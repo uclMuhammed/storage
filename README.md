@@ -1,0 +1,2 @@
+# storage
+bir depo uygulaması
