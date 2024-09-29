@@ -16,7 +16,6 @@ mixin StorageMixin on State<StorageScreen> {
         true,
         ScanMode.BARCODE,
       );
-      print(barcodeScan);
     } on PlatformException {
       barcodeScan = 'ürün kodu okunmadı';
     }
