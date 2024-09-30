@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storage/pages/auth/auth_page.dart';
+import 'package:storage/pages/storage_list_page/storage_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: const AuthPage(),
+      home: const StorageScreen(),
     );
   }
 }
