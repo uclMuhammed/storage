@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class CompanyUserRole extends BaseClass {
-  int id;
   int userID;
   int companyID;
   int roleID;
   CompanyUserRole({
-    required this.id,
+    required super.id,
     required this.userID,
     required this.companyID,
     required this.roleID,

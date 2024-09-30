@@ -2,11 +2,10 @@
 import 'package:core/base/base.dart';
 
 class Roles extends BaseClass {
-  int id;
   String role;
   String description;
   Roles({
-    required this.id,
+    required super.id,
     required this.role,
     required this.description,
     required super.isActive,

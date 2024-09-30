@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class Brands extends BaseClass {
-  int id;
   int brand;
   String description;
   int company_id;
   Brands({
-    required this.id,
+    required super.id,
     required this.brand,
     required this.description,
     required this.company_id,

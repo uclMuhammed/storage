@@ -19,13 +19,16 @@ mixin StorageMixin on State<StorageScreen> {
     } on PlatformException {
       barcodeScan = 'ürün kodu okunmadı';
     }
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
     setState(() {
       _barcodeController.text = barcodeScan;
-      _urunEkleDialog();
     });
+    int index = _urunler.indexWhere((element) => element.barkod == barcodeScan);
+    if (index != -1) {
+      _stokGuncelleDialog(index);
+    } else {
+      _urunEkleDialog();
+    }
   }
 
   // Yeni ürün ekleme dialog'u göster

@@ -2,11 +2,10 @@
 import 'package:core/base/base.dart';
 
 class CompanyUserWarehouses extends BaseClass {
-  int id;
   int companyUserRoleId;
   int warehouses_id;
   CompanyUserWarehouses({
-    required this.id,
+    required super.id,
     required this.companyUserRoleId,
     required this.warehouses_id,
     required super.isActive,

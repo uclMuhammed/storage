@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class Cities extends BaseClass {
-  int id;
   int city;
   int country_id;
   String description;
   Cities({
-    required this.id,
+    required super.id,
     required this.city,
     required this.country_id,
     required this.description,

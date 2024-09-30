@@ -2,7 +2,6 @@
 import 'package:core/base/base.dart';
 
 class Products extends BaseClass {
-  int id;
   int product;
   int barcode;
   String description;
@@ -14,7 +13,7 @@ class Products extends BaseClass {
   String dimensions;
   double weight;
   Products({
-    required this.id,
+    required super.id,
     required this.product,
     required this.barcode,
     required this.description,

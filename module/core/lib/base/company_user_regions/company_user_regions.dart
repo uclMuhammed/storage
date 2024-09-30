@@ -2,11 +2,10 @@
 import 'package:core/base/base.dart';
 
 class CompanyUserRegions extends BaseClass {
-  int id;
   int companyUserRoleId;
   int regionId;
   CompanyUserRegions({
-    required this.id,
+    required super.id,
     required this.companyUserRoleId,
     required this.regionId,
     required super.isActive,

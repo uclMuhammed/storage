@@ -1,5 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 abstract class BaseClass {
+  int id;
   bool isActive;
   bool isDelete;
   DateTime createDat;
@@ -10,6 +10,7 @@ abstract class BaseClass {
   String deletedBy;
 
   BaseClass({
+    required this.id,
     required this.isActive,
     required this.isDelete,
     required this.createDat,

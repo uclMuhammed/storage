@@ -2,13 +2,12 @@
 import 'package:core/base/base.dart';
 
 class ProductUnits extends BaseClass {
-  int id;
   int unit;
   String description;
   int quantity;
   int company_id;
   ProductUnits({
-    required this.id,
+    required super.id,
     required this.unit,
     required this.description,
     required this.quantity,

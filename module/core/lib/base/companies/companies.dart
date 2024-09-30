@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class Companies extends BaseClass {
-  int id;
   int company;
   String name;
   int ownerId;
   Companies({
-    required this.id,
+    required super.id,
     required this.company,
     required this.name,
     required this.ownerId,

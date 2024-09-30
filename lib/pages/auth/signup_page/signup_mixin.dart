@@ -9,7 +9,7 @@ mixin SignUpMixin on State<SignUpScreen> {
   bool _obscureConfirmPassword = true;
 
   // TextEditingController yönetimi
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -31,12 +31,12 @@ mixin SignUpMixin on State<SignUpScreen> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       widget.addUser(
-        _usernameController.text,
+        _emailController.text,
         _passwordController.text,
       );
       showSnackBar(
           context, 'Kayıt Başarılı!'); // mixin'deki fonksiyon kullanıldı
-      _usernameController.clear();
+      _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
     }
@@ -45,7 +45,7 @@ mixin SignUpMixin on State<SignUpScreen> {
   // TextEditingController'ları temizlemek
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -67,11 +67,18 @@ mixin SignUpMixin on State<SignUpScreen> {
     return null;
   }
 
-  String? validateUsername(String? value) {
+  // Email doğrulama fonksiyonu
+  String? _validateEmail(String? value) {
+    // Eğer değer boşsa hata döndür
     if (value == null || value.isEmpty) {
-      return 'Lütfen kullanıcı adınızı girin';
+      return 'Lütfen bir e-posta giriniz.';
     }
-    return null;
+    // RegEx ile email formatı kontrolü
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Geçerli bir e-posta adresi giriniz.';
+    }
+    return null; // Doğruysa null döner (hata yok)
   }
 
   String? validateConfirmPassword(String? value) {

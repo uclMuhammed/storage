@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storage/pages/storage_list_page/storage_page.dart';
+import 'package:storage/pages/auth/auth_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,10 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Stok Uygulaması',
+      theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      // ignore: prefer_const_constructors
-      home: StorageScreen(),
+      home: const AuthPage(),
     );
   }
 }

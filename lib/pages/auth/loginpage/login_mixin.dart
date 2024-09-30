@@ -2,8 +2,32 @@ part of 'login_page.dart';
 
 mixin LoginMixin on State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  bool _obscureText = true;
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Lütfen şifrenizi girin';
+    } else if (value.length < 6) {
+      return 'Şifre en az 6 karakter olmalı';
+    }
+    return null;
+  }
+
+  void togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  String? validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Lütfen kullanıcı adınızı girin';
+    }
+    return null;
+  }
 
   @override
   void dispose() {

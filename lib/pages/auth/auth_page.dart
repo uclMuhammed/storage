@@ -15,36 +15,63 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> with AuthPageMixin {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Storage'),
-        centerTitle: true,
-      ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _selectedPageIndex = index; // Mevcut sayfa güncellenir
-          });
-        },
-        children: [
-          SignUpScreen(addUser: _addUser),
-          LoginScreen(authenticateUser: _authenticateUser),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.person_add), label: 'Kayıt'),
+          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Giriş'),
+        ],
         currentIndex: _selectedPageIndex,
         onTap: (index) {
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
+          setState(() {
+            _selectedPageIndex = index;
+            _pageController.jumpToPage(index);
+          });
         },
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_add), label: 'Kayıt Ol'),
-          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Giriş Yap'),
+      ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: -size.height * 0.3,
+            left: -size.width * 0.3,
+            child: Container(
+              width: size.width * 0.5,
+              height: size.height * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.5),
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(200.0),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -size.height * 0.3,
+            right: -size.width * 0.3,
+            child: Container(
+              width: size.width * 0.5,
+              height: size.height * 0.7,
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.5),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200.0),
+                ),
+              ),
+            ),
+          ),
+          PageView(
+            controller: _pageController,
+            onPageChanged: (pageIndex) {
+              setState(() {
+                _selectedPageIndex = pageIndex;
+              });
+            },
+            children: [
+              SignUpScreen(addUser: _addUser),
+              LoginScreen(authenticateUser: _authenticateUser),
+            ],
+          ),
         ],
       ),
     );

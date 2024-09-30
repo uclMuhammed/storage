@@ -2,14 +2,12 @@
 import 'package:core/base/base.dart';
 
 class Warehouses extends BaseClass {
-  int id;
   int warehouse;
   String description;
   int region_id;
   int company_id;
   String address;
   Warehouses({
-    required this.id,
     required this.warehouse,
     required this.description,
     required this.region_id,
@@ -23,5 +21,6 @@ class Warehouses extends BaseClass {
     required super.createBy,
     required super.updatedBy,
     required super.deletedBy,
+    required super.id,
   });
 }

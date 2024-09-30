@@ -1,15 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:core/base/base.dart';
 
 class Users extends BaseClass {
-  int id;
   int code;
   String email;
-  String passwordHash;
+  String password;
+  bool isOwner;
+  bool isAdmin;
   Users({
-    required this.id,
     required this.code,
     required this.email,
-    required this.passwordHash,
+    required this.password,
+    required this.isOwner,
+    required this.isAdmin,
+    required super.id,
     required super.isActive,
     required super.isDelete,
     required super.createDat,

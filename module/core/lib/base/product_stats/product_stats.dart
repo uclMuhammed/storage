@@ -2,14 +2,13 @@
 import 'package:core/base/base.dart';
 
 class ProductStats extends BaseClass {
-  int id;
   int product_id;
   int purchases;
   int sales;
   double avr_cost;
   double avr_sale;
   ProductStats({
-    required this.id,
+    required super.id,
     required this.product_id,
     required this.purchases,
     required this.sales,

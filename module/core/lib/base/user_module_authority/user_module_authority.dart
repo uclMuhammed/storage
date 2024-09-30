@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class UserModuleAuthority extends BaseClass {
-  int id;
   int companyUserRoleID;
   int moduleID;
   int authorID;
   UserModuleAuthority({
-    required this.id,
+    required super.id,
     required this.companyUserRoleID,
     required this.moduleID,
     required this.authorID,

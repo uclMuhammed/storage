@@ -2,11 +2,10 @@
 import 'package:core/base/base.dart';
 
 class Countries extends BaseClass {
-  int id;
   int countries;
   String description;
   Countries({
-    required this.id,
+    required super.id,
     required this.countries,
     required this.description,
     required super.isActive,

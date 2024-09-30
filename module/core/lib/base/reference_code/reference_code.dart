@@ -2,14 +2,13 @@
 import 'package:core/base/base.dart';
 
 class ReferenceCode extends BaseClass {
-  int id;
   int reference;
   String description;
   int company_id;
   DateTime start_date;
   DateTime end_date;
   ReferenceCode({
-    required this.id,
+    required super.id,
     required this.reference,
     required this.description,
     required this.company_id,

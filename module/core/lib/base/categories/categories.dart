@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class Categories extends BaseClass {
-  int id;
   int category;
   String description;
   int company_id;
   Categories({
-    required this.id,
+    required super.id,
     required this.category,
     required this.description,
     required this.company_id,

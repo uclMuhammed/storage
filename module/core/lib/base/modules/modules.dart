@@ -2,11 +2,10 @@
 import 'package:core/base/base.dart';
 
 class Modules extends BaseClass {
-  int id;
   int module;
   String description;
   Modules({
-    required this.id,
+    required super.id,
     required this.module,
     required this.description,
     required super.isActive,

@@ -2,14 +2,13 @@
 import 'package:core/base/base.dart';
 
 class Regions extends BaseClass {
-  int id;
   int region;
   int company_id;
   int city_id;
   int country_id;
   String description;
   Regions({
-    required this.id,
+    required super.id,
     required this.region,
     required this.company_id,
     required this.city_id,

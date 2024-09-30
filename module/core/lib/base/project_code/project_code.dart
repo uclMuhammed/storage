@@ -2,14 +2,13 @@
 import 'package:core/base/base.dart';
 
 class ProjectCode extends BaseClass {
-  int id;
   int project;
   String description;
   int company_id;
   int start_date;
   int end_date;
   ProjectCode({
-    required this.id,
+    required super.id,
     required this.project,
     required this.description,
     required this.company_id,

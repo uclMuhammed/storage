@@ -2,7 +2,6 @@
 import 'package:core/base/base.dart';
 
 class Suppliers extends BaseClass {
-  int id;
   int company_id;
   int region_id;
   int supplier;
@@ -12,7 +11,7 @@ class Suppliers extends BaseClass {
   String phone;
   String email;
   Suppliers({
-    required this.id,
+    required super.id,
     required this.company_id,
     required this.region_id,
     required this.supplier,

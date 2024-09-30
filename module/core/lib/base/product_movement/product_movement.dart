@@ -2,7 +2,6 @@
 import 'package:core/base/base.dart';
 
 class ProductMovement extends BaseClass {
-  int id;
   int company_id;
   int warehouse_id;
   int supplier_id;
@@ -21,7 +20,7 @@ class ProductMovement extends BaseClass {
   bool is_purchases;
   bool is_return;
   ProductMovement({
-    required this.id,
+    required super.id,
     required this.company_id,
     required this.warehouse_id,
     required this.supplier_id,

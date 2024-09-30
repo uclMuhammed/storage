@@ -2,7 +2,6 @@
 import 'package:core/base/base.dart';
 
 class Authorities extends BaseClass {
-  int id;
   int author;
   bool read_at;
   bool write_at;
@@ -10,7 +9,7 @@ class Authorities extends BaseClass {
   bool delete_at;
   String description;
   Authorities({
-    required this.id,
+    required super.id,
     required this.author,
     required this.read_at,
     required this.write_at,

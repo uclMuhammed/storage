@@ -1,1 +1,1 @@
-export 'package:core/users/users.dart';
+export 'package:core/base/users/users.dart';

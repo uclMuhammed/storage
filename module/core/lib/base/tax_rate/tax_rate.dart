@@ -2,12 +2,11 @@
 import 'package:core/base/base.dart';
 
 class TaxRate extends BaseClass {
-  int id;
   String tax;
   String description;
   int company_id;
   TaxRate({
-    required this.id,
+    required super.id,
     required this.tax,
     required this.description,
     required this.company_id,
