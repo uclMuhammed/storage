@@ -81,6 +81,9 @@ mixin StorageMixin on State<StorageScreen> {
               child: const Text('Ekle'),
               onPressed: () {
                 _urunEkle();
+                _urunController.clear();
+                _barcodeController.clear();
+                _miktarController.clear();
                 Navigator.of(context).pop();
               },
             ),
