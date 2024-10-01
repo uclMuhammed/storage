@@ -23,9 +23,9 @@ mixin StorageMixin on State<StorageScreen> {
     setState(() {
       _barcodeController.text = barcodeScan;
     });
-    int index = _urunler.indexWhere((element) => element.barkod == barcodeScan);
-    if (index != -1) {
-      _stokGuncelleDialog(index);
+    if (_urunler.any((e) => e.barkod == barcodeScan)) {
+      _stokGuncelleDialog(
+          _urunler.indexWhere((element) => element.barkod == barcodeScan));
     } else {
       _urunEkleDialog();
     }

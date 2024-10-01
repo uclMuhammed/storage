@@ -32,8 +32,8 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                   CustomTextFormField(
                     obscureText: false,
                     text: 'Şirket Adı',
-                    controller: _emailController,
-                    validator: _validateEmail,
+                    controller: _companyName,
+                    validator: _validateCompanyName,
                   ),
                   const SizedBox(height: 16),
                   CustomTextFormField(

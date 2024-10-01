@@ -9,6 +9,7 @@ mixin SignUpMixin on State<SignUpScreen> {
   bool _obscureConfirmPassword = true;
 
   // TextEditingController yönetimi
+  final _companyName = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -36,6 +37,7 @@ mixin SignUpMixin on State<SignUpScreen> {
       );
       showSnackBar(
           context, 'Kayıt Başarılı!'); // mixin'deki fonksiyon kullanıldı
+      _companyName.clear();
       _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
@@ -45,6 +47,7 @@ mixin SignUpMixin on State<SignUpScreen> {
   // TextEditingController'ları temizlemek
   @override
   void dispose() {
+    _companyName.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -79,6 +82,13 @@ mixin SignUpMixin on State<SignUpScreen> {
       return 'Geçerli bir e-posta adresi giriniz.';
     }
     return null; // Doğruysa null döner (hata yok)
+  }
+
+  String? _validateCompanyName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Lütfen bir sirket adı giriniz';
+    }
+    return null;
   }
 
   String? validateConfirmPassword(String? value) {

@@ -1,4 +1,4 @@
-import 'package:core/user/index.dart';
+import 'package:core/base/users/users.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/pages/auth/loginpage/login_page.dart';
 import 'package:storage/pages/auth/signup_page/signup_page.dart';

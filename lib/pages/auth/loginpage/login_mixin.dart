@@ -4,7 +4,8 @@ mixin LoginMixin on State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
-  final _usernameController = TextEditingController();
+  final _companynameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   String? validatePassword(String? value) {
@@ -22,16 +23,30 @@ mixin LoginMixin on State<LoginScreen> {
     });
   }
 
-  String? validateUsername(String? value) {
+  // Email doğrulama fonksiyonu
+  String? _validateEmail(String? value) {
+    // Eğer değer boşsa hata döndür
     if (value == null || value.isEmpty) {
-      return 'Lütfen kullanıcı adınızı girin';
+      return 'Lütfen bir e-posta giriniz.';
+    }
+    // RegEx ile email formatı kontrolü
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Geçerli bir e-posta adresi giriniz.';
+    }
+    return null; // Doğruysa null döner (hata yok)
+  }
+
+  String? _validateCompanyName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Lütfen Şirket adını girin';
     }
     return null;
   }
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -39,7 +54,7 @@ mixin LoginMixin on State<LoginScreen> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       bool isAuthenticated = widget.authenticateUser(
-        _usernameController.text,
+        _emailController.text,
         _passwordController.text,
       );
 
@@ -54,7 +69,7 @@ mixin LoginMixin on State<LoginScreen> {
           const SnackBar(content: Text('Geçersiz kullanıcı adı veya şifre')),
         );
       }
-      _usernameController.clear();
+      _emailController.clear();
       _passwordController.clear();
     }
   }
