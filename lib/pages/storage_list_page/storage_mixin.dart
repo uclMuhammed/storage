@@ -26,6 +26,8 @@ mixin StorageMixin on State<StorageScreen> {
     if (_urunler.any((e) => e.barkod == barcodeScan)) {
       _stokGuncelleDialog(
           _urunler.indexWhere((element) => element.barkod == barcodeScan));
+    } else if (barcodeScan == '-1') {
+      return;
     } else {
       _urunEkleDialog();
     }
@@ -41,29 +43,22 @@ mixin StorageMixin on State<StorageScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
+              CustomTextFormField(
                 controller: _urunController,
-                decoration: const InputDecoration(
-                  labelText: 'Ürün İsmi',
-                  border: OutlineInputBorder(),
-                ),
+                text: "Ürün İsmi",
+                obscureText: false,
               ),
               const SizedBox(height: 8.0),
-              TextField(
+              CustomTextFormField(
                 controller: _barcodeController,
-                decoration: const InputDecoration(
-                  labelText: 'Ürün BarKodu',
-                  border: OutlineInputBorder(),
-                ),
+                text: "Ürün Barkodu",
+                obscureText: false,
               ),
               const SizedBox(height: 8.0),
-              TextField(
+              CustomTextFormField(
                 controller: _miktarController,
-                decoration: const InputDecoration(
-                  labelText: 'Stok Miktarı',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
+                text: "Stok Miktarı",
+                obscureText: false,
               ),
             ],
           ),
@@ -105,13 +100,10 @@ mixin StorageMixin on State<StorageScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
+              CustomTextFormField(
                 controller: _miktarController,
-                decoration: const InputDecoration(
-                  labelText: 'Yeni Stok Miktarı',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
+                text: 'Yeni Stok Miktar',
+                obscureText: false,
               ),
             ],
           ),
