@@ -62,8 +62,8 @@ mixin LoginMixin on State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Giriş Başarılı!')),
         );
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const StorageScreen()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Geçersiz kullanıcı adı veya şifre')),

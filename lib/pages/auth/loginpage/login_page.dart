@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storage/pages/storage_list_page/storage_page.dart';
+import 'package:storage/pages/home/home_page.dart';
 import 'package:widgets/buttons/custombutton.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/text/titletext.dart';
@@ -31,6 +31,7 @@ class LoginScreenState extends State<LoginScreen> with LoginMixin {
                   const Titletext(text: "GİRİŞ YAP"),
                   const SizedBox(height: 32),
                   CustomTextFormField(
+                    keyboardType: TextInputType.name,
                     obscureText: false,
                     controller: _companynameController,
                     text: "Şirket Adı",
@@ -38,6 +39,7 @@ class LoginScreenState extends State<LoginScreen> with LoginMixin {
                   ),
                   const SizedBox(height: 16),
                   CustomTextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     obscureText: false,
                     controller: _emailController,
                     text: "E-mail",
@@ -45,6 +47,7 @@ class LoginScreenState extends State<LoginScreen> with LoginMixin {
                   ),
                   const SizedBox(height: 16),
                   CustomTextFormField(
+                    keyboardType: TextInputType.visiblePassword,
                     obscureText: _obscureText,
                     controller: _passwordController,
                     suffixIcon: IconButton(

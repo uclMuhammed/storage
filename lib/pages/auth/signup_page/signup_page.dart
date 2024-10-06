@@ -30,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                   const Titletext(text: "KAYIT OL"),
                   const SizedBox(height: 32),
                   CustomTextFormField(
+                    keyboardType: TextInputType.name,
                     obscureText: false,
                     text: 'Şirket Adı',
                     controller: _companyName,
@@ -37,6 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                   ),
                   const SizedBox(height: 16),
                   CustomTextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     obscureText: false,
                     text: 'E-mail',
                     controller: _emailController,
@@ -44,6 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                   ),
                   const SizedBox(height: 16),
                   CustomTextFormField(
+                      keyboardType: TextInputType.name,
                       obscureText: _obscurePassword,
                       controller: _passwordController,
                       text: 'Sifre',
@@ -56,6 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                       validator: validatePassword),
                   const SizedBox(height: 16),
                   CustomTextFormField(
+                      keyboardType: TextInputType.name,
                       obscureText: _obscureConfirmPassword,
                       controller: _confirmPasswordController,
                       text: 'Sifreyi Doğrula',

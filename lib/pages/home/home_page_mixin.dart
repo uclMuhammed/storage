@@ -45,18 +45,21 @@ mixin HomePageMixin on State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomTextFormField(
+                keyboardType: TextInputType.name,
                 controller: _urunController,
                 text: "Ürün İsmi",
                 obscureText: false,
               ),
               const SizedBox(height: 8.0),
               CustomTextFormField(
+                keyboardType: TextInputType.number,
                 controller: _barcodeController,
                 text: "Ürün Barkodu",
                 obscureText: false,
               ),
               const SizedBox(height: 8.0),
               CustomTextFormField(
+                keyboardType: TextInputType.number,
                 controller: _miktarController,
                 text: "Stok Miktarı",
                 obscureText: false,
@@ -102,6 +105,7 @@ mixin HomePageMixin on State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomTextFormField(
+                keyboardType: TextInputType.number,
                 controller: _miktarController,
                 text: 'Yeni Stok Miktar',
                 obscureText: false,
@@ -112,6 +116,8 @@ mixin HomePageMixin on State<HomePage> {
             TextButton(
               child: const Text('İptal'),
               onPressed: () {
+                _urunController.clear();
+                _barcodeController.clear();
                 _miktarController.clear();
                 Navigator.of(context).pop();
               },
@@ -187,6 +193,8 @@ mixin HomePageMixin on State<HomePage> {
       setState(() {
         _urunler[index].miktar = yeniMiktar;
       });
+      _urunController.clear();
+      _barcodeController.clear();
       _miktarController.clear();
     }
   }
