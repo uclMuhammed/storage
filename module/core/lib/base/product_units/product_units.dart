@@ -5,13 +5,13 @@ class ProductUnits extends BaseClass {
   int unit;
   String description;
   int quantity;
-  int company_id;
+  int companyid;
   ProductUnits({
     required super.id,
     required this.unit,
     required this.description,
     required this.quantity,
-    required this.company_id,
+    required this.companyid,
     required super.isActive,
     required super.isDelete,
     required super.createDat,
