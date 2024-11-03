@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:storage/pages/home/home_body/product_list.dart';
+import 'package:storage/pages/home/home_widgets/appbar.dart/appbar.dart';
+import 'package:storage/pages/home/home_widgets/appbar.dart/searchbar.dart';
 import 'package:storage/pages/home/home_widgets/drawer/drawer.dart';
-import 'package:storage/pages/home/home_widgets/more_vert/more_wert.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/text_form_field/text_form_field.dart';
 part 'home_page_mixin.dart';
@@ -21,19 +22,21 @@ class _HomePageState extends State<HomePage> with HomePageMixin {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, size) => Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'WareHouse',
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
-            ),
-            moreWert(context),
-          ],
-        ),
-        drawer: const MyDrawer(),
+        appBar: changeAppBar
+            ? searchbar(
+                _searchController,
+                () {
+                  changeAppBar = !changeAppBar;
+                  _searchController.clear();
+                  setState(() {});
+                },
+                (value) {},
+              )
+            : myAppBar(changeAppBar, context, () {
+                changeAppBar = !changeAppBar;
+                setState(() {});
+              }),
+        drawer: changeAppBar ? null : const MyDrawer(),
         floatingActionButton: Row(
           children: [
             FloatingActionButton(
@@ -51,7 +54,7 @@ class _HomePageState extends State<HomePage> with HomePageMixin {
         ).paddingAll(16),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: ProductList(
-            urunler: _urunler,
+            urunler: filteredUrunler,
             stokGuncelleDialog: _stokGuncelleDialog,
             urunEkleDialog: _urunEkleDialog,
             urunSilDialog: _urunSilDialog),

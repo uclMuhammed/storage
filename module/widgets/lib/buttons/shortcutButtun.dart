@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:widgets/padding/padding.dart';
-import 'package:widgets/text/index.dart';
 
 class ShortcutButtun extends StatelessWidget {
   final String text;
@@ -21,7 +20,7 @@ class ShortcutButtun extends StatelessWidget {
           const SizedBox(width: 16),
           Text(
             text,
-            style: const TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),

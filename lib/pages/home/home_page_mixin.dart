@@ -1,11 +1,44 @@
 part of 'home_page.dart';
 
 mixin HomePageMixin on State<HomePage> {
-  final List<Urun> _urunler = [];
+  List<Urun> _urunler = [];
+
+  bool changeAppBar = false;
   String scanBarcode = '';
+
   final TextEditingController _urunController = TextEditingController();
   final TextEditingController _barcodeController = TextEditingController();
   final TextEditingController _miktarController = TextEditingController();
+
+  final TextEditingController _searchController = TextEditingController();
+  List<Urun> filteredUrunler = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredUrunler = List.from(_urunler);
+    _searchController.addListener(_filterList);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_filterList);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterList() {
+    setState(() {
+      String query = _searchController.text.toLowerCase();
+      if (query.isEmpty) {
+        filteredUrunler = List.from(_urunler);
+      } else {
+        filteredUrunler = _urunler.where((urun) {
+          return urun.isim.toLowerCase().contains(query);
+        }).toList();
+      }
+    });
+  }
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScan;
@@ -24,8 +57,7 @@ mixin HomePageMixin on State<HomePage> {
       _barcodeController.text = barcodeScan;
     });
     if (_urunler.any((e) => e.barkod == barcodeScan)) {
-      _stokGuncelleDialog(
-          _urunler.indexWhere((element) => element.barkod == barcodeScan));
+      _stokGuncelleDialog(_urunler.indexWhere((element) => element.barkod == barcodeScan));
     } else if (barcodeScan == '-1') {
       _barcodeController.clear();
       return;
@@ -94,8 +126,7 @@ mixin HomePageMixin on State<HomePage> {
 
   // Stok güncelleme dialog'u göster
   void _stokGuncelleDialog(int index) {
-    _miktarController.text =
-        _urunler[index].miktar.toString(); // Mevcut miktarı göster
+    _miktarController.text = _urunler[index].miktar.toString(); // Mevcut miktarı göster
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -142,8 +173,7 @@ mixin HomePageMixin on State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Ürünü Sil'),
-          content: Text(
-              '${_urunler[index].isim} adlı ürünü silmek istediğinize emin misiniz?'),
+          content: Text('${_urunler[index].isim} adlı ürünü silmek istediğinize emin misiniz?'),
           actions: [
             TextButton(
               child: const Text('Hayır'),
@@ -179,6 +209,7 @@ mixin HomePageMixin on State<HomePage> {
             uretimtarihi: DateTime(2001, 9, 27),
             sontuketimtarihi: DateTime(2024, 9, 27),
             partino: '9addc45'));
+        filteredUrunler = List.from(_urunler);
       });
       _urunController.clear();
       _barcodeController.clear();
