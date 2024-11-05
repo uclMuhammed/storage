@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/pages/auth/auth_page.dart';
 import 'package:storage/pages/home/home_page.dart';
 
 Future<void> main() async {

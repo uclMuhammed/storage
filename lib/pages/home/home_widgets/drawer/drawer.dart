@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/pages/home/home_widgets/drawer/warehouse/warehouse.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/buttons/shortcutButtun.dart';
 
@@ -21,7 +22,14 @@ class _MyDrawerState extends State<MyDrawer> {
               ShortcutButtun(
                 icon: Icons.warehouse,
                 text: "D E P O L A R I M",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WareHouse(),
+                    ),
+                  );
+                },
               ),
               ShortcutButtun(
                 icon: Icons.person_add,

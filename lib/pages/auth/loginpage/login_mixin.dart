@@ -4,7 +4,8 @@ mixin LoginMixin on State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
-  final _companynameController = TextEditingController();
+  late final int companyCode;
+  final _companyCodeController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -39,7 +40,7 @@ mixin LoginMixin on State<LoginScreen> {
 
   String? _validateCompanyName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Lütfen Şirket adını girin';
+      return 'Lütfen Şirket Kodunu girin';
     }
     return null;
   }

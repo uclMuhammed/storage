@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/base_services/services/auth_services.dart';
 import 'package:storage/pages/home/home_page.dart';
 import 'package:widgets/buttons/custombutton.dart';
 import 'package:widgets/padding/padding.dart';
@@ -31,10 +32,10 @@ class LoginScreenState extends State<LoginScreen> with LoginMixin {
                   const Titletext(text: "GİRİŞ YAP"),
                   const SizedBox(height: 32),
                   CustomTextFormField(
-                    keyboardType: TextInputType.name,
+                    keyboardType: TextInputType.number,
                     obscureText: false,
-                    controller: _companynameController,
-                    text: "Şirket Adı",
+                    controller: _companyCodeController,
+                    text: "Şirket Kodu",
                     validator: _validateCompanyName,
                   ),
                   const SizedBox(height: 16),
@@ -52,15 +53,18 @@ class LoginScreenState extends State<LoginScreen> with LoginMixin {
                     controller: _passwordController,
                     suffixIcon: IconButton(
                         onPressed: togglePasswordVisibility,
-                        icon: Icon(_obscureText
-                            ? Icons.visibility_off
-                            : Icons.visibility)),
+                        icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility)),
                     text: "Şifre",
                     validator: validatePassword,
                   ),
                   const SizedBox(height: 32),
                   CustomButton(
-                    onTap: _submit,
+                    onTap: () {
+                      setState(() {
+                        companyCode = int.parse(_companyCodeController.text.trim());
+                      });
+                      login(companyCode, _emailController.text, _passwordController.text);
+                    },
                     height: size.maxHeight * 0.08,
                     text: 'Giriş Yap',
                   ),

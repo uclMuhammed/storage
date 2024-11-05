@@ -9,7 +9,7 @@ mixin SignUpMixin on State<SignUpScreen> {
   bool _obscureConfirmPassword = true;
 
   // TextEditingController yönetimi
-  final _companyName = TextEditingController();
+  final _companyNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -35,9 +35,8 @@ mixin SignUpMixin on State<SignUpScreen> {
         _emailController.text,
         _passwordController.text,
       );
-      showSnackBar(
-          context, 'Kayıt Başarılı!'); // mixin'deki fonksiyon kullanıldı
-      _companyName.clear();
+      showSnackBar(context, 'Kayıt Başarılı!'); // mixin'deki fonksiyon kullanıldı
+      _companyNameController.clear();
       _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
@@ -47,7 +46,7 @@ mixin SignUpMixin on State<SignUpScreen> {
   // TextEditingController'ları temizlemek
   @override
   void dispose() {
-    _companyName.dispose();
+    _companyNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -56,8 +55,7 @@ mixin SignUpMixin on State<SignUpScreen> {
 
   // Ortak SnackBar gösterimi
   void showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   // Ortak doğrulama fonksiyonu (Şifre kontrolü dahil)

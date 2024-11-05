@@ -4,12 +4,14 @@ mixin HomePageMixin on State<HomePage> {
   List<Urun> _urunler = [];
 
   bool changeAppBar = false;
+
   String scanBarcode = '';
 
   final TextEditingController _urunController = TextEditingController();
   final TextEditingController _barcodeController = TextEditingController();
   final TextEditingController _miktarController = TextEditingController();
 
+//Search işlemi
   final TextEditingController _searchController = TextEditingController();
   List<Urun> filteredUrunler = [];
 
@@ -39,6 +41,7 @@ mixin HomePageMixin on State<HomePage> {
       }
     });
   }
+//-----------------------------------------------------------
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScan;

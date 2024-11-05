@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:storage/base_services/services/auth_services.dart';
+
 import 'package:widgets/buttons/custombutton.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/text/titletext.dart';
@@ -30,10 +32,10 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                   const Titletext(text: "KAYIT OL"),
                   const SizedBox(height: 32),
                   CustomTextFormField(
-                    keyboardType: TextInputType.name,
+                    keyboardType: TextInputType.text,
                     obscureText: false,
                     text: 'Şirket Adı',
-                    controller: _companyName,
+                    controller: _companyNameController,
                     validator: _validateCompanyName,
                   ),
                   const SizedBox(height: 16),
@@ -51,9 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                       controller: _passwordController,
                       text: 'Sifre',
                       suffixIcon: IconButton(
-                        icon: Icon(_obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility),
+                        icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
                         onPressed: togglePasswordVisibility,
                       ),
                       validator: validatePassword),
@@ -64,15 +64,17 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                       controller: _confirmPasswordController,
                       text: 'Sifreyi Doğrula',
                       suffixIcon: IconButton(
-                        icon: Icon(_obscureConfirmPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility),
+                        icon:
+                            Icon(_obscureConfirmPassword ? Icons.visibility_off : Icons.visibility),
                         onPressed: toggleConfirmPasswordVisibility,
                       ),
                       validator: validateConfirmPassword),
                   const SizedBox(height: 32),
                   CustomButton(
-                      onTap: _submit,
+                      onTap: () {
+                        register(_companyNameController.text, _emailController.text,
+                            _confirmPasswordController.text);
+                      },
                       height: size.maxHeight * 0.08,
                       text: "Kayıt Ol")
                 ],

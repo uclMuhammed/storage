@@ -23,4 +23,21 @@ class Warehouses extends BaseClass {
     required super.deletedBy,
     required super.id,
   });
+
+  factory Warehouses.fromJson(Map<String, dynamic> json) => Warehouses(
+        warehouse: json['warehouse'] as int,
+        description: json['description'] as String,
+        region_id: json['region_id'] as int,
+        company_id: json['company_id'] as int,
+        address: json['address'] as String,
+        isActive: json['isActive'] as bool,
+        isDelete: json['isDelete'] as bool,
+        createDat: json['createDat'] as DateTime,
+        updateDat: json['updateDat'] as DateTime,
+        deleteDat: json['deleteDat'] as DateTime,
+        createBy: json['createBy'] as String,
+        updatedBy: json['updatedBy'] as String,
+        deletedBy: json['deletedBy'] as String,
+        id: json['id'] as int,
+      );
 }
