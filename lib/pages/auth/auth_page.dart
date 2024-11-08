@@ -1,7 +1,11 @@
 import 'package:core/base/users/users.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/base_services/base_service.dart';
+import 'package:storage/base_services/services/auth_services.dart';
 import 'package:storage/pages/auth/loginpage/login_page.dart';
 import 'package:storage/pages/auth/signup_page/signup_page.dart';
+import 'package:storage/pages/home/home_page.dart';
 
 part 'auth_mixin.dart';
 
@@ -30,48 +34,16 @@ class _AuthPageState extends State<AuthPage> with AuthPageMixin {
           });
         },
       ),
-      body: Stack(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (pageIndex) {
+          setState(() {
+            _selectedPageIndex = pageIndex;
+          });
+        },
         children: [
-          Positioned(
-            top: -size.height * 0.3,
-            left: -size.width * 0.3,
-            child: Container(
-              width: size.width * 0.5,
-              height: size.height * 0.8,
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.5),
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(200.0),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -size.height * 0.3,
-            right: -size.width * 0.3,
-            child: Container(
-              width: size.width * 0.5,
-              height: size.height * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.5),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(200.0),
-                ),
-              ),
-            ),
-          ),
-          PageView(
-            controller: _pageController,
-            onPageChanged: (pageIndex) {
-              setState(() {
-                _selectedPageIndex = pageIndex;
-              });
-            },
-            children: [
-              SignUpScreen(addUser: _addUser),
-              LoginScreen(authenticateUser: _authenticateUser),
-            ],
-          ),
+          SignUpScreen(addUser: _addUser),
+          LoginScreen(authenticateUser: _authenticateUser),
         ],
       ),
     );

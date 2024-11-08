@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:storage/base_services/services/auth_services.dart';
 import 'package:storage/pages/home/home_page.dart';
 import 'package:widgets/buttons/custombutton.dart';
@@ -19,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> with LoginMixin {
   @override
   Widget build(BuildContext context) {
+    final loginService = AuthService();
     return LayoutBuilder(
       builder: (context, size) {
         return SingleChildScrollView(
@@ -63,7 +65,8 @@ class LoginScreenState extends State<LoginScreen> with LoginMixin {
                       setState(() {
                         companyCode = int.parse(_companyCodeController.text.trim());
                       });
-                      login(companyCode, _emailController.text, _passwordController.text);
+                      loginService.login(
+                          companyCode, _emailController.text, _passwordController.text);
                     },
                     height: size.maxHeight * 0.08,
                     text: 'Giriş Yap',

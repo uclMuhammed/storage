@@ -13,11 +13,9 @@ class HttpManager implements HttpClient {
         ));
 
   @override
-  Future<Response> get(String endPoint,
-      {Map<String, dynamic>? queryParameters}) async {
+  Future<Response> get(String endPoint, {Map<String, dynamic>? queryParameters}) async {
     try {
-      final response =
-          await _dio.get(endPoint, queryParameters: queryParameters);
+      final response = await _dio.get(endPoint, queryParameters: queryParameters);
       return _handleResponse(response);
     } on DioException catch (e) {
       _handleError(e);
@@ -41,7 +39,7 @@ class HttpManager implements HttpClient {
   }
 
   @override
-  Future<Response> post(String endPoint, {Map<String, dynamic>? body}) async {
+  Future<Response<dynamic>> post(String endPoint, {Map<String, dynamic>? body}) async {
     try {
       final response = await _dio.post(
         endPoint,
@@ -64,8 +62,7 @@ class HttpManager implements HttpClient {
   }
 
   @override
-  Future<Response> put(String endPoint, String id,
-      {Map<String, dynamic>? body}) async {
+  Future<Response> put(String endPoint, String id, {Map<String, dynamic>? body}) async {
     try {
       final response = await _dio.put(
         '$endPoint/$id',

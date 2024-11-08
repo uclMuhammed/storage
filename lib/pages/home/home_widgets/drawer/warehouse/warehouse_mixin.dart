@@ -2,11 +2,11 @@ part of 'warehouse.dart';
 
 mixin WareHouseMixin on State<WareHouse> {
   final List<Warehouses> depolar = [];
-
-  TextEditingController _wNameController = TextEditingController();
-  TextEditingController _wAddressController = TextEditingController();
+  final TextEditingController _wNameController = TextEditingController();
+  final TextEditingController _wAddressController = TextEditingController();
 
   void addButton() {
+    int wAddress = int.tryParse(_wAddressController.text) ?? 0;
     showDialog(
       context: context,
       builder: (context) {
@@ -23,7 +23,7 @@ mixin WareHouseMixin on State<WareHouse> {
               ),
               const SizedBox(height: 8.0),
               CustomTextFormField(
-                keyboardType: TextInputType.name,
+                keyboardType: TextInputType.number,
                 controller: _wAddressController,
                 text: "Depo Yeri",
                 obscureText: false,
@@ -41,7 +41,7 @@ mixin WareHouseMixin on State<WareHouse> {
             ),
             ElevatedButton(
               onPressed: () {
-                addDepo(_wNameController.text, _wAddressController.text);
+                addDepo(_wNameController.text, wAddress);
                 Navigator.of(context).pop();
                 _wNameController.clear();
                 _wAddressController.clear();
@@ -54,22 +54,13 @@ mixin WareHouseMixin on State<WareHouse> {
     );
   }
 
-  void addDepo(String wName, String wAddress) {
-    depolar.add(Warehouses(
-        warehouse: 1,
-        description: wName,
-        region_id: 1,
-        company_id: 1,
-        address: wAddress,
-        isActive: true,
-        isDelete: false,
-        createDat: DateTime(2001, 9, 27),
-        updateDat: DateTime(2001, 9, 27),
-        deleteDat: DateTime(2001, 9, 27),
-        createBy: 'maho',
-        updatedBy: 'maho',
-        deletedBy: 'maho',
-        id: 1));
-    setState(() {});
+  void tokenButton() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token')!;
+    print(token);
+  }
+
+  void addDepo(String wName, int wAddress) {
+    //Warehousesservices().addWarehouses(wAddress, wName);
   }
 }

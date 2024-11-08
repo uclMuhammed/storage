@@ -1,0 +1,4 @@
+enum ServiceEnum {
+  login,
+  register,
+}

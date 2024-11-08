@@ -1,6 +1,13 @@
 part of 'auth_page.dart';
 
 mixin AuthPageMixin on State<AuthPage> {
+  final authService = AuthService();
+  @override
+  void initState() {
+    authService.login(68738, "test11@gmail.com", "testpass");
+    super.initState();
+  }
+
   final List<Users> _userList = [];
 
   int _selectedPageIndex = 0; // Mevcut sayfa indeksi

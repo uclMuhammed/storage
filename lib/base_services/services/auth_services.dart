@@ -1,49 +1,48 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 import 'package:backend/backend.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
+import 'package:storage/base_services/base_service.dart';
 
-final HttpManager stockAuthManager = HttpManager(
-  baseUrl: stockTrackerAuthUrl,
-  headers: stockApiHeader,
-);
+class AuthService extends BaseService {
+  String endPointLogin = '/login';
+  String endPointRegister = '/register';
 
-Future<void> register(String name, String email, String password) async {
-  try {
-    stockAuthManager.addInterceptor(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-    ));
+  AuthService()
+      : super(
+          baseUrl: stockTrackerAuthUrl,
+          headers: stockApiHeader,
+        );
 
-    final response = await stockAuthManager.post('/register', body: {
-      'companyName': name,
-      'email': email,
-      'password': password,
-    });
-  } on DioException catch (e) {
-    print('Dio hatası: ${e.message}');
-  } catch (e) {
-    print('Genel hata: $e');
+  Future<void> login(int code, String email, String password) async {
+    try {
+      httpManager.addInterceptor(
+        LogInterceptor(
+          request: true,
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+          responseBody: true,
+          error: true,
+          logPrint: (object) => print(object),
+        ),
+      );
+      final body = {"companyCode": code, "email": email, "password": password};
+      final response = await get(endPointLogin, queryParameters: body);
+      print(response.data);
+    } on DioException catch (e) {
+      print("Genel hata:" + e.toString());
+    } catch (e) {
+      print("normal hata: " + e.toString());
+    }
   }
-}
 
-Future<void> login(int code, String email, String password) async {
-  try {
-    stockAuthManager.addInterceptor(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-    ));
-
-    final response = await stockAuthManager.post('/login', body: {
-      'companyCode': code,
-      'email': email,
-      'password': password,
-    });
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', response.data['token']);
-    print(response);
-  } on DioException catch (e) {
-    print('Dio hatası: ${e.message}');
-  } catch (e) {
-    print('Genel hata: $e');
+  Future<void> register(String name, String email, String password) async {
+    try {} on DioException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 }

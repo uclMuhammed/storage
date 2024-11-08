@@ -1,7 +1,7 @@
 part of 'home_page.dart';
 
 mixin HomePageMixin on State<HomePage> {
-  List<Urun> _urunler = [];
+  final List<Urun> _urunler = [];
 
   bool changeAppBar = false;
 
