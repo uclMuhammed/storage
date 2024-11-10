@@ -1,14 +1,21 @@
+import 'package:backend/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/pages/auth/auth_manager/auth_manager.dart';
+import 'package:storage/pages/auth/auth_page.dart';
+import 'package:storage/pages/home/home_widgets/drawer/managment/managment.dart';
 import 'package:storage/pages/home/home_widgets/drawer/warehouse/warehouse.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/buttons/shortcutButtun.dart';
 
 class MyDrawer extends StatefulWidget {
-  const MyDrawer({super.key});
+  final AuthManager authManager;
+  const MyDrawer({super.key, required this.authManager});
 
   @override
   State<MyDrawer> createState() => _MyDrawerState();
 }
+
+AuthenticationService auth = AuthenticationService();
 
 class _MyDrawerState extends State<MyDrawer> {
   @override
@@ -34,7 +41,16 @@ class _MyDrawerState extends State<MyDrawer> {
               ShortcutButtun(
                 icon: Icons.person_add,
                 text: "Y Ö N E T İ M",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Managment(
+                        authManager: widget.authManager,
+                      ),
+                    ),
+                  );
+                },
               ),
               ShortcutButtun(
                 icon: Icons.settings,
@@ -52,5 +68,21 @@ class _MyDrawerState extends State<MyDrawer> {
         );
       },
     );
+  }
+
+  showSnackBar(context, text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  Future<void> logout() async {
+    await widget.authManager.logout();
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AuthPage(),
+        ),
+      );
+    }
   }
 }

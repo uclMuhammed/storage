@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:storage/base_services/services/auth_services.dart';
-import 'package:storage/pages/home/home_page.dart';
-
 import 'package:widgets/buttons/custombutton.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/text/titletext.dart';
@@ -21,7 +17,6 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
   @override
   Widget build(BuildContext context) {
-    final registerService = AuthService();
     return LayoutBuilder(
       builder: (context, size) {
         return SingleChildScrollView(
@@ -73,13 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SignUpMixin {
                       ),
                       validator: validateConfirmPassword),
                   const SizedBox(height: 32),
-                  CustomButton(
-                      onTap: () {
-                        registerService.register(_companyNameController.text, _emailController.text,
-                            _confirmPasswordController.text);
-                      },
-                      height: size.maxHeight * 0.08,
-                      text: "Kayıt Ol")
+                  CustomButton(onTap: () async {}, height: size.maxHeight * 0.08, text: "Kayıt Ol")
                 ],
               ),
             ),

@@ -1,6 +1,7 @@
 part of 'warehouse.dart';
 
 mixin WareHouseMixin on State<WareHouse> {
+  AuthoritiesService _author = AuthoritiesService();
   final List<Warehouses> depolar = [];
   final TextEditingController _wNameController = TextEditingController();
   final TextEditingController _wAddressController = TextEditingController();
@@ -41,7 +42,7 @@ mixin WareHouseMixin on State<WareHouse> {
             ),
             ElevatedButton(
               onPressed: () {
-                addDepo(_wNameController.text, wAddress);
+                authorGetAll();
                 Navigator.of(context).pop();
                 _wNameController.clear();
                 _wAddressController.clear();
@@ -54,13 +55,24 @@ mixin WareHouseMixin on State<WareHouse> {
     );
   }
 
-  void tokenButton() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token')!;
-    print(token);
-  }
-
-  void addDepo(String wName, int wAddress) {
-    //Warehousesservices().addWarehouses(wAddress, wName);
+  Future<void> authorGetAll() async {
+    try {
+      await _author.init();
+      //
+      final response = await _author.getAll();
+      //
+      if (response.isNotEmpty) {
+        if (kDebugMode) print('Authorities: $response');
+      } else {
+        if (kDebugMode) print('Authorities Not Found');
+      }
+      //
+      response.map((e) {
+        if (kDebugMode) print('Authorities: $e');
+      }).toList();
+      //
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
   }
 }

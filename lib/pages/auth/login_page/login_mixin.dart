@@ -1,13 +1,47 @@
 part of 'login_page.dart';
 
 mixin LoginMixin on State<LoginScreen> {
+  final AuthManager _auth = AuthManager();
   final _formKey = GlobalKey<FormState>();
-
   bool _obscureText = true;
-  late final int companyCode;
   final _companyCodeController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _companyCodeController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _auth.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    final success = await _auth.login(
+      companyCode: 68738,
+      email: "test11@gmail.com",
+      password: "testpass",
+    );
+
+    if (success && mounted) {
+      // Login başarılı - Ana sayfaya yönlendir
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HomePage(
+            authManager: _auth,
+          ),
+        ),
+      );
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_auth.error ?? 'Login failed'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
@@ -43,35 +77,5 @@ mixin LoginMixin on State<LoginScreen> {
       return 'Lütfen Şirket Kodunu girin';
     }
     return null;
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      bool isAuthenticated = widget.authenticateUser(
-        _emailController.text,
-        _passwordController.text,
-      );
-
-      if (isAuthenticated) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Giriş Başarılı!')),
-        );
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Geçersiz kullanıcı adı veya şifre')),
-        );
-      }
-      _emailController.clear();
-      _passwordController.clear();
-    }
   }
 }

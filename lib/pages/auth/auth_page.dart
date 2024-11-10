@@ -1,12 +1,7 @@
 import 'package:core/base/users/users.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:storage/base_services/base_service.dart';
-import 'package:storage/base_services/services/auth_services.dart';
-import 'package:storage/pages/auth/loginpage/login_page.dart';
+import 'package:storage/pages/auth/login_page/login_page.dart';
 import 'package:storage/pages/auth/signup_page/signup_page.dart';
-import 'package:storage/pages/home/home_page.dart';
-
 part 'auth_mixin.dart';
 
 class AuthPage extends StatefulWidget {
