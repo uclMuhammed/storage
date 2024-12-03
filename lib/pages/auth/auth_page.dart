@@ -1,7 +1,14 @@
-import 'package:core/base/users/users.dart';
+import 'package:backend/backend.dart';
+import 'package:backend/const/keys.dart';
+import 'package:backend/service/index.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/pages/auth/auth_manager/auth_manager.dart';
 import 'package:storage/pages/auth/login_page/login_page.dart';
 import 'package:storage/pages/auth/signup_page/signup_page.dart';
+
+import '../home/home_page.dart';
+
 part 'auth_mixin.dart';
 
 class AuthPage extends StatefulWidget {
@@ -14,7 +21,6 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> with AuthPageMixin {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -36,9 +42,9 @@ class _AuthPageState extends State<AuthPage> with AuthPageMixin {
             _selectedPageIndex = pageIndex;
           });
         },
-        children: [
-          SignUpScreen(addUser: _addUser),
-          LoginScreen(authenticateUser: _authenticateUser),
+        children: const [
+          SignUpScreen(),
+          LoginScreen(),
         ],
       ),
     );

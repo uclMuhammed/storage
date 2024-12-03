@@ -1,13 +1,11 @@
 part of 'warehouse.dart';
 
 mixin WareHouseMixin on State<WareHouse> {
-  AuthoritiesService _author = AuthoritiesService();
-  final List<Warehouses> depolar = [];
+  final AuthoritiesService _author = AuthoritiesService();
   final TextEditingController _wNameController = TextEditingController();
   final TextEditingController _wAddressController = TextEditingController();
 
   void addButton() {
-    int wAddress = int.tryParse(_wAddressController.text) ?? 0;
     showDialog(
       context: context,
       builder: (context) {

@@ -1,37 +1,41 @@
 part of 'auth_page.dart';
 
 mixin AuthPageMixin on State<AuthPage> {
-  @override
-  final List<Users> _userList = [];
+  AuthManager authManager = AuthManager();
+  AuthenticationService auth = AuthenticationService();
+  int _selectedPageIndex = 0; // Mevcut sayfa indeksi"
 
-  int _selectedPageIndex = 0; // Mevcut sayfa indeksi
-
-  void _addUser(String email, String password) {
-    setState(() {
-      _userList.add(
-        Users(
-            id: 1,
-            code: 1,
-            email: email,
-            password: password,
-            isOwner: true,
-            isAdmin: true,
-            isActive: true,
-            isDelete: false,
-            createDat: DateTime.now(),
-            updateDat: DateTime.now(),
-            deleteDat: DateTime.now(),
-            createBy: "",
-            updatedBy: "",
-            deletedBy: ""),
-      );
-    });
+  void _loadAuthorities() async {
+    try {
+      await auth.init();
+      await authManager.checkLoginStatus();
+      final token = await auth.storage?.read(BearerTokenKey);
+      if (kDebugMode) {
+        print(token);
+      }
+      if (token != null) {
+        if (kDebugMode) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                authManager: authManager,
+              ),
+            ),
+          );
+        }
+      } else {
+        if (kDebugMode) print('Token Not Found');
+      }
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
   }
 
-  bool _authenticateUser(String email, String password) {
-    return _userList.any(
-      (user) => user.email == email && user.password == password,
-    );
+  @override
+  void initState() {
+    super.initState();
+    _loadAuthorities();
   }
 
   final PageController _pageController = PageController();

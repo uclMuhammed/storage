@@ -1,9 +1,10 @@
-import 'package:backend/services/auth_service.dart';
+import 'package:backend/models/categories.dart';
 import 'package:flutter/material.dart';
+import 'package:storage/deneme/category.dart';
 import 'package:storage/pages/auth/auth_manager/auth_manager.dart';
 import 'package:storage/pages/auth/auth_page.dart';
-import 'package:storage/pages/home/home_widgets/drawer/managment/managment.dart';
 import 'package:storage/pages/home/home_widgets/drawer/warehouse/warehouse.dart';
+import 'package:storage/pages/products/products.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/buttons/shortcutButtun.dart';
 
@@ -15,8 +16,6 @@ class MyDrawer extends StatefulWidget {
   State<MyDrawer> createState() => _MyDrawerState();
 }
 
-AuthenticationService auth = AuthenticationService();
-
 class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class _MyDrawerState extends State<MyDrawer> {
         return Drawer(
           child: Column(
             children: [
-              SizedBox(height: size.maxHeight * 0.4),
+              SizedBox(height: size.maxHeight * 0.2),
               ShortcutButtun(
                 icon: Icons.warehouse,
                 text: "D E P O L A R I M",
@@ -38,17 +37,14 @@ class _MyDrawerState extends State<MyDrawer> {
                   );
                 },
               ),
+              const Spacer(),
               ShortcutButtun(
                 icon: Icons.person_add,
                 text: "Y Ö N E T İ M",
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => Managment(
-                        authManager: widget.authManager,
-                      ),
-                    ),
+                    MaterialPageRoute(builder: (context) => ProductsView()),
                   );
                 },
               ),
@@ -57,11 +53,14 @@ class _MyDrawerState extends State<MyDrawer> {
                 text: "A Y A R L A R",
                 onPressed: () {},
               ),
-              const Spacer(),
               ShortcutButtun(
                 icon: Icons.logout,
                 text: "Ç I K I Ş  Y A P",
-                onPressed: () {},
+                onPressed: () {
+                  if (context.mounted) {
+                    logout();
+                  }
+                },
               ),
             ],
           ).paddingAll(16),

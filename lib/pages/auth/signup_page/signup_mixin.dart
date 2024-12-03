@@ -1,49 +1,17 @@
 part of 'signup_page.dart';
 
 mixin SignUpMixin on State<SignUpScreen> {
-  //formkey
-
+  final AuthManager _auth = AuthManager();
   final _formKey = GlobalKey<FormState>();
-  // Şifre görünürlüğü yönetimi
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  // TextEditingController yönetimi
   final _companyNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  // Şifre görünürlüğünü değiştiren fonksiyon
-  void togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  // Şifre doğrulama görünürlüğünü değiştiren fonksiyon
-  void toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
-    });
-  }
-
-  // Kayıt işlemi
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      widget.addUser(
-        _emailController.text,
-        _passwordController.text,
-      );
-      showSnackBar(context, 'Kayıt Başarılı!'); // mixin'deki fonksiyon kullanıldı
-      _companyNameController.clear();
-      _emailController.clear();
-      _passwordController.clear();
-      _confirmPasswordController.clear();
-    }
-  }
-
-  // TextEditingController'ları temizlemek
   @override
   void dispose() {
     _companyNameController.dispose();
@@ -53,47 +21,105 @@ mixin SignUpMixin on State<SignUpScreen> {
     super.dispose();
   }
 
-  // Ortak SnackBar gösterimi
-  void showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  Future<void> _handleSignUp() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        final success = await _auth.register(
+          companyName: _companyNameController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+        if (success && mounted) {
+          // Kayıt başarılı
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Kayıt başarılı! Giriş yapabilirsiniz.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Form alanlarını temizle
+          _clearForm();
+        } else if (mounted) {
+          // Hata mesajını göster
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_auth.error ?? 'Bir hata oluştu'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Bir hata oluştu: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
   }
 
-  // Ortak doğrulama fonksiyonu (Şifre kontrolü dahil)
-  String? validatePassword(String? value) {
+  void _clearForm() {
+    _companyNameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+  }
+
+  void togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    setState(() {
+      _obscureConfirmPassword = !_obscureConfirmPassword;
+    });
+  }
+
+  // Validation metodları
+  String? validateCompanyName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Lütfen şifrenizi girin';
-    } else if (value.length < 6) {
-      return 'Şifre en az 6 karakter olmalı';
+      return 'Şirket adı gerekli';
+    }
+    if (value.length < 3) {
+      return 'Şirket adı en az 3 karakter olmalı';
     }
     return null;
   }
 
-  // Email doğrulama fonksiyonu
-  String? _validateEmail(String? value) {
-    // Eğer değer boşsa hata döndür
+  String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Lütfen bir e-posta giriniz.';
+      return 'E-posta gerekli';
     }
-    // RegEx ile email formatı kontrolü
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Geçerli bir e-posta adresi giriniz.';
+      return 'Geçerli bir e-posta adresi giriniz';
     }
-    return null; // Doğruysa null döner (hata yok)
+    return null;
   }
 
-  String? _validateCompanyName(String? value) {
+  String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Lütfen bir sirket adı giriniz';
+      return 'Şifre gerekli';
+    }
+    if (value.length < 6) {
+      return 'Şifre en az 6 karakter olmalı';
     }
     return null;
   }
 
   String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Lütfen şifrenizi tekrar girin';
-    } else if (value != _passwordController.text) {
-      return 'Şifreler uyuşmuyor';
+      return 'Şifreyi tekrar giriniz';
+    }
+    if (value != _passwordController.text) {
+      return 'Şifreler eşleşmiyor';
     }
     return null;
   }

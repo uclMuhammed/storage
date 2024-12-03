@@ -13,8 +13,7 @@ class SharedPreferencesService extends BaseSharedPreferences {
   static Future<SharedPreferencesService> getInstance() async {
     if (_instance == null) {
       final sharedPreferences = await SharedPreferences.getInstance();
-      _instance =
-          SharedPreferencesService._(sharedPreferences: sharedPreferences);
+      _instance = SharedPreferencesService._(sharedPreferences: sharedPreferences);
     }
     return _instance!;
   }

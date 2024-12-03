@@ -1,48 +1,26 @@
 part of 'home_page.dart';
 
 mixin HomePageMixin on State<HomePage> {
-  final List<Urun> _urunler = [];
-
   bool changeAppBar = false;
 
-  String scanBarcode = '';
+  GenericApiService<Products> service =
+      GenericApiService<Products>(endPoint: '/products', fromJson: Products.fromJson);
 
+  String scanBarcode = '';
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _urunController = TextEditingController();
   final TextEditingController _barcodeController = TextEditingController();
   final TextEditingController _miktarController = TextEditingController();
 
 //Search işlemi
   final TextEditingController _searchController = TextEditingController();
-  List<Urun> filteredUrunler = [];
-
-  @override
-  void initState() {
-    super.initState();
-    filteredUrunler = List.from(_urunler);
-    _searchController.addListener(_filterList);
-  }
 
   @override
   void dispose() {
-    _searchController.removeListener(_filterList);
-    _searchController.dispose();
     super.dispose();
   }
 
-  void _filterList() {
-    setState(() {
-      String query = _searchController.text.toLowerCase();
-      if (query.isEmpty) {
-        filteredUrunler = List.from(_urunler);
-      } else {
-        filteredUrunler = _urunler.where((urun) {
-          return urun.isim.toLowerCase().contains(query);
-        }).toList();
-      }
-    });
-  }
 //-----------------------------------------------------------
-
   Future<void> scanBarcodeNormal() async {
     String barcodeScan;
     try {
@@ -59,8 +37,7 @@ mixin HomePageMixin on State<HomePage> {
     setState(() {
       _barcodeController.text = barcodeScan;
     });
-    if (_urunler.any((e) => e.barkod == barcodeScan)) {
-      _stokGuncelleDialog(_urunler.indexWhere((element) => element.barkod == barcodeScan));
+    if (_barcodeController.text.isNotEmpty) {
     } else if (barcodeScan == '-1') {
       _barcodeController.clear();
       return;
@@ -76,30 +53,33 @@ mixin HomePageMixin on State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Yeni Ürün Ekle'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomTextFormField(
-                keyboardType: TextInputType.name,
-                controller: _urunController,
-                text: "Ürün İsmi",
-                obscureText: false,
-              ),
-              const SizedBox(height: 8.0),
-              CustomTextFormField(
-                keyboardType: TextInputType.number,
-                controller: _barcodeController,
-                text: "Ürün Barkodu",
-                obscureText: false,
-              ),
-              const SizedBox(height: 8.0),
-              CustomTextFormField(
-                keyboardType: TextInputType.number,
-                controller: _miktarController,
-                text: "Stok Miktarı",
-                obscureText: false,
-              ),
-            ],
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTextFormField(
+                  keyboardType: TextInputType.name,
+                  controller: _urunController,
+                  text: "Ürün İsmi",
+                  obscureText: false,
+                ),
+                const SizedBox(height: 8.0),
+                CustomTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _barcodeController,
+                  text: "Ürün Barkodu",
+                  obscureText: false,
+                ),
+                const SizedBox(height: 8.0),
+                CustomTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _miktarController,
+                  text: "Stok Miktarı",
+                  obscureText: false,
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -114,7 +94,7 @@ mixin HomePageMixin on State<HomePage> {
             ElevatedButton(
               child: const Text('Ekle'),
               onPressed: () {
-                _urunEkle();
+                _urunEkle(service);
                 _urunController.clear();
                 _barcodeController.clear();
                 _miktarController.clear();
@@ -129,12 +109,10 @@ mixin HomePageMixin on State<HomePage> {
 
   // Stok güncelleme dialog'u göster
   void _stokGuncelleDialog(int index) {
-    _miktarController.text = _urunler[index].miktar.toString(); // Mevcut miktarı göster
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${_urunler[index].isim} Stok Güncelle'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -176,7 +154,6 @@ mixin HomePageMixin on State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Ürünü Sil'),
-          content: Text('${_urunler[index].isim} adlı ürünü silmek istediğinize emin misiniz?'),
           actions: [
             TextButton(
               child: const Text('Hayır'),
@@ -198,25 +175,37 @@ mixin HomePageMixin on State<HomePage> {
   }
 
   // Yeni ürün ekleme fonksiyonu
-  void _urunEkle() {
-    String urunIsmi = _urunController.text;
-    String urunBarcode = _barcodeController.text;
-    int urunMiktari = int.tryParse(_miktarController.text) ?? 0;
-
-    if (urunIsmi.isNotEmpty && urunMiktari > 0) {
-      setState(() {
-        _urunler.add(Urun(
-            isim: urunIsmi,
-            miktar: urunMiktari,
-            barkod: urunBarcode,
-            uretimtarihi: DateTime(2001, 9, 27),
-            sontuketimtarihi: DateTime(2024, 9, 27),
-            partino: '9addc45'));
-        filteredUrunler = List.from(_urunler);
-      });
-      _urunController.clear();
-      _barcodeController.clear();
-      _miktarController.clear();
+  void _urunEkle(GenericApiService<Products> service) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final products = Products(
+          id: 0,
+          description: _urunController.text,
+          barcode: _barcodeController.text,
+          createdAt: DateTime.now(),
+          createdBy: '',
+          updatedAt: DateTime.now(),
+          updatedBy: '',
+          deletedAt: null,
+          deletedBy: null,
+          product: 0,
+          categoryId: 0,
+          companyId: 0,
+          brandId: 0,
+          unitId: 0,
+          price: 200,
+          dimensions: '',
+          weight: 200,
+          isActive: false,
+          isDelete: false,
+        );
+        print('Sending data to the backend: ${products.toJson()}');
+        if (products.barcode != '') {
+          await service.create(products);
+        } else {
+          await service.update(products.id, products);
+        }
+      } catch (e) {}
     }
   }
 
@@ -224,9 +213,7 @@ mixin HomePageMixin on State<HomePage> {
   void _stokGuncelle(int index) {
     int yeniMiktar = int.tryParse(_miktarController.text) ?? 0;
     if (yeniMiktar > 0) {
-      setState(() {
-        _urunler[index].miktar = yeniMiktar;
-      });
+      setState(() {});
       _urunController.clear();
       _barcodeController.clear();
       _miktarController.clear();
@@ -235,8 +222,6 @@ mixin HomePageMixin on State<HomePage> {
 
   // Ürün silme
   void _urunSil(int index) {
-    setState(() {
-      _urunler.removeAt(index);
-    });
+    setState(() {});
   }
 }

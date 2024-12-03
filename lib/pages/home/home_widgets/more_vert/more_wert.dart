@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 moreWert(BuildContext context) {
@@ -5,9 +6,13 @@ moreWert(BuildContext context) {
     onSelected: (value) {
       // Seçilen değere göre işlem yapabilirsiniz
       if (value == 'Kategoriler') {
-        print('Kategoriler selected');
+        if (kDebugMode) {
+          print('Kategoriler selected');
+        }
       } else if (value == 'Profil') {
-        print('Profile selected');
+        if (kDebugMode) {
+          print('Profile selected');
+        }
       }
     },
     itemBuilder: (BuildContext context) {

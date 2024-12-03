@@ -1,19 +1,17 @@
-import 'package:core/product/product.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/padding/padding.dart';
 import 'package:widgets/text/normaltext.dart';
 import 'package:widgets/text/titletext.dart';
 
 class ProductDetail extends StatelessWidget {
-  final Urun urun;
-  const ProductDetail({super.key, required this.urun});
+  const ProductDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, size) {
       return Scaffold(
         appBar: AppBar(
-          title: Titletext(text: urun.isim),
+          title: const Titletext(text: "Ürün Detayları"),
           centerTitle: true,
           actions: [
             IconButton(
@@ -21,8 +19,7 @@ class ProductDetail extends StatelessWidget {
               icon: const Icon(Icons.edit),
             ),
             IconButton(
-              onPressed: () {
-              },
+              onPressed: () {},
               icon: const Icon(Icons.delete),
             ),
           ],
@@ -40,15 +37,11 @@ class ProductDetail extends StatelessWidget {
                   SizedBox(
                     height: size.maxHeight * 0.01,
                   ),
-                  Normaltext(text: "Urun Partino: ${urun.partino}"),
-                  Normaltext(text: "Urun Barkodu: ${urun.barkod}"),
-                  Normaltext(text: "Urun Miktarı: ${urun.miktar}"),
-                  Normaltext(
-                      text:
-                          "UT: ${urun.uretimtarihi.toString().replaceRange(16, null, "")}"),
-                  Normaltext(
-                      text:
-                          "SKT: ${urun.sontuketimtarihi.toString().replaceRange(16, null, "")}"),
+                  const Normaltext(text: "Urun Partino: "),
+                  const Normaltext(text: "Urun Barkodu:"),
+                  const Normaltext(text: "Urun Miktarı: "),
+                  const Normaltext(text: "UT: "),
+                  const Normaltext(text: "SKT: "),
                 ],
               ).paddingAll(8),
             ).centerX(),
@@ -61,19 +54,8 @@ class ProductDetail extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.blue,
                 ),
-                child: Column(
-                  children: [
-                    Text(urun.partino),
-                    Text(urun.barkod),
-                    Text(urun.isim),
-                    Text(urun.uretimtarihi
-                        .toString()
-                        .replaceRange(16, null, "")),
-                    Text(urun.sontuketimtarihi
-                        .toString()
-                        .replaceRange(16, null, "")),
-                    Text(urun.miktar.toString()),
-                  ],
+                child: const Column(
+                  children: [],
                 ),
               ).centerX(),
             ),

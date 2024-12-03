@@ -1,4 +1,4 @@
-import 'package:core/product/product.dart';
+import 'package:backend/backend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -8,6 +8,7 @@ import 'package:storage/pages/home/home_widgets/appbar/appbar.dart';
 import 'package:storage/pages/home/home_widgets/appbar/searchbar.dart';
 import 'package:storage/pages/home/home_widgets/drawer/drawer.dart';
 import 'package:widgets/padding/padding.dart';
+import 'package:backend/service/generic_api_service.dart';
 import 'package:widgets/text_form_field/text_form_field.dart';
 part 'home_page_mixin.dart';
 
@@ -20,56 +21,52 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with HomePageMixin {
+  GenericApiService<Products> products =
+      GenericApiService<Products>(endPoint: '/products', fromJson: Products.fromJson);
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, size) => WillPopScope(
-        onWillPop: () async {
-          await widget.authManager.logout();
-          return true;
-        },
-        child: Scaffold(
-          appBar: changeAppBar
-              ? searchbar(
-                  _searchController,
-                  () {
-                    changeAppBar = !changeAppBar;
-                    _searchController.clear();
-                    setState(() {});
-                  },
-                  (value) {},
-                )
-              : myAppBar(changeAppBar, widget.authManager, context, () {
+      builder: (context, size) => Scaffold(
+        appBar: changeAppBar
+            ? searchbar(
+                _searchController,
+                () {
                   changeAppBar = !changeAppBar;
+                  _searchController.clear();
                   setState(() {});
-                }),
-          drawer: changeAppBar
-              ? null
-              : MyDrawer(
-                  authManager: widget.authManager,
-                ),
-          floatingActionButton: Row(
-            children: [
-              FloatingActionButton(
-                heroTag: "urunEkle",
-                onPressed: _urunEkleDialog,
-                child: const Icon(Icons.add),
+                },
+                (value) {},
+              )
+            : myAppBar(changeAppBar, widget.authManager, context, () {
+                changeAppBar = !changeAppBar;
+                setState(() {});
+              }),
+        drawer: changeAppBar
+            ? null
+            : MyDrawer(
+                authManager: widget.authManager,
               ),
-              const Spacer(),
-              FloatingActionButton(
-                heroTag: "barcodeReader",
-                onPressed: scanBarcodeNormal,
-                child: const Icon(Icons.barcode_reader),
-              ),
-            ],
-          ).paddingAll(16),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          body: ProductList(
-              urunler: filteredUrunler,
-              stokGuncelleDialog: _stokGuncelleDialog,
-              urunEkleDialog: _urunEkleDialog,
-              urunSilDialog: _urunSilDialog),
-        ),
+        floatingActionButton: Row(
+          children: [
+            FloatingActionButton(
+              heroTag: "urunEkle",
+              onPressed: _urunEkleDialog,
+              child: const Icon(Icons.add),
+            ),
+            const Spacer(),
+            FloatingActionButton(
+              heroTag: "barcodeReader",
+              onPressed: scanBarcodeNormal,
+              child: const Icon(Icons.barcode_reader),
+            ),
+          ],
+        ).paddingAll(16),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: ProductList(
+            stokGuncelleDialog: _stokGuncelleDialog,
+            urunEkleDialog: _urunEkleDialog,
+            urunSilDialog: _urunSilDialog),
       ),
     );
   }

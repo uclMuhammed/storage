@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:backend/const/headers.dart';
+import 'package:backend/const/urls.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as Http;
 
@@ -37,8 +39,7 @@ class HttpClientManager extends BaseClient<Http.Response> {
   }
 
   @override
-  Future<Http.Response> post(String endPoint,
-      {required Map<String, dynamic> body}) async {
+  Future<Http.Response> post(String endPoint, {required Map<String, dynamic> body}) async {
     try {
       final uri = Uri.parse('$baseUrl$endPoint');
       //
@@ -62,7 +63,13 @@ class HttpClientManager extends BaseClient<Http.Response> {
     try {
       final uri = Uri.parse('$baseUrl$endPoint/$id');
       //
-      final response = await Http.put(uri, headers: header, body: body);
+      final encodeBody = jsonEncode(body);
+      //
+      final response = await Http.put(
+        uri,
+        headers: header,
+        body: encodeBody,
+      );
       //
       return _handleResponse(response);
     } catch (e) {
@@ -70,13 +77,21 @@ class HttpClientManager extends BaseClient<Http.Response> {
     }
   }
 
+  // lib/implement/http_client.dart
+
   @override
   Future<Http.Response> deleteById(String endPoint, {required int id}) async {
     try {
       final uri = Uri.parse('$baseUrl$endPoint/$id');
-      //
+
+      if (kDebugMode) {
+        print('Delete Request URL: $uri');
+        print('Base URL: $baseUrl');
+        print('Endpoint: $endPoint');
+        print('Full URL: $uri');
+      }
+
       final response = await Http.delete(uri, headers: header);
-      //
       return _handleResponse(response);
     } catch (e) {
       throw _handleError(e);
@@ -86,7 +101,9 @@ class HttpClientManager extends BaseClient<Http.Response> {
   //-------------------------------------------------------------------
   Http.Response _handleResponse(Http.Response response) {
     //
-    if (kDebugMode) print('Response: ${response.body}');
+    if (kDebugMode) {
+      print('HttpClientManager Handle Response: ${response.body}');
+    }
     //
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return response;
@@ -110,3 +127,13 @@ class HttpClientManager extends BaseClient<Http.Response> {
     );
   }
 }
+
+HttpClientManager stockTrackerApiClient(String token) => HttpClientManager(
+      StockTrackerApiUrl,
+      HeaderWithToken(token),
+    );
+
+HttpClientManager stockTrackerAuthClient = HttpClientManager(
+  StockTrackerAuthUrl,
+  StockTrackerAuthHeader,
+);
