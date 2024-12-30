@@ -1,33 +1,55 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
-import 'responsive_ui.dart';
+import 'package:widgets/index.dart';
 
 extension ResponsiveWidgetExtension on BuildContext {
+// My Text
+  Text myText({required String text, TextAlign? textAlign}) => Text(
+        text,
+        style: bodyStyle,
+        textAlign: textAlign,
+      );
+  Text mySmallText({required String text, TextAlign? textAlign}) => Text(
+        text,
+        style: smallTextStyle,
+        textAlign: textAlign,
+      );
+  Text myHeadingText({required String text, TextAlign? textAlign}) => Text(
+        text,
+        style: headingStyle,
+        textAlign: textAlign,
+      );
+  Text mySubheadingText({required String text, TextAlign? textAlign}) => Text(
+        text,
+        style: subheadingStyle,
+        textAlign: textAlign,
+      );
+// My Line
   Widget myLine() => Container(height: 1, color: Colors.grey);
 
-  /// Responsive Grid View
-  Widget responsiveGridView({required List<Widget> children}) {
+  // Responsive Grid View
+
+  Widget responsiveGridView({
+    required List<Widget> children,
+    double? childAspectRatio,
+    required EdgeInsetsGeometry padding,
+  }) {
     return GridView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      padding: padding,
+      physics: const ClampingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isMobile
-            ? 2
-            : isTablet
-                ? 3
-                : 4,
-        childAspectRatio: 1.5,
-        crossAxisSpacing: padding,
-        mainAxisSpacing: padding,
+        crossAxisCount: 1, // Tek sütun
+        crossAxisSpacing: smallPadding,
+        mainAxisSpacing: smallPadding,
+        childAspectRatio: childAspectRatio ?? 1, // Çok uzun kartlar için
       ),
+      scrollDirection: Axis.horizontal, // Yatay kaydırma
       itemCount: children.length,
       itemBuilder: (context, index) => children[index],
     );
   }
 
-  /// My Button
+  // My Button
   Widget myButton(
       {required String buttonText,
       required Function() onPressed,
@@ -52,7 +74,7 @@ extension ResponsiveWidgetExtension on BuildContext {
     );
   }
 
-  /// My Text Button
+  // My Text Button
   Widget myTextButton(
       {required String buttonText, required Function() onPressed}) {
     return TextButton(
@@ -64,142 +86,113 @@ extension ResponsiveWidgetExtension on BuildContext {
     );
   }
 
-  /// My Card
-  Widget myCard({required String title, required String label}) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: cardHeight + 80,
+  // My Card
+  Widget myCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Function() onTap,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(smallBorderRadius),
+      onTap: onTap,
+      child: Card(
         child: Stack(
           children: [
-            Expanded(
-              child: Container(
-                color: Colors.blue,
-                child: Center(
-                  child: Icon(
-                    Icons.warehouse,
-                    size: largeIconSize,
-                  ),
-                ),
-              ),
-            ),
+            Center(child: Icon(icon, size: largeIconSize)),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  color: Colors.black45,
-                  child: Padding(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: headingSize,
-                            ),
-                          ),
-                          Text(
-                            label,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: bodySize,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: bodySize,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: smallTextSize,
+                  ),
+                )
               ],
-            ),
+            ).paddingAll(smallPadding),
           ],
         ),
       ),
     );
   }
 
-  /// My Short Cut Button
+  // My Short Cut Button
   Widget myShortCutButton(
-      {required String name, required Icon icon, required Function() onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        height: buttonHeight,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: buttonHeight,
-              height: buttonHeight,
-              child: icon,
-            ),
-            SizedBox(width: padding),
-            Expanded(
-              flex: 1,
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: subheadingSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
+      {required String name,
+      required IconData icon,
+      required Function() onTap}) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(
+        name,
+        style: TextStyle(
+          fontSize: smallTextSize,
         ),
       ),
+      onTap: onTap,
     );
   }
 
-  /// My Text Form Field
+  // My Text Form Field
   Widget myTextFormField({
     String? title,
-    required String label,
-    required String hint,
+    String? label,
+    String? hint,
     String? Function(String?)? validator,
     required TextEditingController controller,
+    InputDecoration? decoration,
+    IconData? prefixIcon,
+    IconButton? suffixIcon,
+    bool? obscureText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         title != null
-            ? Text(title,
+            ? Text(
+                title,
                 style: TextStyle(
-                    fontSize: subheadingSize, fontWeight: FontWeight.bold))
-            : const SizedBox(height: 0),
-        SizedBox(height: padding),
+                  fontSize: bodySize,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : const SizedBox.shrink(),
         TextFormField(
           controller: controller,
           style: TextStyle(fontSize: bodySize),
           validator: validator,
-          decoration: InputDecoration(
-            label: Text(
-              label,
-              style: TextStyle(
-                fontSize: bodySize,
+          obscureText: obscureText ?? false,
+          decoration: decoration ??
+              InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                contentPadding: EdgeInsets.all(smallPadding),
+                prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+                suffixIcon: suffixIcon,
+                labelText: label,
+                labelStyle: TextStyle(
+                  fontSize: smallTextSize,
+                ),
+                hintStyle: TextStyle(
+                  fontSize: smallTextSize,
+                  color: Colors.grey,
+                ),
+                hintText: hint ?? '',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    smallBorderRadius,
+                  ),
+                ),
               ),
-            ),
-            hintStyle: TextStyle(
-              fontSize: smallTextSize,
-              color: Colors.grey,
-            ),
-            hintText: hint,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                smallBorderRadius,
-              ),
-            ),
-          ),
-        ),
+        ).paddingVertical(smallPadding),
       ],
     );
   }

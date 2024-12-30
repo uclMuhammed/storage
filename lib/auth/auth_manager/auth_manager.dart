@@ -1,3 +1,4 @@
+
 import 'package:backend/const/keys.dart';
 import 'package:backend/service/index.dart';
 import 'package:flutter/material.dart';
@@ -18,52 +19,57 @@ class AuthManager extends ChangeNotifier {
   String? get error => _error;
   bool get isLoggedIn => _isLoggedIn;
 
-  Future<void> checkLoginStatus() async {
-    try {
-      await _authService.init();
-      final token = await _authService.storage?.read<String>(BearerTokenKey);
-      _isLoggedIn = token != null;
-      notifyListeners();
-    } catch (e) {
-      _error = e.toString();
+Future<void> checkLoginStatus() async {
+  try {
+    await _authService.init();
+    final token = await _authService.storage?.read<String>(BearerTokenKey);
+    
+    if (token != null) {
+      // Token'ın geçerliliğini kontrol edebiliriz
+      // Örneğin: token'ın süresi dolmuş mu?
+      _isLoggedIn = true;
+    } else {
       _isLoggedIn = false;
-      notifyListeners();
     }
+    
+    notifyListeners();
+  } catch (e) {
+    _error = e.toString();
+    _isLoggedIn = false;
+    notifyListeners();
   }
+}
 
-  Future<bool> login({
-    required int companyCode,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      _isLoading = true;
-      _error = null;
-      notifyListeners();
+Future<bool> login({
+  required int companyCode,
+  required String email,
+  required String password,
+}) async {
+  try {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
 
-      await _authService.init();
-      _isLoggedIn = await _authService.login(
-        companyCode: companyCode,
-        email: email,
-        password: password,
-      );
+    await _authService.init();
+    _isLoggedIn = await _authService.login(
+      companyCode: companyCode,
+      email: email,
+      password: password,
+    );
 
-      if (_isLoggedIn) {
-        _error = null;
-      } else {
-        _error = 'Giriş yapılamadı';
-      }
+    notifyListeners();
+    return _isLoggedIn;
 
-      return _isLoggedIn;
-    } catch (e) {
-      _error = e.toString();
-      _isLoggedIn = false;
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+  } catch (e) {
+    _error = e.toString();
+    _isLoggedIn = false;
+    notifyListeners();
+    rethrow;
+  } finally {
+    _isLoading = false;
+    notifyListeners();
   }
+}
 
   Future<bool> register({
     required String companyName,

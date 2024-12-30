@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:storage/auth/login/login_view.dart';
-import 'package:storage/auth/signup/signup_view.dart';
 
-import '../auth/auth_view.dart';
+import '../auth/login/login_view.dart';
+import '../auth/signup/signup_view.dart';
 import '../home/home_view.dart';
+import '../welcome/welcome.dart';
+
 import 'app_routes.dart';
 
 class NavigationService {
@@ -12,22 +13,31 @@ class NavigationService {
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case AppRoutes.auth:
+      case AppRoutes.welcome:
         return MaterialPageRoute(
-          builder: (context) => const AuthView(),
+          builder: (context) => const Welcome(),
+          settings: settings,
         );
       case AppRoutes.login:
         return MaterialPageRoute(
-            builder: (context) => const LoginView(), fullscreenDialog: true);
+          builder: (context) => LoginView(),
+          settings: settings,
+        );
       case AppRoutes.signup:
         return MaterialPageRoute(
-            builder: (context) => const SignupView(), fullscreenDialog: true);
+          builder: (context) => const SignupView(),
+          settings: settings,
+        );
       case AppRoutes.home:
         return MaterialPageRoute(
-            builder: (_) => const HomeView(), fullscreenDialog: true);
+          builder: (_) => const HomeView(),
+          settings: settings,
+        );
       default:
         return MaterialPageRoute(
-            builder: (_) => const AuthView(), fullscreenDialog: true);
+          builder: (_) => const Welcome(),
+          settings: settings,
+        );
     }
   }
 }

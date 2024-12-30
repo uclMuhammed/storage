@@ -16,16 +16,15 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
   @override
   Widget build(BuildContext context) {
     return context.responsiveWrapper(
-        mobile: _mobileLayout(context),
-        tablet: _tabletLayout(context),
-        desktop: _desktopLayout(context));
+        small: _mobileLayout(context),
+        medium: _tabletLayout(context),
+        large: _desktopLayout(context));
   }
 
 //----------------------------------------------------------------------------
   AppBar _appBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
-      automaticallyImplyLeading: false,
       title: Text(
         'STOKLARIM.com',
         style: TextStyle(
@@ -41,7 +40,7 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
       width: context.cardWidth * scale,
       height: context.cardHeight * scale,
       decoration: BoxDecoration(
-        color: Colors.cyanAccent,
+        color: Colors.blueAccent,
         borderRadius: BorderRadius.circular(context.largeBorderRadius),
       ),
       child: Icon(Icons.warehouse, size: context.largeIconSize * scale),
@@ -63,38 +62,54 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
       key: formKey,
       child: Column(
         children: [
-          context
-              .myTextFormField(
-                title: 'Company Name',
-                label: 'Company Name',
-                hint: 'Company Name giriniz',
-                controller: companyNameController,
-              )
-              .paddingTop(context.padding),
-          context
-              .myTextFormField(
-                title: 'E-Mail',
-                label: 'E-Mail',
-                hint: 'E-Mail giriniz',
-                controller: emailController,
-              )
-              .paddingTop(context.padding),
-          context
-              .myTextFormField(
-                title: 'Password',
-                label: 'Password',
-                hint: 'Password giriniz',
-                controller: passwordController,
-              )
-              .paddingTop(context.padding),
-          context
-              .myTextFormField(
-                title: 'Re-Password',
-                label: 'Re-Password',
-                hint: 'Re-Password giriniz',
-                controller: passwordController,
-              )
-              .paddingTop(context.padding),
+          context.myTextFormField(
+            title: 'Company Name',
+            label: 'Company Name',
+            hint: 'Company Name giriniz',
+            controller: companyNameController,
+            validator: companyNameValidator,
+            prefixIcon: Icons.person,
+          ),
+          context.myTextFormField(
+            title: 'E-Mail',
+            label: 'E-Mail',
+            hint: 'E-Mail giriniz',
+            controller: emailController,
+            validator: emailValidator,
+            prefixIcon: Icons.email,
+          ),
+          context.myTextFormField(
+            title: 'Password',
+            label: 'Password',
+            hint: 'Password giriniz',
+            controller: passwordController,
+            validator: passwordValidator,
+            prefixIcon: Icons.lock,
+            obscureText: obscurePassword,
+            suffixIcon: IconButton(
+              padding: EdgeInsets.symmetric(horizontal: context.smallPadding),
+              icon: Icon(
+                obscurePassword ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: togglePasswordVisibility,
+            ),
+          ),
+          context.myTextFormField(
+            title: 'Re-Password',
+            label: 'Re-Password',
+            hint: 'Re-Password giriniz',
+            controller: confirmPasswordController,
+            validator: confirmPasswordValidator,
+            prefixIcon: Icons.lock,
+            obscureText: obscurePassword,
+            suffixIcon: IconButton(
+              padding: EdgeInsets.symmetric(horizontal: context.smallPadding),
+              icon: Icon(
+                obscurePassword ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: togglePasswordVisibility,
+            ),
+          ),
         ],
       ),
     );
@@ -104,7 +119,7 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
     return context.myButton(
       color: Colors.blueAccent,
       buttonText: 'Signup',
-      onPressed: signup,
+      onPressed: () => signup(context),
     );
   }
 
@@ -189,11 +204,14 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
             child: Container(
               width: context.screenWidth,
               height: context.screenHeight,
-              color: Colors.blueAccent,
+              color: Colors.black,
               child: Column(
                 children: [
                   _appBar(context),
-                  _buildLogo(context, scale: 2),
+                  _buildLogo(context).paddingAll(context.padding),
+                  const Spacer(
+                    flex: 1,
+                  ),
                   Text(
                     'Stoklarınızı kontrol etmek',
                     style: TextStyle(
@@ -203,16 +221,23 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
                   Text(
                     'artık çok kolay.',
                     style: TextStyle(
-                        fontSize: context.subheadingSize,
-                        fontWeight: FontWeight.bold),
+                      fontSize: context.subheadingSize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(
+                    flex: 1,
                   ),
                   Text(
                     'Tüm depolarınızı ve ürünlerinizi tek bir yerden yönetin.',
                     style: TextStyle(
-                        fontSize: context.bodySize,
-                        fontWeight: FontWeight.bold),
+                      fontSize: context.bodySize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ).paddingAll(context.padding),
+                  const Spacer(
+                    flex: 1,
                   ),
-                  const Spacer(),
                 ],
               ),
             ),

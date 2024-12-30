@@ -24,31 +24,32 @@ class AuthenticationService extends BaseAuthService {
     }
   }
 
-  @override
-  Future<bool> login({
-    required int companyCode,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      super.endPoint = '/login';
+@override
+Future<bool> login({
+  required int companyCode,
+  required String email,
+  required String password,
+}) async {
+  try {
+    super.endPoint = '/login';
 
-      final response = await super.client?.post(
-        super.endPoint ?? '',
-        body: {
-          'COMPANYCODE': companyCode,
-          'EMAIL': email,
-          'PASSWORD': password,
-        },
-      );
+    final response = await super.client?.post(
+      super.endPoint ?? '',
+      body: {
+        'COMPANYCODE': companyCode,
+        'EMAIL': email,
+        'PASSWORD': password,
+      },
+    );
 
-      final responseData = jsonDecode(response.body);
+    final responseData = jsonDecode(response.body);
 
-      // Response'un yapısını kontrol ediyoruz
-      if (response.statusCode == 200 && responseData['status'] == true) {
-        final token = responseData['data']['token'] as String;
+    // Sadece ana response'a bakıyoruz
+    if (response.statusCode == 200 && responseData['status'] == true) {
+      final data = responseData['data'];
+      if (data != null && data['token'] != null) {
+        final token = data['token'] as String;
         if (token.isNotEmpty) {
-          // Token'ı saklama
           final tokenSaved = await super.storage?.write(BearerTokenKey, token);
           if (kDebugMode) {
             print('Token saved status: $tokenSaved');
@@ -57,44 +58,59 @@ class AuthenticationService extends BaseAuthService {
           return tokenSaved ?? false;
         }
       }
-
-      if (kDebugMode) {
-        print('Login failed. Response data: $responseData');
-      }
-      return false;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Login error: $e');
-      }
-      rethrow;
     }
-  }
 
-  @override
-  Future<bool> register({
-    required String companyName,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      super.endPoint = '/register';
-
-      final response = await super.client?.post(
-        super.endPoint ?? '',
-        body: {
-          'COMPANYNAME': companyName,
-          'EMAIL': email,
-          'PASSWORD': password,
-        },
-      );
-
-      final responseData = jsonDecode(response.body);
-      return response.statusCode == 200 && responseData['status'] == 'Success';
-    } catch (e) {
-      if (kDebugMode) print('Register error: $e');
-      return false;
+    // Genel hata durumu
+    final message = responseData['message'] ?? 'Giriş başarısız';
+    throw Exception(message);
+    
+  } catch (e) {
+    if (kDebugMode) {
+      print('Login error: $e');
     }
+    rethrow;
   }
+}
+
+@override
+Future<bool> register({
+  required String companyName,
+  required String email,
+  required String password,
+}) async {
+  try {
+    super.endPoint = '/register';
+
+    final response = await super.client?.post(
+      super.endPoint ?? '',
+      body: {
+        'COMPANYNAME': companyName,
+        'EMAIL': email,
+        'PASSWORD': password,
+      },
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    // Sadece başarılı kayıt durumunu kontrol et
+    if (response.statusCode == 200 && responseData['status'] == true) {
+      if (kDebugMode) {
+        print('Register success');
+      }
+      return true;
+    }
+
+    // Hata durumu
+    final message = responseData['message'] ?? 'Kayıt işlemi başarısız';
+    throw Exception(message);
+    
+  } catch (e) {
+    if (kDebugMode) {
+      print('Register error: $e');
+    }
+    rethrow;
+  }
+}
 
   @override
   Future<bool> logout() async {
