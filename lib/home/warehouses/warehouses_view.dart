@@ -1,3 +1,7 @@
+import 'package:backend/models/index.dart';
+import 'package:backend/service/cities_service.dart';
+import 'package:backend/service/regions_services.dart';
+import 'package:backend/service/warehouses_services.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/index.dart';
 
@@ -25,7 +29,7 @@ class WarehousesViewState extends State<WarehousesView>
   Widget _addWarehouses() {
     return FloatingActionButton(
       backgroundColor: Colors.black87,
-      onPressed: () {},
+      onPressed: createWarehouse,
       child: const Icon(
         Icons.add,
         color: Colors.white,
