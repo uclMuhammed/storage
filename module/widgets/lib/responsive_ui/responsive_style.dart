@@ -14,7 +14,7 @@ extension ResponsiveStyleExtension on BuildContext {
       );
   TextStyle get bodyStyle => TextStyle(
         fontSize: bodySize,
-        overflow: TextOverflow.fade,
+        overflow: TextOverflow.ellipsis,
       );
   TextStyle get smallTextStyle => TextStyle(
         fontSize: smallTextSize,

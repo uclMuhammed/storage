@@ -51,7 +51,6 @@ mixin LoginViewModel<T extends LoginView> on State<T> {
     if (formKey.currentState!.validate()) {
       try {
         context.showLoading();
-
         final loginSuccess = await authManager.login(
           companyCode: int.parse(companyCodeController.text),
           email: emailController.text,

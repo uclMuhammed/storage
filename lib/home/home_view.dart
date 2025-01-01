@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/home/deneme/testpage.dart';
 import 'package:storage/home/product/products_view.dart';
 import 'package:storage/home/settings/settings_view.dart';
 import 'package:widgets/index.dart';
@@ -39,7 +40,7 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
 
   Widget _menu() {
     return Container(
-      width: 250,
+      width: 200,
       color: Colors.black87,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,6 +106,25 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
                 ),
                 const Spacer(),
                 context.myShortCutButton(
+                  name: 'TEST DEVELOPER',
+                  icon: Icons.code,
+                  onTap: () {
+                    _navigateToPage(
+                      const TestPage(),
+                    );
+                  },
+                ),
+                SizedBox(height: context.padding),
+                context.myShortCutButton(
+                  name: 'Settings',
+                  icon: Icons.settings,
+                  onTap: () {
+                    _navigateToPage(
+                      const SettingsView(),
+                    );
+                  },
+                ),
+                context.myShortCutButton(
                   name: 'Logout',
                   icon: Icons.logout,
                   onTap: () {
@@ -115,15 +135,6 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
                         (route) => false,
                       );
                     });
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Settings',
-                  icon: Icons.settings,
-                  onTap: () {
-                    _navigateToPage(
-                      const SettingsView(),
-                    );
                   },
                 ),
                 SizedBox(height: context.padding),
@@ -139,10 +150,12 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
     return AppBar(
       title: context.myTextFormField(
         controller: search,
-        decoration: const InputDecoration(
-          hintText: 'Search...',
-          border: InputBorder.none,
-          prefixIcon: Icon(Icons.search),
+        decoration: InputDecoration(
+          hintText: 'Ara...',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(context.borderRadius),
+          ),
         ),
       ),
       actions: [

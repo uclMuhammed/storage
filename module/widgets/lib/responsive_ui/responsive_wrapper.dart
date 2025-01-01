@@ -27,7 +27,7 @@ extension ResponsiveWrapper on BuildContext {
               child: selectedLayout,
             ),
           ),
-          /* Positioned(
+          /*Positioned(
             top: 40,
             left: 10,
             child: showDebugInfo(),

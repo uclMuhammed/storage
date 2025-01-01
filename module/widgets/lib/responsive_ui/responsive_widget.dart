@@ -7,6 +7,7 @@ extension ResponsiveWidgetExtension on BuildContext {
         text,
         style: bodyStyle,
         textAlign: textAlign,
+        maxLines: 2,
       );
   Text mySmallText({required String text, TextAlign? textAlign}) => Text(
         text,

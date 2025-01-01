@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/home/settings/sub_settings/plans/plans_view.dart';
 import 'package:widgets/index.dart';
 
 part 'settings_view_model.dart';
@@ -77,9 +78,9 @@ class _SettingsViewState extends State<SettingsView>
               controller: tabController,
               children: [
                 generalSettingsView(),
-                securitySettingsView(),
-                securitySettingsView(),
-                securitySettingsView(),
+                appsSettingsView(),
+                notificationsSettingsView(),
+                PlansView(),
                 securitySettingsView(),
               ],
             ),
@@ -113,6 +114,38 @@ class _SettingsViewState extends State<SettingsView>
             children: [
               context
                   .myText(text: 'Security', textAlign: TextAlign.center)
+                  .paddingAll(context.smallPadding),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget notificationsSettingsView() {
+    return Scaffold(
+      body: Column(
+        children: [
+          Row(
+            children: [
+              context
+                  .myText(text: 'Notifications', textAlign: TextAlign.center)
+                  .paddingAll(context.smallPadding),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget appsSettingsView() {
+    return Scaffold(
+      body: Column(
+        children: [
+          Row(
+            children: [
+              context
+                  .myText(text: 'Apps', textAlign: TextAlign.center)
                   .paddingAll(context.smallPadding),
             ],
           ),
