@@ -1,4 +1,4 @@
-import 'package:backend/models/index.dart';
+import 'package:backend/backend.dart';
 import 'package:backend/service/cities_service.dart';
 import 'package:backend/service/regions_services.dart';
 import 'package:backend/service/warehouses_services.dart';
@@ -44,6 +44,7 @@ class WarehousesViewState extends State<WarehousesView>
         scrollDirection: Axis.horizontal,
         children: [
           context.responsiveGridView(
+            crossAxiscount: 1,
             padding: EdgeInsets.all(context.smallPadding),
             childAspectRatio: 1,
             children: List.generate(
@@ -103,13 +104,9 @@ class WarehousesViewState extends State<WarehousesView>
               children: [
                 Row(
                   children: [
-                    Text(
-                      'Warehouses',
-                      style: TextStyle(
-                        fontSize: context.bodySize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ).paddingLeft(context.smallPadding),
+                    context
+                        .mySubheadingText(text: 'Warehouses')
+                        .paddingLeft(context.smallPadding),
                     Spacer(),
                     _addWarehouses().paddingRight(context.smallPadding),
                   ],

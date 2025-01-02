@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:storage/home/deneme/testpage.dart';
 import 'package:storage/home/product/products_view.dart';
+import 'package:storage/home/regions/regions_view.dart';
 import 'package:storage/home/settings/settings_view.dart';
+import 'package:storage/home/suppliers/suppliers_view.dart';
+import 'package:storage/routes/navigation_service.dart';
 import 'package:widgets/index.dart';
 
 import '../auth/auth_manager/auth_manager.dart';
+import 'brands/brands_view.dart';
+import 'category/category_view.dart';
 import 'main_menu/main_menu_view.dart';
 import '../routes/app_routes.dart';
 import 'warehouses/warehouses_view.dart';
@@ -87,22 +92,38 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
                 context.myShortCutButton(
                   name: 'Brands',
                   icon: Icons.branding_watermark,
-                  onTap: () {},
+                  onTap: () {
+                    _navigateToPage(
+                      const BrandsView(),
+                    );
+                  },
                 ),
                 context.myShortCutButton(
                   name: 'Categories',
                   icon: Icons.category,
-                  onTap: () {},
+                  onTap: () {
+                    _navigateToPage(
+                      const CategoriesView(),
+                    );
+                  },
                 ),
                 context.myShortCutButton(
                   name: 'Suppliers',
                   icon: Icons.supervised_user_circle,
-                  onTap: () {},
+                  onTap: () {
+                    _navigateToPage(
+                      const SuppliersView(),
+                    );
+                  },
                 ),
                 context.myShortCutButton(
                   name: 'Regions',
                   icon: Icons.location_city,
-                  onTap: () {},
+                  onTap: () {
+                    _navigateToPage(
+                      const RegionsView(),
+                    );
+                  },
                 ),
                 const Spacer(),
                 context.myShortCutButton(
@@ -165,7 +186,10 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
         ),
         IconButton(
           icon: const Icon(Icons.person),
-          onPressed: () {},
+          onPressed: () {
+            NavigationService.navigatorKey.currentState!
+                .pushNamed(AppRoutes.profile);
+          },
         ),
       ],
     );

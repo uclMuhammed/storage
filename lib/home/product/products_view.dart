@@ -19,6 +19,66 @@ class _ProductsViewState extends State<ProductsView> {
     );
   }
 
+  // -----------------------------------------------------------
+  Widget _addProduct() {
+    return FloatingActionButton(
+      backgroundColor: Colors.black87,
+      onPressed: () {},
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _productsGridList() {
+    return SizedBox(
+      height: context.cardHeight,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          context.responsiveGridView(
+            crossAxiscount: 1,
+            padding: EdgeInsets.all(context.smallPadding),
+            childAspectRatio: 1,
+            children: List.generate(
+              10,
+              (index) {
+                return context.myCard(
+                  onTap: () {},
+                  title: 'Card',
+                  subtitle: 'Subtitle',
+                  icon: Icons.inventory,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _productsDetails() {
+    return Card(
+      color: Colors.black87,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              'Product',
+              style: TextStyle(
+                fontSize: context.bodySize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ).paddingLeft(context.smallPadding),
+        ],
+      ),
+    );
+  }
+  //------------------------------------------------------------
+
   Widget _buildMobileLayout(BuildContext context) {
     return const Scaffold();
   }
@@ -29,35 +89,24 @@ class _ProductsViewState extends State<ProductsView> {
 
   Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Row(
         children: [
-          Text(
-            'Products',
-            style: TextStyle(
-              fontSize: context.bodySize,
-              fontWeight: FontWeight.bold,
-            ),
-          ).paddingLeft(context.smallPadding),
-          SizedBox(
-            height: context.cardHeight,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+          Expanded(
+            flex: 12,
+            child: Column(
               children: [
-                context.responsiveGridView(
-                  padding: EdgeInsets.all(context.smallPadding),
-                  childAspectRatio: 1,
-                  children: List.generate(
-                    10,
-                    (index) {
-                      return context.myCard(
-                        onTap: () {},
-                        title: 'Title',
-                        subtitle: 'Subtitle',
-                        icon: Icons.inventory,
-                      );
-                    },
-                  ),
+                Row(
+                  children: [
+                    context
+                        .mySubheadingText(text: 'Products')
+                        .paddingLeft(context.smallPadding),
+                    Spacer(),
+                    _addProduct().paddingRight(context.smallPadding),
+                  ],
+                ),
+                _productsGridList(),
+                Expanded(
+                  child: _productsDetails().paddingAll(context.smallPadding),
                 ),
               ],
             ),

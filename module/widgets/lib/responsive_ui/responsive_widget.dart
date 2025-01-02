@@ -33,13 +33,14 @@ extension ResponsiveWidgetExtension on BuildContext {
     required List<Widget> children,
     double? childAspectRatio,
     required EdgeInsetsGeometry padding,
+    required int crossAxiscount,
   }) {
     return GridView.builder(
       shrinkWrap: true,
       padding: padding,
       physics: const ClampingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1, // Tek sütun
+        crossAxisCount: crossAxiscount, // Tek sütun
         crossAxisSpacing: smallPadding,
         mainAxisSpacing: smallPadding,
         childAspectRatio: childAspectRatio ?? 1, // Çok uzun kartlar için
@@ -54,10 +55,13 @@ extension ResponsiveWidgetExtension on BuildContext {
   Widget myButton(
       {required String buttonText,
       required Function() onPressed,
+      double? width,
+      double? height,
+      double? buttonHeight,
       Color? color}) {
     return SizedBox(
-      width: double.infinity,
-      height: buttonHeight,
+      width: width ?? buttonHeight,
+      height: height ?? buttonHeight,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

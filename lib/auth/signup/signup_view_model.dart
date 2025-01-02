@@ -4,7 +4,7 @@ mixin SignupViewModel<T extends StatefulWidget> on State<T> {
   bool _obscurePassword = true;
   bool get obscurePassword => _obscurePassword;
 
-  AuthManager _authManager = AuthManager();
+  final AuthManager _authManager = AuthManager();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController companyNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();

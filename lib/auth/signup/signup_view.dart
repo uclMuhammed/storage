@@ -117,6 +117,8 @@ class _SignupViewState extends State<SignupView> with SignupViewModel {
 
   Widget _loginButton(BuildContext context) {
     return context.myButton(
+      width: context.screenWidth,
+      height: context.buttonHeight,
       color: Colors.blueAccent,
       buttonText: 'Signup',
       onPressed: () => signup(context),

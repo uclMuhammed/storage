@@ -45,6 +45,8 @@ class Welcome extends StatelessWidget {
               context
                   .myButton(
                     color: Colors.blueAccent,
+                    width: context.screenWidth,
+                    height: context.buttonHeight,
                     buttonText: 'Giriş Yap',
                     onPressed: () {
                       Navigator.pushNamed(context, AppRoutes.login);
@@ -53,6 +55,8 @@ class Welcome extends StatelessWidget {
                   .paddingTop(context.largePadding),
               context
                   .myButton(
+                    width: context.screenWidth,
+                    height: context.buttonHeight,
                     buttonText: 'Kayıt Ol',
                     onPressed: () {
                       Navigator.pushNamed(context, AppRoutes.signup);

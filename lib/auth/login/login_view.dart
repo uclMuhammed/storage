@@ -6,10 +6,10 @@ import '../auth_manager/auth_manager.dart';
 part 'login_view_model.dart';
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> with LoginViewModel<LoginView> {
@@ -68,6 +68,8 @@ class _LoginViewState extends State<LoginView> with LoginViewModel<LoginView> {
               )
               .paddingBottom(context.padding),
           context.myButton(
+            width: context.screenWidth,
+            height: context.buttonHeight,
             buttonText: 'Giris Yap',
             onPressed: () => login(context),
             color: Colors.blueAccent,

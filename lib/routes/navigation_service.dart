@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../auth/login/login_view.dart';
 import '../auth/signup/signup_view.dart';
 import '../home/home_view.dart';
+import '../home/profile/profile_view.dart';
 import '../welcome/welcome.dart';
 
 import 'app_routes.dart';
@@ -20,7 +21,7 @@ class NavigationService {
         );
       case AppRoutes.login:
         return MaterialPageRoute(
-          builder: (context) => LoginView(),
+          builder: (context) => const LoginView(),
           settings: settings,
         );
       case AppRoutes.signup:
@@ -31,6 +32,11 @@ class NavigationService {
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => const HomeView(),
+          settings: settings,
+        );
+      case AppRoutes.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileView(),
           settings: settings,
         );
       default:
