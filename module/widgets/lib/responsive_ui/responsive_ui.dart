@@ -54,6 +54,11 @@ extension ResponsiveExtension on BuildContext {
       };
 
   // Font sizes
+  double get largeHeadingSize => isSmallScreen
+      ? 26
+      : isMediumScreen
+          ? 32
+          : 36;
   double get headingSize => isSmallScreen
       ? 22
       : isMediumScreen

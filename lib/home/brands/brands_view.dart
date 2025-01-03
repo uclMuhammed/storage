@@ -99,7 +99,7 @@ class _BrandsViewState extends State<BrandsView> {
                     context
                         .mySubheadingText(text: 'Brands')
                         .paddingLeft(context.smallPadding),
-                    Spacer(),
+                    const Spacer(),
                     _addBrands().paddingRight(context.smallPadding),
                   ],
                 ),

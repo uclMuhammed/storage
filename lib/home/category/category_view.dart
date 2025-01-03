@@ -117,7 +117,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     context
                         .mySubheadingText(text: 'Categories')
                         .paddingLeft(context.smallPadding),
-                    Spacer(),
+                    const Spacer(),
                     _addCategory().paddingRight(context.smallPadding),
                   ],
                 ),
@@ -127,7 +127,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     context
                         .mySubheadingText(text: 'Sub Categories')
                         .paddingLeft(context.smallPadding),
-                    Spacer(),
+                    const Spacer(),
                     _addSubCategory().paddingRight(context.smallPadding),
                   ],
                 ),

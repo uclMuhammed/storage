@@ -101,7 +101,7 @@ class _RegionsViewState extends State<RegionsView> {
                     context
                         .mySubheadingText(text: 'Regions')
                         .paddingLeft(context.smallPadding),
-                    Spacer(),
+                    const Spacer(),
                     _addRegions().paddingRight(context.smallPadding),
                   ],
                 ),

@@ -100,7 +100,7 @@ class _ProductsViewState extends State<ProductsView> {
                     context
                         .mySubheadingText(text: 'Products')
                         .paddingLeft(context.smallPadding),
-                    Spacer(),
+                    const Spacer(),
                     _addProduct().paddingRight(context.smallPadding),
                   ],
                 ),

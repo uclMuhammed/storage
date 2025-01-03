@@ -10,7 +10,7 @@ class MyPlansView extends StatefulWidget {
 class _MyPlansViewState extends State<MyPlansView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(child: Text('My Plans View')),
     );
   }

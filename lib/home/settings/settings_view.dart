@@ -80,7 +80,7 @@ class _SettingsViewState extends State<SettingsView>
                 generalSettingsView(),
                 appsSettingsView(),
                 notificationsSettingsView(),
-                PlansView(),
+                const PlansView(),
                 securitySettingsView(),
               ],
             ),
