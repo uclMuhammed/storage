@@ -5,13 +5,13 @@ mixin WarehousesViewModel<T extends WarehousesView> on State<T> {
   final TextEditingController addressController = TextEditingController();
   final RegionsServices rServices = RegionsServices();
   final WarehousesServices wServices = WarehousesServices();
-  final CitiesService cServices = CitiesService();
+  //final CitiesService cServices = CitiesService();
   final List<Regions> regions = [];
   final List<Cities> cities = [];
   @override
   void initState() {
     rServices.init();
-    cServices.init();
+    // cServices.init();
     wServices.init();
     super.initState();
   }
@@ -22,13 +22,13 @@ mixin WarehousesViewModel<T extends WarehousesView> on State<T> {
   }
 
   Future<List<Cities>> getAllCities() async {
-    final cities = await cServices.getAll();
+    //final cities = await cServices.getAll();
     return cities;
   }
 
   Future<void> createWarehouse() async {
     // Default olarak 1 ID'li country'ı seç
-    cServices.setCountryId(1);
+    //cServices.setCountryId(1);
 
     // Regions ve Cities listelerini doldur
     regions.addAll(await getAllRegions());
@@ -135,7 +135,7 @@ mixin WarehousesViewModel<T extends WarehousesView> on State<T> {
   @override
   void dispose() {
     rServices.dispose();
-    cServices.dispose();
+    // cServices.dispose();
     wServices.dispose();
     super.dispose();
   }

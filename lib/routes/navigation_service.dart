@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/home/admin_panel/admin_panel_view.dart';
 
 import '../auth/login/login_view.dart';
 import '../auth/signup/signup_view.dart';
@@ -37,6 +38,11 @@ class NavigationService {
       case AppRoutes.profile:
         return MaterialPageRoute(
           builder: (_) => const ProfileView(),
+          settings: settings,
+        );
+      case AppRoutes.adminPanel:
+        return MaterialPageRoute(
+          builder: (_) => const AdminPanelView(),
           settings: settings,
         );
       default:

@@ -135,6 +135,20 @@ extension ResponsiveWidgetExtension on BuildContext {
       {required String name,
       required IconData icon,
       required Function() onTap}) {
+    if (isMediumScreen) {
+      return ListTile(
+        title: Icon(icon),
+        subtitle: Center(
+          child: Text(
+            name,
+            style: TextStyle(
+              fontSize: smallTextSize,
+            ),
+          ),
+        ),
+        onTap: onTap,
+      );
+    }
     return ListTile(
       leading: Icon(icon),
       title: Text(

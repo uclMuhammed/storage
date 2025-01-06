@@ -90,6 +90,7 @@ class _SettingsViewState extends State<SettingsView>
     );
   }
 
+  //----------------------------------------------------------------------
   Widget generalSettingsView() {
     return Scaffold(
       body: Column(

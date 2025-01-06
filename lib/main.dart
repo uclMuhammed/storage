@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   final AuthManager _authManager = AuthManager();
   Widget? _initialRoute;
 
-  @override
+/*  @override
   void initState() {
     super.initState();
     _checkInitialRoute();
@@ -33,11 +33,11 @@ class _MyAppState extends State<MyApp> {
       _initialRoute =
           _authManager.isLoggedIn ? const HomeView() : const Welcome();
     });
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
-    if (_initialRoute == null) {
+    /* if (_initialRoute == null) {
       return const MaterialApp(
         home: Scaffold(
           body: Center(
@@ -45,12 +45,12 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       );
-    }
+    } */
 
     return MaterialApp(
       navigatorKey: NavigationService.navigatorKey,
       onGenerateRoute: NavigationService.onGenerateRoute,
-      home: _initialRoute,
+      home: HomeView(),
       scrollBehavior: CustomScrollBehavior(),
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),

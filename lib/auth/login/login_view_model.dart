@@ -1,12 +1,16 @@
 part of 'login_view.dart';
 
-mixin LoginViewModel<T extends LoginView> on State<T> {
+mixin LoginViewModel on State<LoginView> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController companyCodeController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController twoFactorController = TextEditingController();
+
   bool _obscurePassword = true;
-  AuthManager authManager = AuthManager();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController companyCodeController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
+  bool requires2FA = false;
+  final AuthManager authManager = AuthManager();
 
   bool get obscurePassword => _obscurePassword;
 
@@ -29,11 +33,10 @@ mixin LoginViewModel<T extends LoginView> on State<T> {
     RegExp regex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
     );
-
     if (value == null || value.isEmpty) {
       return 'E-Mail giriniz';
     } else if (!regex.hasMatch(value)) {
-      return 'Geçersiz E-Mail';
+      return 'Geçersiz E-Mail';
     }
     return null;
   }
@@ -47,63 +50,79 @@ mixin LoginViewModel<T extends LoginView> on State<T> {
     return null;
   }
 
-  Future<void> login(BuildContext context) async {
+  Future<void> handleLogin() async {
     if (formKey.currentState!.validate()) {
       try {
-        context.showLoading();
-        final loginSuccess = await authManager.login(
+        setState(() => isLoading = true);
+
+        final loginResponse = await authManager.login(
           companyCode: int.parse(companyCodeController.text),
           email: emailController.text,
           password: passwordController.text,
         );
 
-        if (context.mounted) {
-          context.hideLoading();
+        if (!mounted) return;
 
-          if (loginSuccess) {
-            // Form temizleme
-            companyCodeController.clear();
-            emailController.clear();
-            passwordController.clear();
-            formKey.currentState!.reset();
+        if (loginResponse) {
+          // Login başarılı, ana sayfaya yönlendir
+          _clearForm();
 
-            // Başarılı bildirim
-            context.showNotification(
-              message: 'Giriş başarılı!',
-              type: NotificationType.success,
-            );
+          context.showNotification(
+            message: 'Giriş başarılı!',
+            type: NotificationType.success,
+          );
 
-            await Future.delayed(const Duration(milliseconds: 500));
+          await Future.delayed(const Duration(milliseconds: 500));
 
-            if (context.mounted) {
-              NavigationService.navigatorKey.currentState
-                  ?.pushNamedAndRemoveUntil(
-                AppRoutes.home,
-                (route) => false,
-              );
-            }
-          }
+          if (!mounted) return;
+          NavigationService.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+            AppRoutes.home,
+            (route) => false,
+          );
+        } else {
+          // Login başarısız, 2FA gerekiyor
+          setState(() {
+            requires2FA = true;
+            isLoading = false;
+          });
         }
       } catch (e) {
-        if (context.mounted) {
-          context.hideLoading();
-          context.showNotification(
-            message: e.toString(),
-            type: NotificationType.error,
-          );
+        if (!mounted) return;
+
+        // Hata mesajını göster
+        context.showNotification(
+          message: e
+              .toString()
+              .replaceAll('Exception: ', ''), // "Exception: " prefix'ini kaldır
+          type: NotificationType.error,
+        );
+
+        // 3 kez hatalı giriş durumunda formu temizle
+        if (e.toString().contains('3 kez hatalı giriş')) {
+          _clearForm();
+        }
+      } finally {
+        if (mounted) {
+          setState(() => isLoading = false);
         }
       }
     }
   }
 
-  @override
-  void dispose() {
+  void _clearForm() {
     companyCodeController.clear();
     emailController.clear();
     passwordController.clear();
+    twoFactorController.clear();
+    formKey.currentState?.reset();
+  }
+
+  @override
+  void dispose() {
     companyCodeController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    twoFactorController.dispose();
     super.dispose();
   }
 }

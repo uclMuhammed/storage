@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage/home/home_view.dart';
 import 'package:widgets/index.dart';
 import '../../routes/app_routes.dart';
 import '../../routes/navigation_service.dart';
@@ -12,7 +13,7 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> with LoginViewModel<LoginView> {
+class _LoginViewState extends State<LoginView> with LoginViewModel {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -67,11 +68,12 @@ class _LoginViewState extends State<LoginView> with LoginViewModel<LoginView> {
                 ),
               )
               .paddingBottom(context.padding),
+          const SizedBox(height: 16),
           context.myButton(
             width: context.screenWidth,
             height: context.buttonHeight,
             buttonText: 'Giris Yap',
-            onPressed: () => login(context),
+            onPressed: handleLogin,
             color: Colors.blueAccent,
           ),
         ],
@@ -100,7 +102,9 @@ class _LoginViewState extends State<LoginView> with LoginViewModel<LoginView> {
           children: [
             context.myTextButton(
               buttonText: 'Sifremi Unuttum',
-              onPressed: () {},
+              onPressed: () {
+                MaterialPageRoute(builder: (context) => const HomeView());
+              },
             ),
           ],
         ).paddingAll(context.smallPadding),

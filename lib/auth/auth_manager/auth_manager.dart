@@ -1,5 +1,6 @@
 import 'package:backend/const/keys.dart';
 import 'package:backend/service/index.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:backend/backend.dart';
 
@@ -9,6 +10,7 @@ class AuthManager extends ChangeNotifier {
   AuthManager._internal();
 
   final _authService = AuthenticationService();
+  final _dio = Dio();
 
   bool _isLoading = false;
   String? _error;
@@ -62,7 +64,13 @@ class AuthManager extends ChangeNotifier {
       _error = e.toString();
       _isLoggedIn = false;
       notifyListeners();
-      rethrow;
+
+      // HTTP hatasını olduğu gibi yukarı fırlat
+      if (e.toString().contains('3 kez hatalı giriş')) {
+        throw Exception(
+            'Çok fazla hatalı giriş denemesi. Lütfen daha sonra tekrar deneyin.');
+      }
+      throw e; // Diğer hataları da fırlat
     } finally {
       _isLoading = false;
       notifyListeners();

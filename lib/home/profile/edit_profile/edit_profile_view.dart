@@ -24,60 +24,133 @@ class _EditProfileViewState extends State<EditProfileView>
   Column _editProfile(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [context.mySubheadingText(text: 'Edit Profile')],
-        ),
-        Column(
-          children: [
-            context.myTextFormField(
-              hint: 'Company Name giriniz',
-              label: 'Company Name',
-              title: 'Company Name',
-              controller: companyNameController,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                context.myButton(buttonText: 'Save', onPressed: () {}),
-              ],
-            ),
-            context.myTextFormField(
-              hint: 'E-Mail giriniz',
-              label: 'E-Mail',
-              title: 'E-Mail',
-              controller: emailController,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                context.myButton(buttonText: 'Save', onPressed: () {}),
-              ],
-            ),
-          ],
-        ).paddingAll(context.padding),
-        Row(
-          children: [context.mySubheadingText(text: 'Chanege Password')],
-        ),
-        Column(
-          children: [
-            context.myTextFormField(
-              hint: 'Email giriniz',
-              label: 'Email',
-              title: 'Send to Email',
-              controller: emailController,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                context.myButton(buttonText: 'Send', onPressed: () {}),
-              ],
-            ),
-          ],
-        ).paddingAll(context.padding),
+        _buildProfileHeader(context),
+        _buildCompanyNameSection(context),
+        _buildEmailSection(context),
+        _buildPhoneSection(context),
+        _buildPasswordSection(context),
       ],
     );
   }
-  //--------------------------------------------------------------
+
+  Widget _buildProfileHeader(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        context.mySubheadingText(text: 'Profil Düzenle'),
+        CircleAvatar(
+          radius: 40,
+          backgroundImage: const NetworkImage('https://i.pravatar.cc/200'),
+          child: Stack(
+            children: [
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: IconButton(
+                  icon: const Icon(Icons.camera_alt),
+                  onPressed: () => handleProfilePhotoUpdate(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ).paddingAll(context.padding);
+  }
+
+  Widget _buildCompanyNameSection(BuildContext context) {
+    return Column(
+      children: [
+        context.myTextFormField(
+          hint: 'Company Name giriniz',
+          label: 'Company Name',
+          title: 'Company Name',
+          controller: companyNameController,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            context.myButton(buttonText: 'Save', onPressed: () {}),
+          ],
+        ),
+      ],
+    ).paddingAll(context.padding);
+  }
+
+  Widget _buildEmailSection(BuildContext context) {
+    return Column(
+      children: [
+        context.myTextFormField(
+          hint: 'E-Mail giriniz',
+          label: 'E-Mail',
+          title: 'E-Mail',
+          controller: emailController,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            context.myButton(buttonText: 'Save', onPressed: () {}),
+          ],
+        ),
+      ],
+    ).paddingAll(context.padding);
+  }
+
+  Widget _buildPhoneSection(BuildContext context) {
+    return Column(
+      children: [
+        context.myTextFormField(
+          hint: 'Phone Number giriniz',
+          label: 'Phone Number',
+          title: 'Phone Number',
+          controller: phoneNumberController,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            context.myButton(buttonText: 'Save', onPressed: () {}),
+          ],
+        ),
+      ],
+    ).paddingAll(context.padding);
+  }
+
+  Widget _buildPasswordSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        context.mySubheadingText(text: 'Şifre Değiştirme'),
+        const SizedBox(height: 16),
+        context.myTextFormField(
+          controller: currentPasswordController,
+          label: 'Mevcut Şifre',
+          obscureText: true,
+        ),
+        const SizedBox(height: 16),
+        context.myTextFormField(
+          controller: newPasswordController,
+          label: 'Yeni Şifre',
+          obscureText: true,
+        ),
+        const SizedBox(height: 16),
+        context.myTextFormField(
+          controller: confirmPasswordController,
+          label: 'Yeni Şifre (Tekrar)',
+          obscureText: true,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            context.myButton(
+              buttonText: 'Şifre Değiştir',
+              onPressed: handlePasswordChange,
+            ),
+          ],
+        ),
+      ],
+    ).paddingAll(context.padding);
+  }
 
   Widget _buildMobileLayout(BuildContext context) {
     return _buildDesktopLayout(context);

@@ -8,6 +8,7 @@ import 'package:storage/routes/navigation_service.dart';
 import 'package:widgets/index.dart';
 
 import '../auth/auth_manager/auth_manager.dart';
+import 'admin_panel/admin_panel_view.dart';
 import 'brands/brands_view.dart';
 import 'category/category_view.dart';
 import 'main_menu/main_menu_view.dart';
@@ -33,7 +34,7 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
   }
   //---------------------------------------------------------------------------
 
-  Widget _currentPage = const WarehousesView();
+  Widget _currentPage = const MainMenuView();
 
   void _navigateToPage(Widget page) {
     setState(() {
@@ -45,19 +46,21 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
 
   Widget _menu() {
     return Container(
-      width: 200,
+      width: context.isMediumScreen ? 140 : 200,
       color: Colors.black87,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Profil Bölümü
-          Text(
-            'STOKLARIM.com',
-            style: TextStyle(
-              fontSize: context.bodySize,
-              fontWeight: FontWeight.bold,
-            ),
-          ).paddingAll(context.smallPadding),
+          context.isMediumScreen
+              ? SizedBox.shrink()
+              : Text(
+                  'STOKLARIM.com',
+                  style: TextStyle(
+                    fontSize: context.bodySize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ).paddingAll(context.smallPadding),
           // Menü Öğeleri
           Expanded(
             child: Column(
@@ -127,7 +130,15 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
                 ),
                 const Spacer(),
                 context.myShortCutButton(
-                  name: 'TEST DEVELOPER',
+                  name: 'ADMIN PANEL',
+                  icon: Icons.admin_panel_settings,
+                  onTap: () {
+                    NavigationService.navigatorKey.currentState!
+                        .pushNamed(AppRoutes.adminPanel);
+                  },
+                ),
+                context.myShortCutButton(
+                  name: 'DEVELOPER TEST',
                   icon: Icons.code,
                   onTap: () {
                     _navigateToPage(
@@ -201,7 +212,7 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
   }
 
   Widget _buildTabletLayout(BuildContext context) {
-    return const Scaffold();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

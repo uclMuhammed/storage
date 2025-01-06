@@ -28,88 +28,89 @@ class MainMenuViewState extends State<MainMenuView> {
 
   Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
-        body: Row(
-      children: [
-        Expanded(
-          flex: 12,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  context
-                      .mySubheadingText(text: 'Main Menu')
-                      .paddingAll(context.smallPadding),
-                ],
-              ),
-              SizedBox(
-                height: 400,
-                width: context.screenWidth,
-                child: context.responsiveGridView(
-                  padding: EdgeInsets.all(context.smallPadding),
-                  crossAxiscount: 2,
-                  childAspectRatio: 1,
+      body: Row(
+        children: [
+          Expanded(
+            flex: 12,
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
-                    context.myCard(
-                      onTap: () {},
-                      title: 'Card',
-                      subtitle: 'Subtitle',
-                      icon: Icons.warehouse,
-                    ),
+                    context
+                        .mySubheadingText(text: 'Main Menu')
+                        .paddingAll(context.smallPadding),
                   ],
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 400,
+                  width: context.screenWidth,
+                  child: context.responsiveGridView(
+                    padding: EdgeInsets.all(context.smallPadding),
+                    crossAxiscount: 2,
+                    childAspectRatio: 1,
+                    children: [
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                      context.myCard(
+                        onTap: () {},
+                        title: 'Card',
+                        subtitle: 'Subtitle',
+                        icon: Icons.warehouse,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 }

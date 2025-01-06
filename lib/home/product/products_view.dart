@@ -89,29 +89,25 @@ class _ProductsViewState extends State<ProductsView> {
 
   Widget _buildDesktopLayout(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            flex: 12,
-            child: Column(
+      body: Expanded(
+        flex: 12,
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    context
-                        .mySubheadingText(text: 'Products')
-                        .paddingLeft(context.smallPadding),
-                    const Spacer(),
-                    _addProduct().paddingRight(context.smallPadding),
-                  ],
-                ),
-                _productsGridList(),
-                Expanded(
-                  child: _productsDetails().paddingAll(context.smallPadding),
-                ),
+                context
+                    .mySubheadingText(text: 'Products')
+                    .paddingLeft(context.smallPadding),
+                const Spacer(),
+                _addProduct().paddingRight(context.smallPadding),
               ],
             ),
-          ),
-        ],
+            _productsGridList(),
+            Expanded(
+              child: _productsDetails().paddingAll(context.smallPadding),
+            ),
+          ],
+        ),
       ),
     );
   }
