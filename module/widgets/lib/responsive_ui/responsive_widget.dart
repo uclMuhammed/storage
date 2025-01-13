@@ -7,6 +7,7 @@ extension ResponsiveWidgetExtension on BuildContext {
         text,
         style: bodyStyle,
         textAlign: textAlign,
+        overflow: TextOverflow.ellipsis,
         maxLines: 2,
       );
   Text mySmallText({required String text, TextAlign? textAlign}) => Text(
@@ -96,12 +97,14 @@ extension ResponsiveWidgetExtension on BuildContext {
     required IconData icon,
     required String title,
     required String subtitle,
+    bool isSelected = false,
     required Function() onTap,
   }) {
     return InkWell(
       borderRadius: BorderRadius.circular(smallBorderRadius),
       onTap: onTap,
       child: Card(
+        color: isSelected ? Colors.blue.withOpacity(0.5) : null,
         child: Stack(
           children: [
             Center(child: Icon(icon, size: largeIconSize)),

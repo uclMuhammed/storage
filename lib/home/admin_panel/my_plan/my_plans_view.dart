@@ -23,11 +23,11 @@ class _MyPlansViewState extends State<MyPlansView> {
   }
 
   Widget _buildMobileLayout(BuildContext context, BoxConstraints size) {
-    return const Scaffold();
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildTabletLayout(BuildContext context, BoxConstraints size) {
-    return const Scaffold();
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildDesktopLayout(BuildContext context, BoxConstraints size) {

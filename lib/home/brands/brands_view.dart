@@ -79,11 +79,27 @@ class _BrandsViewState extends State<BrandsView> {
   //----------------------------------------------
 
   Widget _buildMobileLayout(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      body: Expanded(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                context.mySubheadingText(text: 'Brands'),
+                const Spacer(),
+                _addBrands(),
+              ],
+            ).paddingAll(context.padding),
+            _brandsGridList(),
+            Expanded(child: _brandsDetails().paddingAll(context.smallPadding)),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletLayout(BuildContext context) {
-    return const Scaffold();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

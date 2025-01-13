@@ -4,6 +4,15 @@ class Cities extends BaseModel<Cities> {
   final int city;
   final int countryId;
   final String description;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Cities && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   Cities({
     required this.city,
     required this.countryId,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storage/home/admin_panel/limits/limits_view.dart';
 import 'package:storage/home/admin_panel/my_plan/my_plans_view.dart';
-import 'package:storage/home/settings/sub_settings/plans/plans_view.dart';
 import 'package:widgets/index.dart';
 
 import 'staff/staff_view.dart';
@@ -39,17 +38,74 @@ class _AdminPanelViewState extends State<AdminPanelView> {
   AppBar _appBar() {
     return AppBar(
       backgroundColor: Colors.black,
-      title: const Text('Admin Panel'),
+      title: context.isSmallScreen
+          ? context.myTextFormField(
+              controller: TextEditingController(),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(context.borderRadius),
+                ),
+              ),
+            )
+          : context.myText(text: "Admin Panel"),
+      actions: [
+        context.isSmallScreen
+            ? IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () {},
+              )
+            : const SizedBox(),
+      ],
+    );
+  }
+
+  _menu(BuildContext context, BoxConstraints size) {
+    return Expanded(
+      child: Container(
+        width: size.maxWidth * 0.3,
+        color: Colors.black,
+        child: Column(
+          children: [
+            SizedBox(height: context.padding),
+            context.myShortCutButton(
+              name: 'Staff',
+              icon: Icons.person,
+              onTap: () {
+                _navigateToPage(const StaffView());
+              },
+            ),
+            context.myShortCutButton(
+              name: 'My Plan',
+              icon: Icons.card_membership,
+              onTap: () {
+                _navigateToPage(const MyPlansView());
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Limits',
+              icon: Icons.bar_chart,
+              onTap: () {
+                _navigateToPage(const LimitsView());
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
   //----------------------------------------------------------------------------
 
   Widget _buildMobileLayout(BuildContext context, BoxConstraints size) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: _appBar(),
+      drawer: _menu(context, size),
+      body: _currentPage,
+    );
   }
 
   Widget _buildTabletLayout(BuildContext context, BoxConstraints size) {
-    return const Scaffold();
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildDesktopLayout(BuildContext context, BoxConstraints size) {
@@ -68,31 +124,7 @@ class _AdminPanelViewState extends State<AdminPanelView> {
               child: Column(
                 children: [
                   _appBar(),
-                  Column(
-                    children: [
-                      context.myShortCutButton(
-                        name: 'Staff',
-                        icon: Icons.person,
-                        onTap: () {
-                          _navigateToPage(const StaffView());
-                        },
-                      ),
-                      context.myShortCutButton(
-                        name: 'My Plan',
-                        icon: Icons.card_membership,
-                        onTap: () {
-                          _navigateToPage(const MyPlansView());
-                        },
-                      ),
-                      context.myShortCutButton(
-                        name: 'Limits',
-                        icon: Icons.bar_chart,
-                        onTap: () {
-                          _navigateToPage(const LimitsView());
-                        },
-                      ),
-                    ],
-                  ),
+                  _menu(context, size),
                 ],
               ),
             ),

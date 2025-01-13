@@ -1,12 +1,17 @@
 import 'dart:ui';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:storage/welcome/welcome.dart';
+import 'package:storage/welcome/welcome_view.dart';
 import 'auth/auth_manager/auth_manager.dart';
 import 'home/home_view.dart';
 import 'routes/navigation_service.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -31,13 +36,13 @@ class _MyAppState extends State<MyApp> {
     await _authManager.checkLoginStatus();
     setState(() {
       _initialRoute =
-          _authManager.isLoggedIn ? const HomeView() : const Welcome();
+          _authManager.isLoggedIn ? const HomeView() : const WelcomeView();
     });
   } */
 
   @override
   Widget build(BuildContext context) {
-    /* if (_initialRoute == null) {
+/*    if (_initialRoute == null) {
       return const MaterialApp(
         home: Scaffold(
           body: Center(
@@ -50,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       navigatorKey: NavigationService.navigatorKey,
       onGenerateRoute: NavigationService.onGenerateRoute,
-      home: HomeView(),
+      home: const HomeView(),
       scrollBehavior: CustomScrollBehavior(),
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),

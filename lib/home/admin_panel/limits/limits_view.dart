@@ -19,11 +19,11 @@ class _LimitsViewState extends State<LimitsView> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
-    return Container();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildTabletLayout(BuildContext context) {
-    return Container();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

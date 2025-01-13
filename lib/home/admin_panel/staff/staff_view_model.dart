@@ -1,6 +1,6 @@
 part of 'staff_view.dart';
 
-mixin StaffViewModel {
+mixin StaffViewModel<T extends StaffView> on State<T> {
   final TextEditingController searchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
@@ -15,12 +15,14 @@ mixin StaffViewModel {
     passwordController.clear();
   }
 
+  @override
   void dispose() {
     searchController.dispose();
     nameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
   void showAddStaffDialog(BuildContext context) {

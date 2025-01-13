@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:widgets/index.dart';
 
@@ -81,11 +79,27 @@ class _RegionsViewState extends State<RegionsView> {
   //--------------------------------------------------------------------------------
 
   Widget _buildMobileLayout(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      body: Expanded(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                context.mySubheadingText(text: 'Regions'),
+                const Spacer(),
+                _addRegions(),
+              ],
+            ).paddingHorizontal(context.smallPadding),
+            _regionsGridList(),
+            Expanded(child: _regionsDetails().paddingAll(context.smallPadding)),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletLayout(BuildContext context) {
-    return const Scaffold();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

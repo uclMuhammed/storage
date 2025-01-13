@@ -79,11 +79,28 @@ class _SuppliersViewState extends State<SuppliersView> {
   //----------------------------------------------------
 
   Widget _buildMobileLayout(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      body: Expanded(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                context.mySubheadingText(text: 'Suppliers'),
+                const Spacer(),
+                _addSuppliers(),
+              ],
+            ).paddingHorizontal(context.smallPadding),
+            _suppliersGridList(),
+            Expanded(
+                child: _suppliersDetails().paddingAll(context.smallPadding)),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletLayout(BuildContext context) {
-    return const Scaffold();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

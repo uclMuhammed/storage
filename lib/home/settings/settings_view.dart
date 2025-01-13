@@ -33,11 +33,11 @@ class _SettingsViewState extends State<SettingsView>
   }
 
   Widget _buildMobileLayout(BuildContext context, BoxConstraints size) {
-    return const Placeholder();
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildTabletLayout(BuildContext context, BoxConstraints size) {
-    return const Placeholder();
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildDesktopLayout(BuildContext context, BoxConstraints size) {

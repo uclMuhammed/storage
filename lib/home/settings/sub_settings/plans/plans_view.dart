@@ -25,6 +25,7 @@ class PlansView extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: context.largePadding),
         ],
       ),
     );

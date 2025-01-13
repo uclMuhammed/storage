@@ -40,7 +40,8 @@ class _EditProfileViewState extends State<EditProfileView>
         context.mySubheadingText(text: 'Profil Düzenle'),
         CircleAvatar(
           radius: 40,
-          backgroundImage: const NetworkImage('https://i.pravatar.cc/200'),
+          backgroundImage: NetworkImage(
+              'https://api.dicebear.com/7.x/avataaars/svg?seed=John'),
           child: Stack(
             children: [
               Positioned(

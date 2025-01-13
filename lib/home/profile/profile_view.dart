@@ -23,24 +23,14 @@ class _ProfileViewState extends State<ProfileView> with ProfileViewModel {
 
   Widget _menu(BuildContext context) {
     return Container(
-      width: context.isSmallScreen ? 160 : 300,
+      width: context.isSmallScreen || context.isMediumScreen ? 160 : 300,
       color: Colors.black,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppBar(
-            backgroundColor: Colors.black,
-            title: context.mySubheadingText(text: 'Profile'),
-          ),
-          const UserAccountsDrawerHeader(
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage('https://i.pravatar.cc/200'),
-            ),
-            decoration: BoxDecoration(color: Colors.black),
-            accountName: Text('John Doe'),
-            accountEmail: Text('I0l7m@example.com'),
-          ),
+          appBar(context),
+          userAccountsDrawerHeader(),
           context.myShortCutButton(
             name: 'Profile',
             icon: Icons.person_rounded,
@@ -59,15 +49,35 @@ class _ProfileViewState extends State<ProfileView> with ProfileViewModel {
     );
   }
 
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.black,
+      centerTitle: true,
+      title: context.mySubheadingText(text: 'Profile'),
+    );
+  }
+
+  UserAccountsDrawerHeader userAccountsDrawerHeader() {
+    return const UserAccountsDrawerHeader(
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: NetworkImage(
+            'https://api.dicebear.com/7.x/avataaars/svg?seed=John'),
+      ),
+      decoration: BoxDecoration(color: Colors.black),
+      accountName: Text('John Doe'),
+      accountEmail: Text('I0l7m@example.com'),
+    );
+  }
+
   Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          _menu(context),
-          Expanded(child: _currentPage),
-        ],
-      ),
-    );
+        appBar: appBar(context),
+        body: Column(
+          children: [
+            userAccountsDrawerHeader(),
+            Expanded(child: _currentPage),
+          ],
+        ));
   }
 
   Widget _buildTabletLayout(BuildContext context) {

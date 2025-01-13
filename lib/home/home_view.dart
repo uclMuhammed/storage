@@ -26,10 +26,14 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
   @override
   Widget build(BuildContext context) {
-    return context.responsiveWrapper(
-      small: _buildMobileLayout(context),
-      medium: _buildTabletLayout(context),
-      large: _buildDesktopLayout(context),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints size) {
+        return context.responsiveWrapper(
+          small: _buildMobileLayout(context, size),
+          medium: _buildTabletLayout(context, size),
+          large: _buildDesktopLayout(context, size),
+        );
+      },
     );
   }
   //---------------------------------------------------------------------------
@@ -44,136 +48,133 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
 
   AuthManager authManager = AuthManager();
 
-  Widget _menu() {
+  Widget _menu(BuildContext context, BoxConstraints size) {
     return Container(
-      width: context.isMediumScreen ? 140 : 200,
+      width: context.isMediumScreen ? 150 : 200,
+      height: size.maxHeight,
       color: Colors.black87,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Profil Bölümü
-          context.isMediumScreen
-              ? SizedBox.shrink()
-              : Text(
-                  'STOKLARIM.com',
-                  style: TextStyle(
-                    fontSize: context.bodySize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ).paddingAll(context.smallPadding),
-          // Menü Öğeleri
-          Expanded(
-            child: Column(
-              children: [
-                context.myShortCutButton(
-                  name: 'Main Menu',
-                  icon: Icons.dashboard,
-                  onTap: () {
-                    _navigateToPage(
-                      const MainMenuView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Warehouses',
-                  icon: Icons.warehouse,
-                  onTap: () {
-                    _navigateToPage(
-                      const WarehousesView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Products',
-                  icon: Icons.inventory,
-                  onTap: () {
-                    _navigateToPage(
-                      const ProductsView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Brands',
-                  icon: Icons.branding_watermark,
-                  onTap: () {
-                    _navigateToPage(
-                      const BrandsView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Categories',
-                  icon: Icons.category,
-                  onTap: () {
-                    _navigateToPage(
-                      const CategoriesView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Suppliers',
-                  icon: Icons.supervised_user_circle,
-                  onTap: () {
-                    _navigateToPage(
-                      const SuppliersView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Regions',
-                  icon: Icons.location_city,
-                  onTap: () {
-                    _navigateToPage(
-                      const RegionsView(),
-                    );
-                  },
-                ),
-                const Spacer(),
-                context.myShortCutButton(
-                  name: 'ADMIN PANEL',
-                  icon: Icons.admin_panel_settings,
-                  onTap: () {
-                    NavigationService.navigatorKey.currentState!
-                        .pushNamed(AppRoutes.adminPanel);
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'DEVELOPER TEST',
-                  icon: Icons.code,
-                  onTap: () {
-                    _navigateToPage(
-                      const TestPage(),
-                    );
-                  },
-                ),
-                SizedBox(height: context.padding),
-                context.myShortCutButton(
-                  name: 'Settings',
-                  icon: Icons.settings,
-                  onTap: () {
-                    _navigateToPage(
-                      const SettingsView(),
-                    );
-                  },
-                ),
-                context.myShortCutButton(
-                  name: 'Logout',
-                  icon: Icons.logout,
-                  onTap: () {
-                    authManager.logout().then((value) {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        AppRoutes.welcome,
-                        (route) => false,
-                      );
-                    });
-                  },
-                ),
-                SizedBox(height: context.padding),
-              ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Profil Bölümü
+            Text(
+              'STOKLARIM.com',
+              style: TextStyle(
+                fontSize: context.smallTextSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ).paddingAll(context.smallPadding),
+            // Menü Öğeleri
+            context.myLine(),
+            context.myShortCutButton(
+              name: 'Main Menu',
+              icon: Icons.dashboard,
+              onTap: () {
+                _navigateToPage(
+                  const MainMenuView(),
+                );
+              },
             ),
-          ),
-        ],
+            context.myShortCutButton(
+              name: 'Warehouses',
+              icon: Icons.warehouse,
+              onTap: () {
+                _navigateToPage(
+                  const WarehousesView(),
+                );
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Products',
+              icon: Icons.inventory,
+              onTap: () {
+                _navigateToPage(
+                  const ProductsView(),
+                );
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Brands',
+              icon: Icons.branding_watermark,
+              onTap: () {
+                _navigateToPage(
+                  const BrandsView(),
+                );
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Categories',
+              icon: Icons.category,
+              onTap: () {
+                _navigateToPage(
+                  const CategoriesView(),
+                );
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Suppliers',
+              icon: Icons.supervised_user_circle,
+              onTap: () {
+                _navigateToPage(
+                  const SuppliersView(),
+                );
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Regions',
+              icon: Icons.location_city,
+              onTap: () {
+                _navigateToPage(
+                  const RegionsView(),
+                );
+              },
+            ),
+            context.myLine(),
+            SizedBox(height: context.padding),
+            context.myShortCutButton(
+              name: 'ADMIN PANEL',
+              icon: Icons.admin_panel_settings,
+              onTap: () {
+                NavigationService.navigatorKey.currentState!
+                    .pushNamed(AppRoutes.adminPanel);
+              },
+            ),
+            context.myShortCutButton(
+              name: 'DEVELOPER TEST',
+              icon: Icons.code,
+              onTap: () {
+                _navigateToPage(
+                  const TestPage(),
+                );
+              },
+            ),
+            SizedBox(height: context.padding),
+            context.myShortCutButton(
+              name: 'Settings',
+              icon: Icons.settings,
+              onTap: () {
+                _navigateToPage(
+                  const SettingsView(),
+                );
+              },
+            ),
+            context.myShortCutButton(
+              name: 'Logout',
+              icon: Icons.logout,
+              onTap: () {
+                authManager.logout().then((value) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.welcome,
+                    (route) => false,
+                  );
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -207,19 +208,23 @@ class _HomeViewState extends State<HomeView> with HomeViewModel<HomeView> {
   }
   //----------------------------------------------------------------------------
 
-  Widget _buildMobileLayout(BuildContext context) {
-    return const Scaffold();
+  Widget _buildMobileLayout(BuildContext context, BoxConstraints size) {
+    return Scaffold(
+      drawer: _menu(context, size),
+      appBar: _appBar(),
+      body: _currentPage,
+    );
   }
 
-  Widget _buildTabletLayout(BuildContext context) {
-    return _buildDesktopLayout(context);
+  Widget _buildTabletLayout(BuildContext context, BoxConstraints size) {
+    return _buildDesktopLayout(context, size);
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
+  Widget _buildDesktopLayout(BuildContext context, BoxConstraints size) {
     return Scaffold(
       body: Row(
         children: [
-          _menu(),
+          _menu(context, size),
           Expanded(
             child: Column(
               children: [

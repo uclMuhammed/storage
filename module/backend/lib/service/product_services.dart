@@ -12,9 +12,32 @@ class ProductServices extends BaseApiService<Products> with BaseServiceMixin {
   ProductServices({super.endPoint = '/products'});
 
   @override
+  Future<void> init() async {
+    try {
+      if (client != null) return;
+
+      super.storage = await SharedPreferencesService.getInstance();
+      if (kDebugMode) print('ProductServices Storage initialized');
+
+      final token = await super.storage?.read(BearerTokenKey);
+      if (token == null) throw Exception('Token bulunamadı');
+
+      super.client = stockTrackerApiClient(token);
+      if (kDebugMode) print('ProductServices Client initialized with token');
+    } catch (e) {
+      if (kDebugMode) print('ProductServices Init Error: $e');
+      rethrow;
+    }
+  }
+
+  @override
   Future<List<Products>> getAll() async {
     try {
+      if (client == null) await init();
+
       final response = await client?.getAll(endPoint);
+      if (response == null) throw Exception('API yanıt vermedi');
+
       if (kDebugMode) {
         print('Product Service GetAll Response Body : ${response.body}');
       }
@@ -118,24 +141,6 @@ class ProductServices extends BaseApiService<Products> with BaseServiceMixin {
       }
     } catch (e) {
       if (kDebugMode) print('ProductService Delete Error: $e');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> init() async {
-    try {
-      super.storage = await SharedPreferencesService.getInstance();
-
-      if (kDebugMode) print('ProductServices Storage initialized');
-
-      final token = await super.storage?.read(BearerTokenKey);
-
-      super.client = stockTrackerApiClient(token);
-
-      if (kDebugMode) print('ProductServices Client initialized');
-    } catch (e) {
-      if (kDebugMode) print('ProductServices Init Error: $e');
       rethrow;
     }
   }

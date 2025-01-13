@@ -5,6 +5,14 @@ class Regions extends BaseModel<Regions> {
   final int companyId;
   final String description;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Regions && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   Regions({
     required this.region,
     required this.companyId,

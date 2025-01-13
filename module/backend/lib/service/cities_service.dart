@@ -87,7 +87,6 @@ class CitiesService extends BaseApiService<Cities> with BaseServiceMixin {
     }
   }
 
-  @override
   Future<Cities> getById(int id) async {
     try {
       final response = await client?.getById(super.endPoint, id: id);
@@ -98,8 +97,23 @@ class CitiesService extends BaseApiService<Cities> with BaseServiceMixin {
 
       final apiResponse = ApiResponse<Cities>.fromJson(
         json.decode(response.body),
-        (data) => (data as List).map((e) => Cities.fromJson(e)).first,
+        (data) {
+          // Eğer data boş array ise null dön
+          if (data is List && data.isEmpty) {
+            return Cities.empty();
+          }
+          // Tek bir eleman varsa onu dön
+          if (data is List) {
+            return Cities.fromJson(data.first);
+          }
+          // Tek bir obje ise direkt onu dön
+          return Cities.fromJson(data);
+        },
       );
+
+      if (apiResponse.data == null) {
+        throw Exception('Şehir bulunamadı');
+      }
 
       return apiResponse.data;
     } catch (e) {

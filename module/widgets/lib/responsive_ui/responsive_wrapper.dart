@@ -14,25 +14,27 @@ extension ResponsiveWrapper on BuildContext {
       selectedLayout = medium;
     }
 
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Stack(
-        children: [
-          Center(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: maxWidth,
+    return SafeArea(
+      child: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: maxWidth,
+                ),
+                child: selectedLayout,
               ),
-              child: selectedLayout,
             ),
-          ),
-          /*Positioned(
-            top: 40,
-            left: 10,
-            child: showDebugInfo(),
-          ), */
-        ],
+            /*Positioned(
+              top: 40,
+              left: 10,
+              child: showDebugInfo(),
+            ), */
+          ],
+        ),
       ),
     );
   }

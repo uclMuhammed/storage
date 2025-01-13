@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.17.0
   flutter_riverpod: ^2.6.1
   qr_flutter: ^4.1.0
+  firebase_core: ^3.9.0
 
 
 dev_dependencies:

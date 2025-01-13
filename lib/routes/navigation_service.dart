@@ -5,7 +5,7 @@ import '../auth/login/login_view.dart';
 import '../auth/signup/signup_view.dart';
 import '../home/home_view.dart';
 import '../home/profile/profile_view.dart';
-import '../welcome/welcome.dart';
+import '../welcome/welcome_view.dart';
 
 import 'app_routes.dart';
 
@@ -17,7 +17,7 @@ class NavigationService {
     switch (settings.name) {
       case AppRoutes.welcome:
         return MaterialPageRoute(
-          builder: (context) => const Welcome(),
+          builder: (context) => const WelcomeView(),
           settings: settings,
         );
       case AppRoutes.login:
@@ -47,7 +47,7 @@ class NavigationService {
         );
       default:
         return MaterialPageRoute(
-          builder: (_) => const Welcome(),
+          builder: (_) => const WelcomeView(),
           settings: settings,
         );
     }

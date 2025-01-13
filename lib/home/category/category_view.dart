@@ -97,11 +97,38 @@ class _CategoriesViewState extends State<CategoriesView> {
   //---------------------------------------------
 
   Widget _buildMobileLayout(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      body: Expanded(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                context
+                    .mySubheadingText(text: 'Categories')
+                    .paddingLeft(context.smallPadding),
+                const Spacer(),
+                _addCategory().paddingRight(context.smallPadding),
+              ],
+            ),
+            _categoryGridList(),
+            Row(
+              children: [
+                context
+                    .mySubheadingText(text: 'Sub Categories')
+                    .paddingLeft(context.smallPadding),
+                const Spacer(),
+                _addSubCategory().paddingRight(context.smallPadding),
+              ],
+            ),
+            _subCategoryGridList(),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletLayout(BuildContext context) {
-    return const Scaffold();
+    return _buildDesktopLayout(context);
   }
 
   Widget _buildDesktopLayout(BuildContext context) {

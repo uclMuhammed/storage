@@ -106,11 +106,11 @@ class _StaffViewState extends State<StaffView> with StaffViewModel {
   //--------------------------------------------------------------
 
   Widget _buildMobileLayout(BuildContext context, BoxConstraints size) {
-    return const Scaffold(body: Center(child: Text('Staff View')));
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildTabletLayout(BuildContext context, BoxConstraints size) {
-    return const Scaffold(body: Center(child: Text('Staff View')));
+    return _buildDesktopLayout(context, size);
   }
 
   Widget _buildDesktopLayout(BuildContext context, BoxConstraints size) {
@@ -118,7 +118,7 @@ class _StaffViewState extends State<StaffView> with StaffViewModel {
       body: Expanded(
         child: Column(
           children: [
-            _staffSearch(),
+            context.isSmallScreen ? const SizedBox() : _staffSearch(),
             Row(
               children: [
                 context
