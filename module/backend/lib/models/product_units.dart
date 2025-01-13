@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class ProductUnits extends BaseModel<ProductUnits> {
+class ProductUnits extends IModel<ProductUnits> {
   final int unit;
   final String description;
   final double quantity;
@@ -114,5 +114,11 @@ class ProductUnits extends BaseModel<ProductUnits> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  ProductUnits copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

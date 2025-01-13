@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Users extends BaseModel<Users> {
+class Users extends IModel<Users> {
   final int userCode;
   final String email;
   final String password;
@@ -77,5 +77,11 @@ class Users extends BaseModel<Users> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  Users copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

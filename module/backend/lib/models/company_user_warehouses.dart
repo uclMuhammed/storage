@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class CompanyUserWarehouses extends BaseModel<CompanyUserWarehouses> {
+class CompanyUserWarehouses extends IModel<CompanyUserWarehouses> {
   final int companyUserRoleId;
   final int warehousesId;
 
@@ -82,4 +82,10 @@ class CompanyUserWarehouses extends BaseModel<CompanyUserWarehouses> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  CompanyUserWarehouses copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

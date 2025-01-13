@@ -1,12 +1,13 @@
-class HttpCustomException implements Exception {
-  final int statusCode;
-  final String message;
+import '../abstract/exception.dart';
 
+class HttpCustomException extends IException {
   HttpCustomException({
-    required this.statusCode,
-    required this.message,
+    required super.message,
+    required super.statusCode,
+    required super.stackTrace,
+    super.name,
+    super.operation,
+    super.type,
+    super.metaData,
   });
-
-  @override
-  String toString() => 'Http Custom Exception: $statusCode - $message';
 }

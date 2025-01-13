@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class ProductStats extends BaseModel<ProductStats> {
+class ProductStats extends IModel<ProductStats> {
   final int productId;
   final int companyId;
   final double purchasesQuantity;
@@ -118,4 +118,10 @@ class ProductStats extends BaseModel<ProductStats> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  ProductStats copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

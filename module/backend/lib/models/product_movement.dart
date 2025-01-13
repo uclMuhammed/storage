@@ -1,9 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-// ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
-
-class ProductMovement extends BaseModel<ProductMovement> {
+class ProductMovement extends IModel<ProductMovement> {
   final int warehouseId;
   final int supplierId;
   final int companyId;
@@ -223,7 +220,7 @@ class ProductMovement extends BaseModel<ProductMovement> {
       'TAX_RATE': taxRate,
       'DISCOUNT': discount,
       'TOTAL_COST': totalCost,
-      'TRANSACTION_DATE': DateFormat('yyyy-MM-dd').format(transactionDate),
+      'TRANSACTION_DATE': transactionDate,
       'DOCUMENT_NO': documentNo,
       'DESCRIPTION': description,
       'IS_PURCHASES': isPurchases,
@@ -232,5 +229,11 @@ class ProductMovement extends BaseModel<ProductMovement> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  ProductMovement copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

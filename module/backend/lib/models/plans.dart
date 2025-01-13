@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Plans extends BaseModel<Plans> {
+class Plans extends IModel<Plans> {
   final int plans;
   final String description;
   final int price;
@@ -154,4 +154,10 @@ class Plans extends BaseModel<Plans> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  Plans copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

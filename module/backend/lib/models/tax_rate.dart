@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import 'package:backend/abstract/models.dart';
 
-class TaxRate extends BaseModel<TaxRate> {
+class TaxRate extends IModel<TaxRate> {
   final double tax;
   final String description;
   final int companyId;
@@ -87,5 +87,11 @@ class TaxRate extends BaseModel<TaxRate> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  TaxRate copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

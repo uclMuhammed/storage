@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import '../abstract/models.dart';
 
-class Companies extends BaseModel<Companies> {
+class Companies extends IModel<Companies> {
   final int company;
   final String name;
   final int ownerId;
@@ -23,6 +23,53 @@ class Companies extends BaseModel<Companies> {
     required super.deletedBy,
     required super.deletedAt,
   });
+
+  factory Companies.fromJson(Map<String, dynamic> json) {
+    if (json.isEmpty) return Companies.empty();
+    return Companies(
+      planID: int.tryParse(json['PLAN_ID'].toString()) ?? -1,
+      planAt: DateTime.tryParse(json['PLANAT'] ?? '') ?? DateTime(1950),
+      company: int.tryParse(json['COMPANY'].toString()) ?? -1,
+      name: json['NAME'],
+      ownerId: int.tryParse(json['OWNERID'].toString()) ?? -1,
+      id: int.tryParse(json['ID'].toString()) ?? -1,
+      isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
+      isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
+      createdAt: DateTime.tryParse(json['CREATEDAT'] ?? '') ?? DateTime(1950),
+      createdBy: json['CREATEDBY'],
+      updatedAt: json['UPDATEDAT'] != null
+          ? DateTime.tryParse(json['UPDATEDAT'])
+          : null,
+      updatedBy: json['UPDATEDBY'],
+      deletedAt: json['DELETEDAT'] != null
+          ? DateTime.tryParse(json['DELETEDAT'])
+          : null,
+      deletedBy: json['DELETEDBY'],
+    );
+  }
+  @override
+  Companies fromJson(Map<String, dynamic> json) => Companies.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'PLAN_ID': planID,
+      'PLANAT': planAt.toIso8601String(),
+      'COMPANY': company,
+      'NAME': name,
+      'OWNERID': ownerId,
+      'ID': id,
+      'ISACTIVE': isActive,
+      'ISDELETE': isDelete,
+    };
+  }
+
+  @override
+  Companies copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
+
   factory Companies.empty() {
     return Companies(
       planID: -1,
@@ -97,45 +144,5 @@ class Companies extends BaseModel<Companies> {
       deletedBy: '',
       deletedAt: null,
     );
-  }
-
-  factory Companies.fromJson(Map<String, dynamic> json) {
-    if (json.isEmpty) return Companies.empty();
-    return Companies(
-      planID: int.tryParse(json['PLAN_ID'].toString()) ?? -1,
-      planAt: DateTime.tryParse(json['PLANAT'] ?? '') ?? DateTime(1950),
-      company: int.tryParse(json['COMPANY'].toString()) ?? -1,
-      name: json['NAME'],
-      ownerId: int.tryParse(json['OWNERID'].toString()) ?? -1,
-      id: int.tryParse(json['ID'].toString()) ?? -1,
-      isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
-      isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
-      createdAt: DateTime.tryParse(json['CREATEDAT'] ?? '') ?? DateTime(1950),
-      createdBy: json['CREATEDBY'],
-      updatedAt: json['UPDATEDAT'] != null
-          ? DateTime.tryParse(json['UPDATEDAT'])
-          : null,
-      updatedBy: json['UPDATEDBY'],
-      deletedAt: json['DELETEDAT'] != null
-          ? DateTime.tryParse(json['DELETEDAT'])
-          : null,
-      deletedBy: json['DELETEDBY'],
-    );
-  }
-  @override
-  Companies fromJson(Map<String, dynamic> json) => Companies.fromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'PLAN_ID': planID,
-      'PLANAT': planAt.toIso8601String(),
-      'COMPANY': company,
-      'NAME': name,
-      'OWNERID': ownerId,
-      'ID': id,
-      'ISACTIVE': isActive,
-      'ISDELETE': isDelete,
-    };
   }
 }

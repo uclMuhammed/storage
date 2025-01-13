@@ -1,8 +1,6 @@
-import 'package:backend/base/models.dart';
-// ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
+import 'package:backend/abstract/models.dart';
 
-class ReferenceCode extends BaseModel<ReferenceCode> {
+class ReferenceCode extends IModel<ReferenceCode> {
   final int reference;
   final String description;
   final int companyId;
@@ -105,11 +103,17 @@ class ReferenceCode extends BaseModel<ReferenceCode> {
       'REFERENCE': reference,
       'DESCRIPTION': description,
       'COMPANY_ID': companyId,
-      'START_DATE': DateFormat('yyyy-MM-dd').format(startDate),
-      'END_DATE': DateFormat('yyyy-MM-dd').format(endDate),
+      'START_DATE': startDate,
+      'END_DATE': endDate,
       'ID': id,
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  ReferenceCode copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

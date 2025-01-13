@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import '../abstract/models.dart';
 
-class Logger extends BaseModel<Logger> {
+class Logger extends IModel<Logger> {
   final String type;
   final String operation;
   final String message;
@@ -88,5 +88,11 @@ class Logger extends BaseModel<Logger> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  Logger copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

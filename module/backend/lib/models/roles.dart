@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Roles extends BaseModel<Roles> {
+class Roles extends IModel<Roles> {
   final int role;
   final String description;
   Roles({
@@ -82,4 +82,10 @@ class Roles extends BaseModel<Roles> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  Roles copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

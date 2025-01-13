@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Regions extends BaseModel<Regions> {
+class Regions extends IModel<Regions> {
   final int region;
   final int companyId;
   final String description;
@@ -119,4 +119,10 @@ class Regions extends BaseModel<Regions> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  Regions copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

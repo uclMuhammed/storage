@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class CompanyUserRole extends BaseModel<CompanyUserRole> {
+class CompanyUserRole extends IModel<CompanyUserRole> {
   final int userID;
   final int companyID;
   final int roleID;
@@ -70,4 +70,10 @@ class CompanyUserRole extends BaseModel<CompanyUserRole> {
   @override
   CompanyUserRole fromJson(Map<String, dynamic> json) =>
       CompanyUserRole.fromJson(json);
+
+  @override
+  CompanyUserRole copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

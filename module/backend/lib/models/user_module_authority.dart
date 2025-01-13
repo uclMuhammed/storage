@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import '../abstract/models.dart';
 
-class UserModuleAuthority extends BaseModel<UserModuleAuthority> {
+class UserModuleAuthority extends IModel<UserModuleAuthority> {
   final int companyUserRoleID;
   final int moduleID;
   final int authorID;
@@ -71,4 +71,10 @@ class UserModuleAuthority extends BaseModel<UserModuleAuthority> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  UserModuleAuthority copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

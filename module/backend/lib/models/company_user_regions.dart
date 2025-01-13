@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class CompanyUserRegions extends BaseModel<CompanyUserRegions> {
+class CompanyUserRegions extends IModel<CompanyUserRegions> {
   final int companyUserId;
   final int companyUserRoleId; // Eklendi
   final int regionId;
@@ -126,4 +126,10 @@ class CompanyUserRegions extends BaseModel<CompanyUserRegions> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  CompanyUserRegions copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }

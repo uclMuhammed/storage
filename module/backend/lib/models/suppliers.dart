@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Suppliers extends BaseModel<Suppliers> {
+class Suppliers extends IModel<Suppliers> {
   final int companyId;
   final int regionId;
   final int supplier;
@@ -136,5 +136,11 @@ class Suppliers extends BaseModel<Suppliers> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  Suppliers copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Cities extends BaseModel<Cities> {
+class Cities extends IModel<Cities> {
   final int city;
   final int countryId;
   final String description;
@@ -18,6 +18,56 @@ class Cities extends BaseModel<Cities> {
     required super.deletedBy,
     required super.deletedAt,
   });
+
+  factory Cities.fromJson(Map<String, dynamic> json) {
+    if (json.isEmpty) return Cities.empty();
+    return Cities(
+      city: int.tryParse(json['CITY'].toString()) ?? -1,
+      countryId: int.tryParse(json['COUNTRY_ID'].toString()) ?? -1,
+      description: json['DESCRIPTION'].toString(),
+      id: int.tryParse(json['ID'].toString()) ?? -1,
+      isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
+      isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
+      createdAt: DateTime.tryParse(json['CREATEDAT'] ?? '') ?? DateTime(1950),
+      createdBy: json['CREATEDBY'],
+      updatedAt: json['UPDATEDAT'] != null
+          ? DateTime.tryParse(json['UPDATEDAT'])
+          : null,
+      updatedBy: json['UPDATEDBY'],
+      deletedAt: json['DELETEDAT'] != null
+          ? DateTime.tryParse(json['DELETEDAT'])
+          : null,
+      deletedBy: json['DELETEDBY'],
+    );
+  }
+
+  @override
+  Cities fromJson(Map<String, dynamic> json) {
+    return Cities.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'CITY': city,
+      'COUNTRYID': countryId,
+      'DESCRIPTION': description,
+      'ISACTIVE': isActive,
+      'ISDELETE': isDelete,
+      'CREATEDAT': createdAt,
+      'CREATEDBY': createdBy,
+      'UPDATEDAT': updatedAt,
+      'UPDATEDBY': updatedBy,
+      'DELETEDAT': deletedAt,
+      'DELETEDBY': deletedBy,
+    };
+  }
+
+  @override
+  Cities copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 
   factory Cities.empty() {
     return Cities(
@@ -85,44 +135,5 @@ class Cities extends BaseModel<Cities> {
       deletedBy: '',
       deletedAt: DateTime.now(),
     );
-  }
-
-  factory Cities.fromJson(Map<String, dynamic> json) {
-    if (json.isEmpty) return Cities.empty();
-    return Cities(
-      city: int.tryParse(json['CITY'].toString()) ?? -1,
-      countryId: int.tryParse(json['COUNTRY_ID'].toString()) ?? -1,
-      description: json['DESCRIPTION'].toString(),
-      id: int.tryParse(json['ID'].toString()) ?? -1,
-      isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
-      isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
-      createdAt: DateTime.tryParse(json['CREATEDAT'] ?? '') ?? DateTime(1950),
-      createdBy: json['CREATEDBY'],
-      updatedAt: json['UPDATEDAT'] != null
-          ? DateTime.tryParse(json['UPDATEDAT'])
-          : null,
-      updatedBy: json['UPDATEDBY'],
-      deletedAt: json['DELETEDAT'] != null
-          ? DateTime.tryParse(json['DELETEDAT'])
-          : null,
-      deletedBy: json['DELETEDBY'],
-    );
-  }
-
-  @override
-  Cities fromJson(Map<String, dynamic> json) {
-    return Cities.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'CITY': city,
-      'COUNTRYID': countryId,
-      'DESCRIPTION': description,
-      'ID': id,
-      'ISACTIVE': isActive,
-      'ISDELETE': isDelete,
-    };
   }
 }

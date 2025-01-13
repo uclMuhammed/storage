@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import '../abstract/models.dart';
 
-class Products extends BaseModel<Products> {
+class Products extends IModel<Products> {
   final int product;
   final String barcode;
   final String code;
@@ -12,7 +12,6 @@ class Products extends BaseModel<Products> {
   final int price;
   final String dimensions;
   final double weight;
-
 
   Products({
     required this.code,
@@ -57,7 +56,7 @@ class Products extends BaseModel<Products> {
       updatedAt: null,
       updatedBy: "",
       deletedBy: "",
-      deletedAt: null, 
+      deletedAt: null,
       code: '',
     );
   }
@@ -72,7 +71,7 @@ class Products extends BaseModel<Products> {
     double price,
     String dimensions,
     double weight,
-    ) {
+  ) {
     return Products(
       product: 0,
       code: code,
@@ -107,7 +106,7 @@ class Products extends BaseModel<Products> {
     double price,
     String dimensions,
     double weight,
-    ) {
+  ) {
     return Products(
       product: 0,
       code: code,
@@ -152,7 +151,8 @@ class Products extends BaseModel<Products> {
       updatedAt: null,
       updatedBy: "",
       deletedBy: "",
-      deletedAt: null, code: '',
+      deletedAt: null,
+      code: '',
     );
   }
 
@@ -215,5 +215,11 @@ class Products extends BaseModel<Products> {
       'DELETEDAT': deletedAt.toString(),
       'DELETEDBY': deletedBy,
     };
+  }
+
+  @override
+  Products copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

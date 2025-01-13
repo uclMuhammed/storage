@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Countries extends BaseModel<Countries> {
+class Countries extends IModel<Countries> {
   final int country;
   final String description;
   Countries({
@@ -115,5 +115,11 @@ class Countries extends BaseModel<Countries> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  Countries copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

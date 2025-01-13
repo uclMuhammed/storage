@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import 'package:backend/abstract/models.dart';
 
-class Warehouses extends BaseModel<Warehouses> {
+class Warehouses extends IModel<Warehouses> {
   final int warehouse;
   final String description;
   final int regionId;
@@ -45,7 +45,8 @@ class Warehouses extends BaseModel<Warehouses> {
       deletedAt: DateTime.now(),
     );
   }
-  factory Warehouses.insert(String description,int regionId,int cityId,String address) {
+  factory Warehouses.insert(
+      String description, int regionId, int cityId, String address) {
     return Warehouses(
       cityId: cityId,
       warehouse: 0,
@@ -105,5 +106,11 @@ class Warehouses extends BaseModel<Warehouses> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  Warehouses copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

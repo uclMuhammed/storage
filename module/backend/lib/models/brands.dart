@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class Brands extends BaseModel<Brands> {
+class Brands extends IModel<Brands> {
   final int brand;
   final int companyId;
   final String description;
@@ -19,6 +19,86 @@ class Brands extends BaseModel<Brands> {
     required super.deletedBy,
     required super.deletedAt,
   });
+
+  @override
+  Brands fromJson(Map<String, dynamic> json) {
+    return Brands.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'COMPANY_ID': companyId,
+      'BRAND': brand,
+      'DESCRIPTION': description,
+      'ID': id,
+      'ISACTIVE': isActive,
+      'ISDELETE': isDelete,
+      'CREATEDAT': createdAt,
+      'CREATEDBY': createdBy,
+      'UPDATEDAT': updatedAt,
+      'UPDATEDBY': updatedBy,
+      'DELETEDAT': deletedAt,
+      'DELETEDBY': deletedBy,
+    };
+  }
+
+  @override
+  Brands copyWith({
+    int? brand,
+    int? companyId,
+    String? description,
+    int? id,
+    bool? isActive,
+    bool? isDelete,
+    DateTime? createdAt,
+    String? createdBy,
+    DateTime? updatedAt,
+    String? updatedBy,
+    DateTime? deletedAt,
+    String? deletedBy,
+  }) {
+    return Brands(
+      id: id ?? this.id,
+      brand: brand ?? this.brand,
+      companyId: companyId ?? this.companyId,
+      description: description ?? this.description,
+      isActive: isActive ?? this.isActive,
+      isDelete: isDelete ?? this.isDelete,
+      createdAt: createdAt ?? this.createdAt,
+      createdBy: createdBy ?? this.createdBy,
+      updatedAt: updatedAt ?? this.updatedAt,
+      updatedBy: updatedBy ?? this.updatedBy,
+      deletedAt: deletedAt ?? this.deletedAt,
+      deletedBy: deletedBy ?? this.deletedBy,
+    );
+  }
+
+  factory Brands.fromJson(Map<String, dynamic> json) {
+    if (json.isEmpty) return Brands.empty();
+    //
+    return Brands(
+      id: int.tryParse(json['ID'].toString()) ?? -1,
+      brand: int.tryParse(json['BRAND'].toString()) ?? -1,
+      companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? -1,
+      description: json['DESCRIPTION'].toString(),
+      isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
+      isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
+      // Tarih alanları için null kontrolü ve parse işlemi
+      createdAt: json['CREATEDAT'] != null
+          ? DateTime.tryParse(json['CREATEDAT'].toString()) ?? DateTime(1950)
+          : DateTime(1950),
+      createdBy: json['CREATEDBY']?.toString() ?? '',
+      updatedAt: json['UPDATEDAT'] != null
+          ? DateTime.tryParse(json['UPDATEDAT'].toString())
+          : null,
+      updatedBy: json['UPDATEDBY']?.toString(),
+      deletedAt: json['DELETEDAT'] != null
+          ? DateTime.tryParse(json['DELETEDAT'].toString())
+          : null,
+      deletedBy: json['DELETEDBY']?.toString(),
+    );
+  }
 
   factory Brands.empty() {
     return Brands(
@@ -85,48 +165,5 @@ class Brands extends BaseModel<Brands> {
       deletedBy: null,
       deletedAt: null,
     );
-  }
-
-  factory Brands.fromJson(Map<String, dynamic> json) {
-    if (json.isEmpty) return Brands.empty();
-    //
-    return Brands(
-      id: int.tryParse(json['ID'].toString()) ?? -1,
-      brand: int.tryParse(json['BRAND'].toString()) ?? -1,
-      companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? -1,
-      description: json['DESCRIPTION'].toString(),
-      isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
-      isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
-      // Tarih alanları için null kontrolü ve parse işlemi
-      createdAt: json['CREATEDAT'] != null
-          ? DateTime.tryParse(json['CREATEDAT'].toString()) ?? DateTime(1950)
-          : DateTime(1950),
-      createdBy: json['CREATEDBY']?.toString() ?? '',
-      updatedAt: json['UPDATEDAT'] != null
-          ? DateTime.tryParse(json['UPDATEDAT'].toString())
-          : null,
-      updatedBy: json['UPDATEDBY']?.toString(),
-      deletedAt: json['DELETEDAT'] != null
-          ? DateTime.tryParse(json['DELETEDAT'].toString())
-          : null,
-      deletedBy: json['DELETEDBY']?.toString(),
-    );
-  }
-
-  @override
-  Brands fromJson(Map<String, dynamic> json) {
-    return Brands.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'COMPANY_ID': companyId,
-      'BRAND': brand,
-      'DESCRIPTION': description,
-      'ID': id,
-      'ISACTIVE': isActive,
-      'ISDELETE': isDelete,
-    };
   }
 }

@@ -1,6 +1,6 @@
-import '../base/models.dart';
+import '../abstract/models.dart';
 
-class ProjectCode extends BaseModel<ProjectCode> {
+class ProjectCode extends IModel<ProjectCode> {
   final int project;
   final String description;
   final int companyId;
@@ -104,5 +104,11 @@ class ProjectCode extends BaseModel<ProjectCode> {
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };
+  }
+
+  @override
+  ProjectCode copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
   }
 }

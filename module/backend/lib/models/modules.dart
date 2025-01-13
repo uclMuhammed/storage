@@ -1,6 +1,6 @@
-import 'package:backend/base/models.dart';
+import '../abstract/models.dart';
 
-class Modules extends BaseModel<Modules> {
+class Modules extends IModel<Modules> {
   final int module;
   final String description;
 
@@ -109,4 +109,10 @@ class Modules extends BaseModel<Modules> {
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
       };
+
+  @override
+  Modules copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
 }
