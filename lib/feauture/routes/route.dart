@@ -9,5 +9,5 @@ RouteController routeController = RouteController(
 );
 
 final Map<Routes, Widget Function(BuildContext context)> routes = {
-  Routes.welcome: (context) => const Welcome(),
+  Routes.welcome: (context) => const WelcomeView(),
 };

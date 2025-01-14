@@ -95,3 +95,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  assets:
+    - assets/onboarding1.png
+    - assets/onboarding2.png
+    - assets/onboarding3.png
