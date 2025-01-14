@@ -4,6 +4,8 @@ import 'package:widgets/widgets.dart';
 part 'welcome_desktop.dart';
 part 'welcome_mobile.dart';
 part 'welcome_tablet.dart';
+part './component/drawer.dart';
+part './component/appbar.dart';
 
 class WelcomeView extends BaseView {
   const WelcomeView({super.key});
