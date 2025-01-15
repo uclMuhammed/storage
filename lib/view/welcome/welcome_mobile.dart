@@ -1,17 +1,26 @@
 part of 'welcome_view.dart';
 
-class _WelcomeMobile extends StatelessWidget {
-  const _WelcomeMobile();
+class _WelcomeMobile extends StatelessWidget with _WelcomeDrawerMixin {
+  _WelcomeMobile();
+  //
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      drawer: _WelcomeDrawer(drawerKey: Key('_WelcomeMobileDrawer')),
-      appBar: _WelcomeAppBar(),
-      body: Column(
+    return Scaffold(
+      drawer: _WelcomeDrawer(
+        viewKey: drawerKey,
+        drawerNotifier: drawerNotifier,
+      ),
+      appBar: const _WelcomeAppBar(),
+      body: const Column(
         children: [
           Text('Welcome Mobile'),
         ],
       ),
     );
   }
+}
+
+mixin _WelcomeDrawerMixin {
+  final drawerNotifier = GenericNotifier<DrawerMode>(DrawerMode.icon);
+  final Key drawerKey = const Key('_WelcomeMobileDrawer');
 }

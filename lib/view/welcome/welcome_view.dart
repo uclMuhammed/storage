@@ -17,7 +17,7 @@ class WelcomeView extends BaseView {
 
   @override
   Widget buildMobileView(BuildContext context) {
-    return const _WelcomeMobile();
+    return _WelcomeMobile();
   }
 
   @override

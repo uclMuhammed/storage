@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    // overridePathCheck = true
     namespace = "com.example.storage"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -15,7 +16,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    android.overridePathCheck=true
+    // android.overridePathCheck=true
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8

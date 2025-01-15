@@ -1,8 +1,10 @@
 part of '../welcome_view.dart';
 
-class _WelcomeDrawer extends BaseDrawer {
-  final Key drawerKey;
-  const _WelcomeDrawer({required this.drawerKey}) : super(key: drawerKey);
+class _WelcomeDrawer extends BaseDrawerView {
+  const _WelcomeDrawer({
+    required super.drawerNotifier,
+    required super.viewKey,
+  });
 
   @override
   Widget buildDrawerBody(BuildContext context) {
@@ -27,6 +29,6 @@ class _WelcomeDrawer extends BaseDrawer {
 
   @override
   Widget buildDrawerHeader(BuildContext context) {
-    return HeaderCard(parentKey: drawerKey);
+    return HeaderCard(parentKey: viewKey);
   }
 }
