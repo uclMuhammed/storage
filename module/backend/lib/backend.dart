@@ -6,3 +6,4 @@ export './extension/index.dart';
 export './implement/index.dart';
 export './models/index.dart';
 export './feauture/index.dart';
+export './notifier/index.dart';

@@ -5,7 +5,7 @@ class _WelcomeMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      drawer: _WelcomeDrawer(),
+      drawer: _WelcomeDrawer(drawerKey: Key('_WelcomeMobileDrawer')),
       appBar: _WelcomeAppBar(),
       body: Column(
         children: [

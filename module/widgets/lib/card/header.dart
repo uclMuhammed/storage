@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HeaderCard extends StatelessWidget {
+  final Key parentKey;
   const HeaderCard({
     super.key,
+    required this.parentKey,
   });
 
   @override
