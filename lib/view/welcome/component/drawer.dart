@@ -1,7 +1,7 @@
 part of '../welcome_view.dart';
 
 class _WelcomeDrawer extends BaseDrawer {
-  const _WelcomeDrawer();
+  const _WelcomeDrawer({required super.shape});
 
   @override
   Widget buildDrawerBody(BuildContext context) {
@@ -26,10 +26,6 @@ class _WelcomeDrawer extends BaseDrawer {
 
   @override
   Widget buildDrawerHeader(BuildContext context) {
-    return const HeaderCard(
-      height: 100,
-      width: 100,
-      url: 'assets/welcome/welcome.png',
-    );
+    return const HeaderCard();
   }
 }

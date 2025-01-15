@@ -8,7 +8,7 @@ abstract class BaseDrawer extends StatelessWidget {
     this.backgroundColor,
     this.width,
     this.elevation,
-    this.shape,
+    required this.shape,
     this.drawerMode = DrawerMode.icon,
   });
 
