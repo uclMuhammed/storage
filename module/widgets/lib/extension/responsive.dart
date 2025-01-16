@@ -31,3 +31,7 @@ extension MediaQueryExtension on BuildContext {
   double get height => size.height;
   //
 }
+
+extension WidgetResponsiveExtension on Widget {
+  FittedBox get fittedBox => FittedBox(child: this);
+}

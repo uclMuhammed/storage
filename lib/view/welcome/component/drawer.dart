@@ -17,18 +17,20 @@ class _WelcomeDrawer extends BaseDrawerView {
 
   @override
   Widget buildDrawerFooter(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {},
-          child: const Text('Get Started'),
-        ),
-      ],
-    );
+    if (drawerNotifier.value == DrawerMode.icon) {
+      return IconButton(onPressed: () {}, icon: const Icon(Icons.logout));
+    }
+    return ElevatedButton(
+      onPressed: () {},
+      child: const Row(
+        spacing: 8,
+        children: [Icon(Icons.logout), Text('Logout')],
+      ),
+    ).fittedBox;
   }
 
   @override
   Widget buildDrawerHeader(BuildContext context) {
-    return HeaderCard(parentKey: viewKey);
+    return const HeaderCard();
   }
 }

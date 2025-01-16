@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:widgets/const/padding.dart';
 
 class HeaderCard extends StatelessWidget {
-  final Key parentKey;
-  const HeaderCard({
-    super.key,
-    required this.parentKey,
-  });
+  const HeaderCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth <= 60) {
-        return const _SmallHeader();
+      if (constraints.maxWidth >= 200) {
+        return const _LargeHeader();
       }
-      return const _LargeHeader();
+      return const _SmallHeader();
     });
   }
 }
@@ -44,10 +41,10 @@ class _LargeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        child: const Row(
+    return const FittedBox(
+      child: Padding(
+        padding: normalPadding,
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
           children: [
@@ -60,12 +57,11 @@ class _LargeHeader extends StatelessWidget {
               children: [
                 Text('Name Surname'),
                 Text('Owner'),
-                Text('email@example.com'),
               ],
             ),
           ],
         ),
-      );
-    });
+      ),
+    );
   }
 }

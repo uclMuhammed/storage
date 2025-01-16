@@ -95,12 +95,9 @@ class _ChildAnimated extends StatelessWidget {
             children: [
               child,
               Positioned(
-                height: 30,
-                width: 30,
-                top: 20,
+                top: 0,
                 left: 0,
                 right: 0,
-                bottom: 0,
                 child: IconButton(
                   onPressed: () => drawerNotifier.change(
                     drawerNotifier.value == DrawerMode.icon
