@@ -14,15 +14,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: routeController.navigatorKey,
-      onGenerateRoute: routeController.onGenerateRoute,
-      initialRoute: Routes.welcome.routeName,
-      scrollBehavior: CustomScrollBehavior(),
-      themeMode: ThemeMode.system,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
+    return TokenActivityStateProvider(
+      child: MaterialApp(
+        navigatorKey: routeController.navigatorKey,
+        onGenerateRoute: routeController.onGenerateRoute,
+        initialRoute: Routes.welcome.routeName,
+        scrollBehavior: CustomScrollBehavior(),
+        themeMode: ThemeMode.system,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
