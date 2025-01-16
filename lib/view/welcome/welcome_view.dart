@@ -12,7 +12,7 @@ class WelcomeView extends BaseView {
 
   @override
   Widget buildDesktopView(BuildContext context) {
-    return const _WelcomeDesktop();
+    return _WelcomeDesktop();
   }
 
   @override
@@ -22,6 +22,6 @@ class WelcomeView extends BaseView {
 
   @override
   Widget buildTabletView(BuildContext context) {
-    return const _WelcomeTablet();
+    return _WelcomeTablet();
   }
 }
