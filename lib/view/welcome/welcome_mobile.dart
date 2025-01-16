@@ -21,6 +21,6 @@ class _WelcomeMobile extends StatelessWidget with _WelcomeDrawerMixin {
 }
 
 mixin _WelcomeDrawerMixin {
-  final drawerNotifier = GenericNotifier<DrawerMode>(DrawerMode.icon);
+  final drawerNotifier = GenericNotifier<DrawerMode>(DrawerMode.detail);
   final Key drawerKey = const Key('_WelcomeMobileDrawer');
 }

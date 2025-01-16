@@ -47,15 +47,22 @@ class _LargeHeader extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         padding: const EdgeInsets.all(16),
-        child: const Column(
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
           children: [
             CircleAvatar(
-              radius: 30,
+              radius: 36,
             ),
-            Text('Name Surname'),
-            Text('Owner'),
-            Text('email@example.com'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Name Surname'),
+                Text('Owner'),
+                Text('email@example.com'),
+              ],
+            ),
           ],
         ),
       );
