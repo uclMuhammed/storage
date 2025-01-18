@@ -9,3 +9,4 @@ export 'controller/index.dart';
 export 'const/index.dart';
 export 'card/index.dart';
 export 'notifier/index.dart';
+export 'view/index.dart';

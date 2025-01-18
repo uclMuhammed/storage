@@ -6,17 +6,15 @@ class _WelcomeDesktop extends StatelessWidget with _WelcomeDesktopMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          _WelcomeDrawer(drawerNotifier: drawerNotifier, viewKey: viewKey),
-          const Expanded(child: Text('Desktop Body')),
-        ],
+      body: BodyWithSideBar(
+        sideBar: _WelcomeDrawer(drawerNotifier: notifier, viewKey: viewKey),
+        body: const Text('Welcome Desktop'),
       ),
     );
   }
 }
 
 mixin _WelcomeDesktopMixin {
-  final drawerNotifier = GenericNotifier<DrawerMode>(DrawerMode.icon);
+  final notifier = GenericNotifier<DrawerMode>(DrawerMode.icon);
   final Key viewKey = const Key('_WelcomeTabletDrawer');
 }
