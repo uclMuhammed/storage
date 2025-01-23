@@ -18,6 +18,9 @@ abstract class BaseDrawerView extends StatelessWidget {
     this.shape,
   }) : super(key: viewKey);
 
+  /// Build the button section of the drawer
+  Widget buildDrawerButton(BuildContext context);
+
   /// Build the header section of the drawer
   Widget buildDrawerHeader(BuildContext context);
 
@@ -46,26 +49,22 @@ abstract class BaseDrawerView extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 children: [
-                  // --
-                  const SizedBox(height: 40),
-                  // --
+                  buildDrawerButton(context),
+                  const Divider(),
                   Expanded(
-                    flex: 1,
+                    flex: 3,
                     child: buildDrawerHeader(context),
                   ),
                   const Divider(),
-                  // --
                   Expanded(
-                    flex: 5,
+                    flex: 10,
                     child: buildDrawerBody(context),
                   ),
                   const Divider(),
-                  // --
                   Expanded(
                     flex: 1,
                     child: buildDrawerFooter(context),
                   ),
-                  //--
                 ],
               ),
             ),
@@ -80,13 +79,13 @@ class _ChildAnimated extends StatelessWidget {
   const _ChildAnimated({required this.drawerNotifier, required this.child});
   final Widget child;
   final GenericNotifier<DrawerMode> drawerNotifier;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: duration300Ms,
       curve: Curves.easeInOut,
       width: drawerNotifier.value.width,
-      // -------------
       child: SingleChildScrollView(
         child: SizedBox(
           width: drawerNotifier.value.width,
@@ -94,23 +93,6 @@ class _ChildAnimated extends StatelessWidget {
           child: Stack(
             children: [
               child,
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: IconButton(
-                  onPressed: () => drawerNotifier.change(
-                    drawerNotifier.value == DrawerMode.icon
-                        ? DrawerMode.detail
-                        : DrawerMode.icon,
-                  ),
-                  icon: Icon(
-                    drawerNotifier.value == DrawerMode.icon
-                        ? Icons.menu
-                        : Icons.arrow_back,
-                  ),
-                ),
-              ),
             ],
           ),
         ),

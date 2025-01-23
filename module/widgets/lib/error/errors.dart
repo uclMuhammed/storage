@@ -14,7 +14,7 @@ enum NotificationType {
 
 // BuildContext extension
 extension ErrorHandling on BuildContext {
-  void showNotification( {
+  void showNotification({
     required String message,
     NotificationType type = NotificationType.info,
     Duration duration = const Duration(seconds: 3),
@@ -107,9 +107,12 @@ extension ErrorWrapper on Future Function() {
     try {
       context.showLoading();
       await this();
+      // ignore: use_build_context_synchronously
       context.hideLoading();
     } catch (e) {
+      // ignore: use_build_context_synchronously
       context.hideLoading();
+      // ignore: use_build_context_synchronously
       context.showNotification(
         message: e.toString(),
         type: NotificationType.error,

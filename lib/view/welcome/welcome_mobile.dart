@@ -1,8 +1,9 @@
 part of 'welcome_view.dart';
 
 class WelcomeMobile extends StatelessWidget {
-  final WelcomePageMixin viewModel;
-  const WelcomeMobile({super.key, required this.viewModel});
+  final WelcomeViewModel viewModel;
+  final WelcomeBody body;
+  const WelcomeMobile({super.key, required this.viewModel, required this.body});
 
   @override
   Widget build(BuildContext context) {
@@ -11,31 +12,29 @@ class WelcomeMobile extends StatelessWidget {
         children: [
           Row(
             children: [
-              viewModel.buildAppTitle(context).paddingAll(context.smallPadding),
+              body.buildAppTitle(context).paddingAll(context.smallPadding),
             ],
           ),
           Expanded(
-            child: viewModel.buildWelcomePage(),
+            child: body.buildWelcomePage(),
           ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                viewModel
+                body
                     .buildTitleDescription()
                     .paddingVertical(context.smallPadding),
-                viewModel
-                    .buildDescription()
-                    .paddingVertical(context.smallPadding),
-                viewModel
+                body.buildDescription().paddingVertical(context.smallPadding),
+                body
                     .buildNextPage(context)
                     .paddingVertical(context.largePadding),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     viewModel.welcomeModels.length,
-                    (index) => viewModel.buildDot(index),
+                    (index) => body.buildDot(index),
                   ),
                 ).paddingVertical(context.padding),
               ],

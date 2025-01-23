@@ -1,10 +1,12 @@
 part of 'welcome_view.dart';
 
 class WelcomeDesktop extends StatelessWidget {
-  final WelcomePageMixin viewModel;
+  final WelcomeViewModel viewModel;
+  final WelcomeBody body;
   const WelcomeDesktop({
     super.key,
     required this.viewModel,
+    required this.body,
   });
 
   @override
@@ -12,42 +14,40 @@ class WelcomeDesktop extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          Expanded(
-            flex: 4,
-            child: Container(
-              decoration: const BoxDecoration(
-                border: Border(
-                  right: BorderSide(color: Colors.white),
-                ),
+          Container(
+            width: 250,
+            decoration: const BoxDecoration(
+              border: Border(
+                right: BorderSide(color: Colors.white),
               ),
-              child: Column(
-                children: [
-                  viewModel.buildAppTitle(context),
-                  context.myLine().paddingVertical(context.smallPadding),
-                  Expanded(
-                    child: Center(
-                      child: viewModel.buildTitleDescription(),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: viewModel.buildDescription(),
-                  ),
-                ],
-              ).paddingAll(context.smallPadding),
             ),
+            child: Column(
+              children: [
+                body.buildAppTitle(context),
+                context.myLine().paddingVertical(context.smallPadding),
+                Expanded(
+                  child: Center(
+                    child: body.buildTitleDescription(),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: body.buildDescription(),
+                ),
+              ],
+            ).paddingAll(context.smallPadding),
           ),
           Expanded(
             flex: 10,
             child: Column(
               children: [
-                Expanded(child: viewModel.buildWelcomePage()),
-                viewModel.buildNextPage(context),
+                Expanded(child: body.buildWelcomePage()),
+                body.buildNextPage(context),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     viewModel.welcomeModels.length,
-                    (index) => viewModel.buildDot(index),
+                    (index) => body.buildDot(index),
                   ),
                 ).paddingAll(context.smallPadding),
               ],

@@ -1,30 +1,77 @@
 import 'package:flutter/material.dart';
+
+import 'package:lottie/lottie.dart';
 import 'package:widgets/index.dart';
 
 extension ResponsiveWidgetExtension on BuildContext {
 // My Text
-  Text myText({required String text, TextAlign? textAlign}) => Text(
+  Text mySubText({
+    required String text,
+    TextAlign? textAlign,
+  }) =>
+      Text(
         text,
-        style: bodyStyle,
+        style: subTextStyle,
         textAlign: textAlign,
       );
-  Text mySmallText({required String text, TextAlign? textAlign}) => Text(
+
+  Text myText({
+    required String text,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextStyle? style,
+  }) =>
+      Text(
         text,
-        style: smallTextStyle,
+        style: style ?? bodyStyle,
         textAlign: textAlign,
+        maxLines: maxLines,
       );
-  Text myHeadingText({required String text, TextAlign? textAlign}) => Text(
+
+  Text mySmallText({
+    required String text,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextStyle? style,
+  }) =>
+      Text(
         text,
-        style: headingStyle,
+        style: style ?? smallTextStyle,
         textAlign: textAlign,
+        maxLines: maxLines,
       );
-  Text mySubheadingText({required String text, TextAlign? textAlign}) => Text(
+
+  Text myHeadingText({
+    required String text,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextStyle? style,
+  }) =>
+      Text(
         text,
-        style: subheadingStyle,
+        style: style ?? headingStyle,
         textAlign: textAlign,
+        maxLines: maxLines,
+      );
+
+  Text mySubheadingText({
+    required String text,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextStyle? style,
+  }) =>
+      Text(
+        text,
+        style: style ?? subheadingStyle,
+        textAlign: textAlign,
+        maxLines: maxLines,
       );
 // My Line
-  Widget myLine() => Container(height: 1, color: Colors.grey);
+  Widget myLine() => Container(
+      height: 1,
+      color: Theme.of(this).brightness == Brightness.light
+          ? Colors.black
+          : Colors.white);
 
   // Responsive Grid View
 
@@ -33,6 +80,7 @@ extension ResponsiveWidgetExtension on BuildContext {
     double? childAspectRatio,
     required EdgeInsetsGeometry padding,
     required int crossAxiscount,
+    Axis? scrollDirection,
   }) {
     return GridView.builder(
       shrinkWrap: true,
@@ -51,154 +99,134 @@ extension ResponsiveWidgetExtension on BuildContext {
   }
 
   // My Button
-  Widget myButton(
-      {required String buttonText,
-      required Function() onPressed,
-      double? width,
-      double? height,
-      double? buttonHeight,
-      double? fontSize,
-      Color? color}) {
-    return SizedBox(
-      width: width ?? buttonHeight,
-      height: height ?? buttonHeight,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? Colors.transparent,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: color ?? Colors.blueAccent),
-            borderRadius: BorderRadius.circular(borderRadius),
+  Widget myButton({
+    required String buttonText,
+    required VoidCallback onPressed,
+    double? width,
+    double? height,
+    Color? backgroundColor,
+    Color? textColor,
+  }) =>
+      SizedBox(
+        width: width ?? double.infinity,
+        height: height ?? buttonHeight,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: elevatedButtonStyle.copyWith(
+            backgroundColor: WidgetStateProperty.all(backgroundColor),
+            foregroundColor: WidgetStateProperty.all(textColor),
           ),
+          child: Text(buttonText),
         ),
-        child: Text(
-          buttonText,
-          style: TextStyle(fontSize: fontSize ?? bodySize),
-        ),
-      ),
-    );
-  }
+      );
 
   // My Text Button
-  Widget myTextButton(
-      {required String buttonText, required Function() onPressed}) {
+  Widget myTextButton({
+    required String buttonText,
+    required Function() onPressed,
+  }) {
     return TextButton(
       onPressed: onPressed,
+      style: textButtonStyle,
       child: Text(
         buttonText,
-        style: TextStyle(fontSize: bodySize),
+        style: smallTextStyle,
       ),
     );
   }
 
   // My Card
   Widget myCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Function() onTap,
-  }) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(smallBorderRadius),
-      onTap: onTap,
-      child: Card(
-        child: Stack(
-          children: [
-            Center(child: Icon(icon, size: largeIconSize)),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: bodySize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: smallTextSize,
-                  ),
-                )
-              ],
-            ).paddingAll(smallPadding),
-          ],
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? backgroundColor,
+  }) =>
+      Container(
+        decoration: cardDecoration.copyWith(
+          color: backgroundColor,
         ),
-      ),
-    );
-  }
+        padding: padding ?? EdgeInsets.all(smallPadding),
+        child: child,
+      );
 
   // My Short Cut Button
-  Widget myShortCutButton(
-      {required String name,
-      required IconData icon,
-      required Function() onTap}) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(
-        name,
-        style: TextStyle(
-          fontSize: smallTextSize,
+  Widget myShortCutButton({
+    required String name,
+    required IconData icon,
+    required Function() onTap,
+    String? tooltipMessage = '',
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: Tooltip(
+        message: tooltipMessage,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(borderRadius),
+          hoverColor: Colors.grey[800],
+          onTap: onTap,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: isLargeScreen ? smallIconSize : iconSize,
+              ).paddingLeft(smallPadding),
+              SizedBox(width: smallPadding),
+              Expanded(
+                child: Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: smallTextSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ).paddingHorizontal(isSmallScreen ? smallPadding : 0),
         ),
       ),
-      onTap: onTap,
     );
   }
 
   // My Text Form Field
   Widget myTextFormField({
-    String? title,
-    String? label,
-    String? hint,
-    String? Function(String?)? validator,
-    required TextEditingController controller,
-    InputDecoration? decoration,
+    TextEditingController? controller,
+    String? labelText,
+    String? hintText,
     IconData? prefixIcon,
-    IconButton? suffixIcon,
+    Widget? suffixIcon,
     bool? obscureText,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        title != null
-            ? Text(
-                title,
-                style: TextStyle(
-                  fontSize: bodySize,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            : const SizedBox.shrink(),
-        TextFormField(
-          controller: controller,
-          style: TextStyle(fontSize: bodySize),
-          validator: validator,
-          obscureText: obscureText ?? false,
-          decoration: decoration ??
-              InputDecoration(
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                contentPadding: EdgeInsets.all(smallPadding),
-                prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-                suffixIcon: suffixIcon,
-                labelText: label,
-                labelStyle: TextStyle(
-                  fontSize: smallTextSize,
-                ),
-                hintStyle: TextStyle(
-                  fontSize: smallTextSize,
-                  color: Colors.grey,
-                ),
-                hintText: hint ?? '',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    smallBorderRadius,
-                  ),
-                ),
-              ),
-        ).paddingVertical(smallPadding),
-      ],
-    );
-  }
+    String? Function(String?)? validator,
+    InputDecoration? decoration,
+  }) =>
+      TextFormField(
+        controller: controller,
+        style: bodyStyle,
+        obscureText: obscureText ?? false,
+        validator: validator,
+        decoration: (decoration ?? inputDecoration).copyWith(
+          labelText: labelText,
+          hintText: hintText,
+          prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+          suffixIcon: suffixIcon,
+        ),
+      );
+
+  Widget myLottie({
+    required String path,
+    double? width,
+    double? height,
+    BoxFit? fit,
+    Widget? errorWidget,
+  }) =>
+      Lottie.asset(
+        path,
+        width: width ?? screenWidth * 0.8,
+        height: height ?? screenHeight * 0.4,
+        fit: fit ?? BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return errorWidget ?? const SizedBox.shrink();
+        },
+      );
 }

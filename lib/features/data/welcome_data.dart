@@ -1,5 +1,5 @@
 import '../../core/constants/string.dart';
-import '../models/welcome_models.dart';
+import '../models/welcome_model.dart';
 
 class WelcomeData {
   final List<WelcomeModel> welcomeModels;

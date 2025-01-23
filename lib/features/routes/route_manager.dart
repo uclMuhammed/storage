@@ -1,51 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:storage/view/pages/welcome/welcome_mixin.dart';
-import '../../view/pages/welcome/welcome_view.dart';
+import 'package:storage/view/pages/home/home_view.dart';
+import 'package:storage/view/welcome/welcome_view_model.dart';
+import 'package:storage/view/auth/login/login_view_model.dart';
+import '../../view/auth/signup/signup_view.dart';
+import '../../view/auth/signup/signup_view_model.dart';
+import '../../view/welcome/welcome_view.dart';
+import '../../view/auth/login/login_view.dart';
 
 class RouteManager {
   static final Map<String, Widget Function(BuildContext)> routes = {
-    '/welcome': (context) => WelcomePage(viewModel: WelcomePageMixin()),
-    /* '/': (context) => const HomePage(),
-    '/login': (context) => const LoginPage(),
-    '/register': (context) => const RegisterPage(),
-    '/profile': (context) => const ProfilePage(),
-    '/settings': (context) => const SettingsPage(), */
+    '/welcome': (context) =>
+        WelcomeView(viewModel: WelcomeViewModel(), body: WelcomeBody()),
+    '/login': (context) => LoginView(
+          viewModel: LoginViewModel(),
+          body: LoginBody(),
+        ),
+    '/signup': (context) =>
+        SignupView(viewModel: SignupViewModel(), body: SignupBody()),
+    '/home': (context) => const HomeView(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     // Route parametrelerini al
-    final args = settings.arguments;
+
     switch (settings.name) {
       case '/welcome':
         return MaterialPageRoute(
-          builder: (context) => WelcomePage(viewModel: WelcomePageMixin()),
+          builder: (context) =>
+              WelcomeView(viewModel: WelcomeViewModel(), body: WelcomeBody()),
+        );
+      case '/login':
+        return MaterialPageRoute(
+          builder: (context) =>
+              LoginView(viewModel: LoginViewModel(), body: LoginBody()),
+        );
+      case '/signup':
+        return MaterialPageRoute(
+          builder: (context) =>
+              SignupView(viewModel: SignupViewModel(), body: SignupBody()),
+        );
+      case '/home':
+        return MaterialPageRoute(
+          builder: (context) => const HomeView(),
         );
       default:
         return _errorRoute();
     }
-
-    /*    switch (settings.name) {
-      case '/':
-        return MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        );
-      
-      case '/profile':
-        return MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            userId: args is String ? args : null,
-          ),
-        );
-      
-      case '/settings':
-        return MaterialPageRoute(
-          builder: (context) => const SettingsPage(),
-          fullscreenDialog: true,
-        );
-
-      default:
-        return _errorRoute();
-    } */
   }
 
   static Route<dynamic> _errorRoute() {

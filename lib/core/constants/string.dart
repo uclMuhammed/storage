@@ -9,7 +9,7 @@ const String welcomeDescription2 =
     "Ürün giriş-çıkışlarını otomatik takip edin, stok seviyelerinizi optimize edin.";
 const String welcomeDescription3 =
     "Kağıt bazlı sistemlere veda edin, modern depo yönetiminin keyfini çıkarın.";
-const String welcomeAnimation1 = "assets/animation/welcome3.json";
-const String welcomeAnimation2 = "assets/animation/welcome2.json";
-const String welcomeAnimation3 = "assets/animation/welcome1.json";
+const String welcomeAnimation1 = 'assets/animation/welcome/welcome3.json';
+const String welcomeAnimation2 = 'assets/animation/welcome/welcome2.json';
+const String welcomeAnimation3 = 'assets/animation/welcome/welcome1.json';
 //------------------------------------------------------------------------------

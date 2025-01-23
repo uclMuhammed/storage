@@ -55,85 +55,101 @@ extension ResponsiveExtension on BuildContext {
 
   // Font sizes
   double get largeHeadingSize => isSmallScreen
-      ? 26
+      ? 32 // mobile
       : isMediumScreen
-          ? 32
-          : 36;
+          ? 40 // tablet
+          : 48; // desktop
+
   double get headingSize => isSmallScreen
-      ? 22
+      ? 24 // mobile
       : isMediumScreen
-          ? 26
-          : 30;
+          ? 32 // tablet
+          : 40; // desktop
+
   double get subheadingSize => isSmallScreen
-      ? 18
+      ? 20 // mobile
       : isMediumScreen
-          ? 22
-          : 24;
+          ? 24 // tablet
+          : 32; // desktop
+
+  double get subTextSize => isSmallScreen
+      ? 18 // mobile
+      : isMediumScreen
+          ? 20 // tablet
+          : 24; // desktop
+
   double get bodySize => isSmallScreen
-      ? 14
+      ? 16 // mobile
       : isMediumScreen
-          ? 16
-          : 18;
+          ? 18 // tablet
+          : 20; // desktop
+
   double get smallTextSize => isSmallScreen
-      ? 12
+      ? 12 // mobile
       : isMediumScreen
-          ? 14
-          : 16;
+          ? 14 // tablet
+          : 16; // desktop
 
   // Icon sizes
   double get iconSize => isSmallScreen
-      ? 24
+      ? 24 // mobile
       : isMediumScreen
-          ? 28
-          : 32;
+          ? 32 // tablet
+          : 40; // desktop
+
   double get smallIconSize => isSmallScreen
-      ? 16
+      ? 20 // mobile
       : isMediumScreen
-          ? 20
-          : 24;
+          ? 24 // tablet
+          : 28; // desktop
+
   double get largeIconSize => isSmallScreen
-      ? 32
+      ? 32 // mobile
       : isMediumScreen
-          ? 36
-          : 40;
+          ? 40 // tablet
+          : 48; // desktop
 
   // Height values
   double get buttonHeight => isSmallScreen
-      ? 48
+      ? 40 // mobile
       : isMediumScreen
-          ? 52
-          : 56;
+          ? 48 // tablet
+          : 56; // desktop
+
   double get inputHeight => isSmallScreen
-      ? 40
+      ? 36 // mobile
       : isMediumScreen
-          ? 44
-          : 48;
+          ? 44 // tablet
+          : 52; // desktop
+
   double get cardHeight => isSmallScreen
-      ? 160
+      ? 180 // mobile
       : isMediumScreen
-          ? 200
-          : 240;
+          ? 220 // tablet
+          : 260; // desktop
 
   // Width values
   double get maxContentWidth => isSmallScreen ? double.infinity : 1200;
+
   double get cardWidth => isSmallScreen
-      ? screenWidth * 0.8
+      ? screenWidth * 0.9 // mobile
       : isMediumScreen
-          ? 300
-          : 360;
+          ? 320 // tablet
+          : 380; // desktop
 
   // Padding values
   double get basePadding => switch (platformType) {
-        PlatformType.mobile => 14,
-        PlatformType.desktop => 18,
-        PlatformType.web => 18,
+        PlatformType.mobile => 12,
+        PlatformType.desktop => 16,
+        PlatformType.web => 16,
       };
 
   double get padding => isSmallScreen
-      ? basePadding
+      ? basePadding // mobile
       : isMediumScreen
-          ? basePadding * 1.5
-          : basePadding * 2;
+          ? basePadding * 1.5 // tablet
+          : basePadding * 2; // desktop
+
   double get smallPadding => padding / 2;
   double get largePadding => padding * 2;
 
@@ -143,6 +159,7 @@ extension ResponsiveExtension on BuildContext {
         PlatformType.desktop => 12,
         PlatformType.web => 10,
       };
+
   double get smallBorderRadius => borderRadius / 2;
   double get largeBorderRadius => borderRadius * 2;
 

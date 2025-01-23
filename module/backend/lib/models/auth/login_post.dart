@@ -14,7 +14,7 @@ class LoginPostModel extends IModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'COMPANYNAME': companyName,
+      'COMPANYCODE': companyName,
       'EMAIL': email,
       'PASSWORD': password,
     };
@@ -22,7 +22,7 @@ class LoginPostModel extends IModel {
 
   factory LoginPostModel.fromJson(Map<String, dynamic> json) {
     return LoginPostModel(
-      companyName: json['COMPANYNAME'],
+      companyName: json['COMPANYCODE'],
       email: json['EMAIL'],
       password: json['PASSWORD'],
     );

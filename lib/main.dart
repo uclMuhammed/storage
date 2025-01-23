@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         darkTheme: ThemeData.dark(),
         debugShowCheckedModeBanner: false,
         onGenerateRoute: RouteManager.onGenerateRoute,
-        initialRoute: RouteConstants.welcome,
+        initialRoute: RouteConstants.home,
       ),
     );
   }

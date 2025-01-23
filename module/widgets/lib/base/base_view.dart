@@ -16,11 +16,11 @@ abstract class BaseView<T extends BaseViewModel> extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.isMobile()) {
-        return buildMobileView(context);
+        return SafeArea(child: buildMobileView(context));
       } else if (constraints.isTablet()) {
-        return buildTabletView(context);
+        return SafeArea(child: buildTabletView(context));
       } else {
-        return buildDesktopView(context);
+        return SafeArea(child: buildDesktopView(context));
       }
     });
   }
