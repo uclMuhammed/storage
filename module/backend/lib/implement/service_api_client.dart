@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../abstract/models.dart';
 import '../abstract/service_api.dart';
 import '../exception/http_custom_exception.dart';
+import '../exception/unauthorized_exception.dart';
 
 class ServiceApiClient<T extends IModel> extends IApiService<T> {
   final T Function(Map<String, dynamic> json) fromJson;
@@ -96,19 +97,28 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
       print('Response Body: ${response.body}');
       print('Response Headers: ${response.headers}');
     }
+
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      if (R is List) {
-        final decoded = json.decode(response.body) as List;
-        if (kDebugMode) {
-          print('Decoded: $decoded');
-        }
-        return decoded.map((e) => fromJson(e)).toList() as R;
-      } else {
-        if (kDebugMode) {
-          print('Decoded: ${json.decode(response.body)}');
-        }
-        return json.decode(response.body) as R;
+      final decodedBody = json.decode(response.body);
+      if (kDebugMode) {
+        print('Decoded: $decodedBody');
       }
+
+      if (R == List<T>) {
+        final List<dynamic> data = decodedBody['data'] as List;
+        return data.map((e) => fromJson(e as Map<String, dynamic>)).toList()
+            as R;
+      } else if (R == T) {
+        return fromJson(decodedBody['data'] as Map<String, dynamic>) as R;
+      } else {
+        return decodedBody as R;
+      }
+    } else if (response.statusCode == 401) {
+      throw UnauthorizedException(
+        message: json.decode(response.body)['message'] ?? 'Token has expired',
+        statusCode: response.statusCode,
+        stackTrace: StackTrace.current,
+      );
     } else {
       throw HttpCustomException(
         message: response.body,

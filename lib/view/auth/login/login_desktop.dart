@@ -3,7 +3,10 @@ part of 'login_view.dart';
 class LoginDesktop extends StatelessWidget {
   final LoginViewModel viewModel;
   final LoginBody body;
-  const LoginDesktop({super.key, required this.viewModel, required this.body});
+  LoginDesktop({
+    super.key,
+  })  : viewModel = LoginViewModel()..init(),
+        body = LoginBody(viewModel: LoginViewModel()..init());
 
   @override
   Widget build(BuildContext context) {

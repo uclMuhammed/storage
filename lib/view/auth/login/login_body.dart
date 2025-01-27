@@ -1,7 +1,9 @@
 part of 'login_view.dart';
 
-class LoginBody extends LoginViewModel {
-  //----------------------------------------------------------------------------
+class LoginBody extends StatelessWidget {
+  final LoginViewModel viewModel;
+  const LoginBody({super.key, required this.viewModel});
+
   AppBar appBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -37,50 +39,58 @@ class LoginBody extends LoginViewModel {
     return context.myTextButton(
       buttonText: 'Hesabınız yok mu? Kayıt Ol',
       onPressed: () {
-        RouteManager.navigateTo(context, RouteConstants.signup);
+        routeController.navigatorKey.currentState
+            ?.pushNamed(Routes.register.routeName);
       },
     );
   }
 
   Widget buildLoginForm(BuildContext context) {
     return Form(
-      key: formKey,
+      key: viewModel.formKey,
       child: Column(
         children: [
           context
               .myTextFormField(
-                controller: companyCodeController,
+                controller: viewModel.companyCodeController,
                 labelText: 'Şirket Kodu',
                 hintText: 'Şirket Kodu Giriniz',
-                validator: companyCodeValidator,
+                validator: viewModel.companyCodeValidator,
                 prefixIcon: Icons.business,
               )
               .paddingVertical(context.smallPadding),
           context
               .myTextFormField(
-                controller: emailController,
+                controller: viewModel.emailController,
                 labelText: 'Email',
                 hintText: 'Email Giriniz',
-                validator: emailValidator,
+                validator: viewModel.emailValidator,
                 prefixIcon: Icons.email,
               )
               .paddingVertical(context.smallPadding),
-          context
-              .myTextFormField(
-                obscureText: isVisible.value,
-                controller: passwordController,
-                labelText: 'Şifre',
-                hintText: 'Şifre Giriniz',
-                validator: passwordValidator,
-                prefixIcon: Icons.lock_open,
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: isVisible.value
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
-                ),
-              )
-              .paddingVertical(context.smallPadding),
+          ValueListenableBuilder(
+            valueListenable: viewModel.isVisible,
+            builder: (context, value, child) {
+              return context
+                  .myTextFormField(
+                    obscureText: viewModel.isVisible.value,
+                    controller: viewModel.passwordController,
+                    labelText: 'Şifre',
+                    hintText: 'Şifre Giriniz',
+                    validator: viewModel.passwordValidator,
+                    prefixIcon: Icons.lock_open,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        viewModel.isVisible.value = !viewModel.isVisible.value;
+                      },
+                      icon: viewModel.isVisible.value
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
+                    ),
+                  )
+                  .paddingVertical(context.smallPadding);
+            },
+          ),
         ],
       ),
     );
@@ -91,10 +101,20 @@ class LoginBody extends LoginViewModel {
       height: context.buttonHeight,
       width: MediaQuery.of(context).size.width,
       buttonText: 'LOGIN',
-      onPressed: () {
-        RouteManager.navigateToReplacement(context, RouteConstants.home);
-        //login();
-      },
+      onPressed: () => viewModel.login(context),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        buildLoginAnimation(context),
+        buildLoginForm(context),
+        buildLoginButton(context),
+        buildForgotPasswordButton(context),
+        buildSignUpButton(context),
+      ],
     );
   }
 }

@@ -8,11 +8,16 @@ extension ResponsiveWidgetExtension on BuildContext {
   Text mySubText({
     required String text,
     TextAlign? textAlign,
+    int? maxLines,
+    TextStyle? style,
+    TextOverflow? overflow,
   }) =>
       Text(
         text,
-        style: subTextStyle,
+        style: style ?? subTextStyle,
         textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
       );
 
   Text myText({
@@ -20,12 +25,14 @@ extension ResponsiveWidgetExtension on BuildContext {
     TextAlign? textAlign,
     int? maxLines,
     TextStyle? style,
+    TextOverflow? overflow,
   }) =>
       Text(
         text,
         style: style ?? bodyStyle,
         textAlign: textAlign,
         maxLines: maxLines,
+        overflow: overflow,
       );
 
   Text mySmallText({
@@ -33,12 +40,14 @@ extension ResponsiveWidgetExtension on BuildContext {
     TextAlign? textAlign,
     int? maxLines,
     TextStyle? style,
+    TextOverflow? overflow,
   }) =>
       Text(
         text,
         style: style ?? smallTextStyle,
         textAlign: textAlign,
         maxLines: maxLines,
+        overflow: overflow,
       );
 
   Text myHeadingText({
@@ -46,12 +55,14 @@ extension ResponsiveWidgetExtension on BuildContext {
     TextAlign? textAlign,
     int? maxLines,
     TextStyle? style,
+    TextOverflow? overflow,
   }) =>
       Text(
         text,
         style: style ?? headingStyle,
         textAlign: textAlign,
         maxLines: maxLines,
+        overflow: overflow,
       );
 
   Text mySubheadingText({
@@ -59,12 +70,14 @@ extension ResponsiveWidgetExtension on BuildContext {
     TextAlign? textAlign,
     int? maxLines,
     TextStyle? style,
+    TextOverflow? overflow,
   }) =>
       Text(
         text,
         style: style ?? subheadingStyle,
         textAlign: textAlign,
         maxLines: maxLines,
+        overflow: overflow,
       );
 // My Line
   Widget myLine() => Container(
@@ -79,7 +92,7 @@ extension ResponsiveWidgetExtension on BuildContext {
     required List<Widget> children,
     double? childAspectRatio,
     required EdgeInsetsGeometry padding,
-    required int crossAxiscount,
+    required int crossAxisCount,
     Axis? scrollDirection,
   }) {
     return GridView.builder(
@@ -87,10 +100,10 @@ extension ResponsiveWidgetExtension on BuildContext {
       padding: padding,
       physics: const ClampingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxiscount, // Tek sütun
+        crossAxisCount: crossAxisCount, // Tek sütun
         crossAxisSpacing: smallPadding,
         mainAxisSpacing: smallPadding,
-        childAspectRatio: childAspectRatio ?? 1, // Çok uzun kartlar için
+        childAspectRatio: childAspectRatio ?? 1,
       ),
       scrollDirection: Axis.horizontal, // Yatay kaydırma
       itemCount: children.length,
@@ -140,14 +153,21 @@ extension ResponsiveWidgetExtension on BuildContext {
     required Widget child,
     EdgeInsetsGeometry? padding,
     Color? backgroundColor,
+    double? width,
+    Function()? onTap,
   }) =>
-      Container(
-        decoration: cardDecoration.copyWith(
-          color: backgroundColor,
-        ),
-        padding: padding ?? EdgeInsets.all(smallPadding),
-        child: child,
-      );
+      InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Container(
+          width: width ?? cardWidth,
+          decoration: cardDecoration.copyWith(
+            color: backgroundColor,
+          ),
+          padding: padding ?? EdgeInsets.all(smallPadding),
+          child: child,
+        ).paddingAll(smallPadding / 2),
+      ).paddingVertical(smallPadding / 2);
 
   // My Short Cut Button
   Widget myShortCutButton({

@@ -8,7 +8,6 @@ class SignupViewModel extends BaseViewModel {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
   final TextEditingController passConfirmController = TextEditingController();
-  ServiceAuthClient serviceAuthClient = ServiceAuthClient();
   ValueNotifier<bool> isVisible = ValueNotifier<bool>(false);
   ValueNotifier<bool> isVisibleConfirm = ValueNotifier<bool>(false);
 
@@ -54,16 +53,9 @@ class SignupViewModel extends BaseViewModel {
   Future<void> signup() async {
     if (formKey.currentState!.validate()) {
       init();
-      await serviceAuthClient.signup(
-        companyNameController.text,
-        emailController.text,
-        passController.text,
-      );
     }
   }
 
   @override
-  void init() {
-    serviceAuthClient.init();
-  }
+  void init() {}
 }

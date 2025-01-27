@@ -14,15 +14,34 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       title: ValueListenableBuilder(
         valueListenable: viewModel.isSearchVisible,
-        builder: (context, value, child) {
+        builder: (context, isSearchVisible, child) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (context.isSmallScreen) ...[
-                value
+                isSearchVisible
                     ? const SizedBox.shrink()
-                    : Expanded(child: context.mySubText(text: 'Dashboard')),
-                value
+                    : Expanded(
+                        child: ValueListenableBuilder(
+                          valueListenable: viewModel.currentPage,
+                          builder: (context, currentPage, _) {
+                            return ValueListenableBuilder(
+                              valueListenable: viewModel.drawerModels,
+                              builder: (context, drawerModels, _) {
+                                final currentDrawer = drawerModels.firstWhere(
+                                  (element) =>
+                                      element.page.runtimeType ==
+                                      currentPage.runtimeType,
+                                  orElse: () => drawerModels.first,
+                                );
+                                return context.mySubText(
+                                    text: currentDrawer.title);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                isSearchVisible
                     ? Expanded(
                         child: context.myTextFormField(
                           controller: viewModel.searchController,
@@ -55,7 +74,23 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ] else ...[
                 Expanded(
                   flex: 2,
-                  child: context.mySubText(text: 'Dashboard'),
+                  child: ValueListenableBuilder(
+                    valueListenable: viewModel.currentPage,
+                    builder: (context, currentPage, _) {
+                      return ValueListenableBuilder(
+                        valueListenable: viewModel.drawerModels,
+                        builder: (context, drawerModels, _) {
+                          final currentDrawer = drawerModels.firstWhere(
+                            (element) =>
+                                element.page.runtimeType ==
+                                currentPage.runtimeType,
+                            orElse: () => drawerModels.first,
+                          );
+                          return context.mySubText(text: currentDrawer.title);
+                        },
+                      );
+                    },
+                  ),
                 ),
                 Expanded(
                   flex: 3,

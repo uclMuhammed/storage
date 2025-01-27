@@ -1,7 +1,7 @@
+import 'package:backend/const/index.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/widgets.dart';
-import '../../features/routes/route_constants.dart';
-import '../../features/routes/route_manager.dart';
+import '../../features/routes/routes.dart';
 import 'welcome_view_model.dart';
 
 part 'welcome_desktop.dart';
@@ -12,7 +12,9 @@ part 'welcome_body.dart';
 class WelcomeView extends BaseView<WelcomeViewModel> {
   final WelcomeViewModel viewModel;
   final WelcomeBody body;
-  const WelcomeView({super.key, required this.viewModel, required this.body});
+  WelcomeView({super.key})
+      : viewModel = WelcomeViewModel(),
+        body = WelcomeBody();
 
   @override
   Widget buildDesktopView(BuildContext context) {

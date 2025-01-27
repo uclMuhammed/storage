@@ -3,7 +3,10 @@ part of 'login_view.dart';
 class LoginMobile extends StatelessWidget {
   final LoginViewModel viewModel;
   final LoginBody body;
-  const LoginMobile({super.key, required this.viewModel, required this.body});
+  LoginMobile({
+    super.key,
+  })  : viewModel = LoginViewModel()..init(),
+        body = LoginBody(viewModel: LoginViewModel()..init());
 
   @override
   Widget build(BuildContext context) {

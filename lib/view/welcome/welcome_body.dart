@@ -86,7 +86,9 @@ class WelcomeBody extends WelcomeViewModel {
           buttonText: buttonText,
           onPressed: () {
             if (isLastPage) {
-              RouteManager.navigateToReplacement(context, RouteConstants.login);
+              routeController.navigatorKey.currentState
+                  ?.pushNamedAndRemoveUntil(
+                      Routes.login.routeName, (route) => false);
             } else {
               controller.nextPage();
             }

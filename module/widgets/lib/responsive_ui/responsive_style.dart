@@ -70,11 +70,5 @@ extension ResponsiveStyleExtension on BuildContext {
   // Card styles
   BoxDecoration get cardDecoration => BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
       );
 }

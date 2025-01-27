@@ -4,7 +4,7 @@ import 'package:widgets/widgets.dart';
 
 import '../../../features/data/drawer_data.dart';
 import '../../../features/models/drawer_model.dart';
-import '../dashboard/dashbord_view.dart';
+import '../warehouses/warehouses_view.dart';
 
 class HomeViewModel extends BaseViewModel {
   final drawerNotifier = GenericNotifier<DrawerMode>(DrawerMode.icon);
@@ -12,7 +12,7 @@ class HomeViewModel extends BaseViewModel {
   final ValueNotifier<bool> isSearchVisible = ValueNotifier(false);
   final TextEditingController searchController = TextEditingController();
   final ValueNotifier<Widget> currentPage =
-      ValueNotifier(const DashboardView());
+      ValueNotifier(const WarehousesView());
   final ValueNotifier<List<DrawerModel>> drawerModels =
       ValueNotifier(DrawerData.getDrawerPage);
 

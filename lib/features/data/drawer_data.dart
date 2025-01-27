@@ -61,6 +61,10 @@ class DrawerData extends ChangeNotifier {
       icon: Icons.developer_board,
       page: const DeveloperView(),
     ),
+    DrawerModel(
+      title: 'LOGOUT',
+      icon: Icons.logout,
+    ),
   ];
 
   static List<DrawerModel> reportDrawerModels = [
@@ -141,6 +145,10 @@ class DrawerData extends ChangeNotifier {
       title: 'DEVELOPER',
       icon: Icons.developer_board,
       page: const DeveloperView(),
+    ),
+    DrawerModel(
+      title: 'LOGOUT',
+      icon: Icons.logout,
     ),
   ];
 }

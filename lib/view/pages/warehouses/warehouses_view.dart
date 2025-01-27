@@ -1,21 +1,34 @@
+library warehouses;
+
 import 'package:flutter/material.dart';
+import 'package:backend/backend.dart';
 import 'package:widgets/widgets.dart';
 
-class WarehousesView extends BaseView {
+import 'warehouses_view_model.dart';
+
+part 'warehouses_desktop.dart';
+part 'warehouses_tablet.dart';
+part 'warehouses_mobile.dart';
+part 'warehouses_body.dart';
+part 'dialog/warehouses_edit.dart';
+part 'dialog/warehouses_create.dart';
+part 'dialog/warehouses_delete.dart';
+
+class WarehousesView extends BaseView<WarehousesViewModel> {
   const WarehousesView({super.key});
 
   @override
   Widget buildDesktopView(BuildContext context) {
-    return const Center(child: Text('Warehouses - Desktop View'));
+    return _WarehousesDesktop();
   }
 
   @override
   Widget buildMobileView(BuildContext context) {
-    return const Center(child: Text('Warehouses - Mobile View'));
+    return _WarehousesMobile();
   }
 
   @override
   Widget buildTabletView(BuildContext context) {
-    return const Center(child: Text('Warehouses - Tablet View'));
+    return _WarehousesTablet();
   }
 }

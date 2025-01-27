@@ -12,7 +12,9 @@ part 'signup_body.dart';
 class SignupView extends BaseView {
   final SignupViewModel viewModel;
   final SignupBody body;
-  const SignupView({super.key, required this.viewModel, required this.body});
+  SignupView({super.key})
+      : viewModel = SignupViewModel(),
+        body = SignupBody();
 
   @override
   Widget buildDesktopView(BuildContext context) {

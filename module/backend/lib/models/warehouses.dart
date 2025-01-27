@@ -110,7 +110,22 @@ class Warehouses extends IModel<Warehouses> {
 
   @override
   Warehouses copyWith() {
-    // TODO: implement copyWith
-    throw UnimplementedError();
+    return Warehouses(
+      cityId: cityId,
+      warehouse: warehouse,
+      description: description,
+      regionId: regionId,
+      companyId: companyId,
+      address: address,
+      id: id,
+      isActive: isActive,
+      isDelete: isDelete,
+      createdAt: createdAt,
+      createdBy: createdBy,
+      updatedAt: updatedAt,
+      updatedBy: updatedBy,
+      deletedBy: deletedBy,
+      deletedAt: deletedAt,
+    );
   }
 }

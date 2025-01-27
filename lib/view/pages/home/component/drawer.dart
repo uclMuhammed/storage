@@ -6,7 +6,6 @@ class _Drawer extends BaseDrawerView {
     required super.viewKey,
     required this.viewModel,
     required super.drawerNotifier,
-    // ignore: unused_element
     super.shape = const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.zero),
     ),
@@ -50,7 +49,6 @@ class _Drawer extends BaseDrawerView {
               )
               .toList(),
         );
-        ;
       },
     );
   }
@@ -70,7 +68,20 @@ class _Drawer extends BaseDrawerView {
                   name: e.title,
                   icon: e.icon,
                   onTap: () {
-                    viewModel.currentPage.value = e.page!;
+                    if (e.title == 'LOGOUT') {
+                      try {
+                        ServiceAuthClient().logout();
+                        routeController.navigatorKey.currentState
+                            ?.pushNamedAndRemoveUntil(
+                          Routes.login.routeName,
+                          (route) => false,
+                        );
+                      } catch (e) {
+                        print(e);
+                      }
+                    } else {
+                      viewModel.currentPage.value = e.page!;
+                    }
                   },
                   tooltipMessage:
                       drawerNotifier.value == DrawerMode.icon ? e.title : '',
