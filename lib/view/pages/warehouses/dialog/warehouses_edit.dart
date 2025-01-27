@@ -3,10 +3,12 @@ part of warehouses;
 class WarehousesEdit {
   final Warehouses warehouse;
   final BuildContext context;
+  final WarehousesViewModel viewModel;
 
   WarehousesEdit({
     required this.warehouse,
     required this.context,
+    required this.viewModel,
   });
 
   Future<void> show() async {
@@ -16,8 +18,8 @@ class WarehousesEdit {
     int? selectedRegionId = warehouse.regionId;
     int? selectedCityId = warehouse.cityId;
 
-    final _authClient = ServiceAuthClient();
-    final token = await _authClient.getAuthToken();
+    final authClient = ServiceAuthClient();
+    final token = await authClient.getAuthToken();
 
     final warehouseService = ServiceApiClient<Warehouses>(
       baseUrl: StockTrackerApiUrl,
@@ -35,7 +37,7 @@ class WarehousesEdit {
 
     final cityService = ServiceApiClient<Cities>(
       baseUrl: StockTrackerApiUrl,
-      endPoint: '/1/cities',
+      endPoint: '/cities/1',
       fromJson: (json) => Cities.fromJson(json),
       header: HeaderWithToken(token ?? ''),
     )..init();
@@ -138,6 +140,8 @@ class WarehousesEdit {
                     warehouse.id!,
                     updatedWarehouse,
                   );
+                  viewModel.refreshTrigger.value =
+                      !viewModel.refreshTrigger.value;
                   Navigator.pop(context, updatedWarehouse);
                 }
               },

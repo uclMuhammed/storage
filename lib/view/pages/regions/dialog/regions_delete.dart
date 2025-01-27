@@ -1,24 +1,24 @@
-part of warehouses;
+part of regions;
 
-class WarehousesDelete {
-  final Warehouses warehouse;
+class RegionsDelete {
+  final Regions region;
   final BuildContext context;
-  final WarehousesViewModel viewModel;
+  final RegionsViewModel viewModel;
 
-  WarehousesDelete({
-    required this.warehouse,
+  RegionsDelete({
     required this.context,
     required this.viewModel,
+    required this.region,
   });
 
   Future<bool?> show() async {
     final authClient = ServiceAuthClient();
     final token = await authClient.getAuthToken();
 
-    final warehouseService = ServiceApiClient<Warehouses>(
+    final regionService = ServiceApiClient<Regions>(
       baseUrl: StockTrackerApiUrl,
-      endPoint: '/warehouses',
-      fromJson: (json) => Warehouses.fromJson(json),
+      endPoint: '/regions',
+      fromJson: (json) => Regions.fromJson(json),
       header: HeaderWithToken(token ?? ''),
     )..init();
 
@@ -26,18 +26,18 @@ class WarehousesDelete {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Depo Sil'),
+          title: const Text('Bölge Sil'),
           content: Text(
-              '${warehouse.description} deposunu silmek istediğinize emin misiniz?'),
+              '${region.description} bölgesini silmek istediğinize emin misiniz?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () => Navigator.pop(context),
               child: const Text('İptal'),
             ),
             TextButton(
               onPressed: () async {
                 try {
-                  await warehouseService.deleteById(warehouse.id!);
+                  await regionService.deleteById(region.id!);
                   viewModel.refreshTrigger.value =
                       !viewModel.refreshTrigger.value;
                   Navigator.pop(context, true);
@@ -45,7 +45,10 @@ class WarehousesDelete {
                   Navigator.pop(context, false);
                 }
               },
-              child: const Text('Sil', style: TextStyle(color: Colors.red)),
+              child: const Text(
+                'Sil',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
           ],
         );

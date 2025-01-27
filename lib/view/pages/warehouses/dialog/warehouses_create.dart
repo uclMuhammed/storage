@@ -2,9 +2,11 @@ part of warehouses;
 
 class WarehousesCreate {
   final BuildContext context;
+  final WarehousesViewModel viewModel;
 
   WarehousesCreate({
     required this.context,
+    required this.viewModel,
   });
 
   Future<bool?> show() async {
@@ -14,8 +16,8 @@ class WarehousesCreate {
     int? selectedRegionId;
     int? selectedCityId;
 
-    final _authClient = ServiceAuthClient();
-    final token = await _authClient.getAuthToken();
+    final authClient = ServiceAuthClient();
+    final token = await authClient.getAuthToken();
 
     final warehouseService = ServiceApiClient<Warehouses>(
       baseUrl: StockTrackerApiUrl,
@@ -33,7 +35,7 @@ class WarehousesCreate {
 
     final cityService = ServiceApiClient<Cities>(
       baseUrl: StockTrackerApiUrl,
-      endPoint: '/1/cities',
+      endPoint: '/cities/1',
       fromJson: (json) => Cities.fromJson(json),
       header: HeaderWithToken(token ?? ''),
     )..init();
@@ -90,30 +92,28 @@ class WarehousesCreate {
                       ).paddingVertical(context.smallPadding);
                     },
                   ),
-                  if (selectedRegionId != null)
-                    FutureBuilder<List<Cities>>(
-                      future: cityService.getAll(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        final cities = snapshot.data ?? [];
-                        return DropdownButtonFormField<int>(
-                          value: selectedCityId,
-                          decoration: const InputDecoration(labelText: 'Şehir'),
-                          items: cities.map((city) {
-                            return DropdownMenuItem(
-                              value: city.id,
-                              child: Text(city.description),
-                            );
-                          }).toList(),
-                          onChanged: (value) => selectedCityId = value,
-                          validator: (value) =>
-                              value == null ? 'Şehir seçiniz' : null,
-                        ).paddingVertical(context.smallPadding);
-                      },
-                    ),
+                  FutureBuilder<List<Cities>>(
+                    future: cityService.getAll(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      final cities = snapshot.data ?? [];
+                      return DropdownButtonFormField<int>(
+                        value: selectedCityId,
+                        decoration: const InputDecoration(labelText: 'Şehir'),
+                        items: cities.map((city) {
+                          return DropdownMenuItem(
+                            value: city.id,
+                            child: Text(city.description),
+                          );
+                        }).toList(),
+                        onChanged: (value) => selectedCityId = value,
+                        validator: (value) =>
+                            value == null ? 'Şehir seçiniz' : null,
+                      ).paddingVertical(context.smallPadding);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -134,6 +134,8 @@ class WarehousesCreate {
                       addressController.text,
                     );
                     await warehouseService.create(newWarehouse);
+                    viewModel.refreshTrigger.value =
+                        !viewModel.refreshTrigger.value;
                     Navigator.pop(context, true);
                   } catch (e) {
                     Navigator.pop(context, false);

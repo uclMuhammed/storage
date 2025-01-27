@@ -5,88 +5,117 @@ class WarehousesBody {
 
   WarehousesBody(this.viewModel);
 
+  @override
   Widget buildHeader(BuildContext context) {
-    return FutureBuilder<List<IModel>>(
-      future: viewModel.getAllWarehouses(),
-      builder: (context, AsyncSnapshot<List<IModel>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return ValueListenableBuilder<bool>(
+      valueListenable: viewModel.refreshTrigger,
+      builder: (context, _, __) {
+        return FutureBuilder<List<IModel>>(
+          future: viewModel.getAllWarehouses(),
+          builder: (context, AsyncSnapshot<List<IModel>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        if (snapshot.hasError) {
-          return Center(child: Text('Hata: ${snapshot.error}'));
-        }
+            if (snapshot.hasError) {
+              return Center(child: Text('Hata: ${snapshot.error}'));
+            }
 
-        final warehouses = snapshot.data ?? [];
-        if (warehouses.isEmpty) {
-          return const Center(child: Text('Henüz depo bulunmuyor'));
-        }
-
-        return context.responsiveGridView(
-          padding: EdgeInsets.symmetric(horizontal: context.smallPadding / 2),
-          crossAxisCount: 1,
-          childAspectRatio: 0.75,
-          children: warehouses
-              .map(
-                (warehouse) => context.myCard(
-                  onTap: () {
-                    viewModel.selectedWarehouseNotifier.value = warehouse;
-                  },
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: context.mySubText(
-                                text: (warehouse as Warehouses).description,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            context.myText(
-                              text: '#${warehouse.warehouse}',
-                              style: TextStyle(
-                                fontSize: context.bodySize,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Spacer(),
-                            Icon(
-                              Icons.warehouse,
-                              size: context.iconSize,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+            final warehouses = snapshot.data ?? [];
+            if (warehouses.isEmpty) {
+              return Center(
+                child: Tooltip(
+                  message: 'Depo oluşturmak için tıklayınız',
+                  child: context.myCard(
+                    onTap: () {
+                      WarehousesCreate(
+                        context: context,
+                        viewModel: viewModel,
+                      ).show();
+                    },
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                    width: 100,
+                    height: 100,
+                    child: const Icon(Icons.add),
                   ),
                 ),
-              )
-              .toList(),
+              );
+            }
+
+            return context.responsiveGridView(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.smallPadding / 2,
+                vertical: context.smallPadding,
+              ),
+              crossAxisCount: 1,
+              childAspectRatio: 0.75,
+              children: warehouses
+                  .map(
+                    (warehouse) => context.myCard(
+                      onTap: () {
+                        viewModel.selectedWarehouse.value = warehouse;
+                      },
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: context.mySubText(
+                                    text: (warehouse as Warehouses).description,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                context.myText(
+                                  text: '#${warehouse.warehouse}',
+                                  style: TextStyle(
+                                    fontSize: context.bodySize,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Icon(
+                                  Icons.warehouse,
+                                  size: context.iconSize,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
         );
       },
     );
   }
 
+  @override
   Widget buildBody(BuildContext context) {
     return ValueListenableBuilder<Warehouses?>(
-      valueListenable: viewModel.selectedWarehouseNotifier,
+      valueListenable: viewModel.selectedWarehouse,
       builder: (context, selectedWarehouse, _) {
+        viewModel.regionIndex = selectedWarehouse?.regionId;
+        viewModel.cityIndex = selectedWarehouse?.cityId;
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(context.smallPadding),
+            borderRadius: BorderRadius.circular(context.borderRadius),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,13 +124,10 @@ class WarehousesBody {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.smallPadding,
-                      vertical: context.smallPadding,
-                    ),
+                    padding: EdgeInsets.all(context.smallPadding),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(context.smallPadding),
+                      borderRadius: BorderRadius.circular(context.borderRadius),
                     ),
                     child: context.mySubheadingText(
                       text: '#${selectedWarehouse?.warehouse}',
@@ -138,13 +164,24 @@ class WarehousesBody {
                         context,
                         icon: Icons.map,
                         label: 'Bölge',
-                        value: selectedWarehouse?.regionId.toString() ?? '',
+                        value: viewModel.regions.value
+                            .firstWhere(
+                              (region) =>
+                                  region.id == selectedWarehouse?.regionId,
+                              orElse: () => Regions.empty(),
+                            )
+                            .description,
                       ),
                       _buildDetailRow(
                         context,
                         icon: Icons.location_city,
                         label: 'Şehir',
-                        value: selectedWarehouse?.cityId.toString() ?? '',
+                        value: viewModel.cities.value
+                            .firstWhere(
+                              (city) => city.id == selectedWarehouse?.cityId,
+                              orElse: () => Cities.empty(),
+                            )
+                            .description,
                       ),
                       _buildDetailRow(
                         context,
@@ -204,38 +241,44 @@ class WarehousesBody {
 
   Widget buildFooter(BuildContext context) {
     return ValueListenableBuilder<Warehouses?>(
-      valueListenable: viewModel.selectedWarehouseNotifier,
+      valueListenable: viewModel.selectedWarehouse,
       builder: (context, selectedWarehouse, _) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FloatingActionButton(
+              tooltip: 'Depo Sil',
               heroTag: 'delete',
               onPressed: () async {
                 WarehousesDelete(
                   warehouse: selectedWarehouse!,
                   context: context,
+                  viewModel: viewModel,
                 ).show();
               },
               child: const Icon(Icons.delete),
             ),
             SizedBox(width: context.smallPadding),
             FloatingActionButton(
+              tooltip: 'Depo Düzenle',
               heroTag: 'edit',
               onPressed: () {
                 WarehousesEdit(
                   warehouse: selectedWarehouse!,
                   context: context,
+                  viewModel: viewModel,
                 ).show();
               },
               child: const Icon(Icons.edit),
             ),
             SizedBox(width: context.smallPadding),
             FloatingActionButton(
+              tooltip: 'Depo Oluştur',
               heroTag: 'create',
-              onPressed: () {
+              onPressed: () async {
                 WarehousesCreate(
                   context: context,
+                  viewModel: viewModel,
                 ).show();
               },
               child: const Icon(Icons.add),

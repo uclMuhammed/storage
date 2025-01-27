@@ -154,6 +154,7 @@ extension ResponsiveWidgetExtension on BuildContext {
     EdgeInsetsGeometry? padding,
     Color? backgroundColor,
     double? width,
+    double? height,
     Function()? onTap,
   }) =>
       InkWell(
@@ -161,6 +162,7 @@ extension ResponsiveWidgetExtension on BuildContext {
         borderRadius: BorderRadius.circular(borderRadius),
         child: Container(
           width: width ?? cardWidth,
+          height: height ?? cardHeight,
           decoration: cardDecoration.copyWith(
             color: backgroundColor,
           ),
