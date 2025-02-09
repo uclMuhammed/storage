@@ -99,7 +99,7 @@ class ProductMovement extends IModel<ProductMovement> {
       taxRate: 0,
       discount: 0,
       totalCost: 0,
-      transactionDate: DateTime.now(),
+      transactionDate: transactionDate,
       documentNo: documentNo,
       description: description,
       projectId: projectId,
@@ -220,7 +220,7 @@ class ProductMovement extends IModel<ProductMovement> {
       'TAX_RATE': taxRate,
       'DISCOUNT': discount,
       'TOTAL_COST': totalCost,
-      'TRANSACTION_DATE': transactionDate,
+      'TRANSACTION_DATE': transactionDate.toIso8601String(),
       'DOCUMENT_NO': documentNo,
       'DESCRIPTION': description,
       'IS_PURCHASES': isPurchases,
@@ -233,7 +233,6 @@ class ProductMovement extends IModel<ProductMovement> {
 
   @override
   ProductMovement copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

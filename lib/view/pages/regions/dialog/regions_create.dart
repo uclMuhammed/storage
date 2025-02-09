@@ -1,4 +1,4 @@
-part of regions;
+part of '../regions_view.dart';
 
 class RegionsCreate {
   final BuildContext context;
@@ -9,17 +9,6 @@ class RegionsCreate {
   Future<bool?> show() async {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController();
-
-    final authClient = ServiceAuthClient();
-    final token = await authClient.getAuthToken();
-
-    final regionService = ServiceApiClient<Regions>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/regions',
-      fromJson: (json) => Regions.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
     return showDialog<bool>(
       context: context,
       builder: (context) {
@@ -51,11 +40,9 @@ class RegionsCreate {
             TextButton(
               onPressed: () async {
                 if (formKey.currentState?.validate() == true) {
-                  final newRegion = Regions.insert(nameController.text);
-                  await regionService.create(newRegion);
-                  viewModel.refreshTrigger.value =
-                      !viewModel.refreshTrigger.value;
-                  Navigator.pop(context, newRegion);
+                  await viewModel.createRegion(nameController.text);
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context, true);
                 }
               },
               child: const Text('Kaydet'),

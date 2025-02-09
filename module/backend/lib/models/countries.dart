@@ -119,7 +119,6 @@ class Countries extends IModel<Countries> {
 
   @override
   Countries copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

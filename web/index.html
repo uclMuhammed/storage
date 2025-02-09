@@ -31,8 +31,27 @@
 
   <title>storage</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- CORS ve güvenlik politikaları -->
+  <meta http-equiv="Content-Security-Policy" 
+        content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content: https://ssl.gstatic.com;
+                 connect-src * 'self' http://localhost:* https://* http://* ws://*;
+                 style-src * 'self' 'unsafe-inline';
+                 img-src * 'self' data: content:;
+                 media-src * blob: data: content:;
+                 script-src * 'self' 'unsafe-inline' 'unsafe-eval';">
 </head>
 <body>
+  <script>
+    // CORS için global ayarlar
+    window.addEventListener('load', function() {
+      if (window.location.protocol === 'https:') {
+        console.log('Running in HTTPS');
+      } else {
+        console.log('Running in HTTP');
+      }
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

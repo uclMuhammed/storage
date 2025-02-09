@@ -7,6 +7,7 @@ class Products extends IModel<Products> {
   final String description;
   final int brandId;
   final int categoryId;
+  final int categorySubId;
   final int companyId;
   final int unitId;
   final int price;
@@ -19,6 +20,7 @@ class Products extends IModel<Products> {
     required this.barcode,
     required this.description,
     required this.categoryId,
+    required this.categorySubId,
     required this.companyId,
     required this.brandId,
     required this.unitId,
@@ -42,6 +44,7 @@ class Products extends IModel<Products> {
       barcode: '',
       description: '',
       categoryId: 0,
+      categorySubId: 0,
       companyId: 0,
       brandId: 0,
       unitId: 0,
@@ -67,6 +70,7 @@ class Products extends IModel<Products> {
     String description,
     int brandId,
     int categoryId,
+    int categorySubId,
     int unitId,
     double price,
     String dimensions,
@@ -78,6 +82,7 @@ class Products extends IModel<Products> {
       barcode: barcode,
       description: description,
       categoryId: categoryId,
+      categorySubId: categorySubId,
       companyId: 0,
       brandId: brandId,
       unitId: unitId,
@@ -102,6 +107,7 @@ class Products extends IModel<Products> {
     String description,
     int brandId,
     int categoryId,
+    int categorySubId,
     int unitId,
     double price,
     String dimensions,
@@ -113,6 +119,7 @@ class Products extends IModel<Products> {
       barcode: barcode,
       description: description,
       categoryId: categoryId,
+      categorySubId: categorySubId,
       companyId: 0,
       brandId: brandId,
       unitId: unitId,
@@ -137,6 +144,7 @@ class Products extends IModel<Products> {
       barcode: '',
       description: '',
       categoryId: 0,
+      categorySubId: 0,
       companyId: 0,
       brandId: 0,
       unitId: 0,
@@ -164,6 +172,7 @@ class Products extends IModel<Products> {
       code: json['CODE'] ?? '',
       description: json['DESCRIPTION'] ?? 'No description',
       categoryId: int.tryParse(json['CATEGORY_ID'].toString()) ?? 0,
+      categorySubId: int.tryParse(json['CATEGORY_SUB_ID'].toString()) ?? 0,
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       brandId: int.tryParse(json['BRAND_ID'].toString()) ?? 0,
       unitId: int.tryParse(json['UNIT_ID'].toString()) ?? 0,
@@ -199,6 +208,7 @@ class Products extends IModel<Products> {
       'BARCODE': barcode,
       'DESCRIPTION': description,
       'CATEGORY_ID': categoryId,
+      'CATEGORY_SUB_ID': categorySubId,
       'COMPANY_ID': companyId,
       'BRAND_ID': brandId,
       'UNIT_ID': unitId,
@@ -219,7 +229,6 @@ class Products extends IModel<Products> {
 
   @override
   Products copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

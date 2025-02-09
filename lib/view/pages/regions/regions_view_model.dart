@@ -1,124 +1,138 @@
 import 'package:backend/backend.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:widgets/base/base_view_model.dart';
 
 class RegionsViewModel extends BaseViewModel {
-  //key
-  final Key key = Key('_regions_view_key');
+  late final ServiceAuthClient _serviceAuthClient;
+  late final SmartApiService<Regions> _regionsService;
+  late final SmartApiService<Cities> _citiesService;
+  bool _isInitialized = false;
 
-  // Service Auth Client
-  final _authClient = ServiceAuthClient();
+  final regions = ValueNotifier<List<Regions>>([]);
+  final cities = ValueNotifier<List<Cities>>([]);
 
-  // Service
-  ServiceApiClient? serviceApiClient;
+  final selectedRegion = ValueNotifier<Regions?>(null);
+  final selectedCity = ValueNotifier<Cities?>(null);
 
-  // ValueNotifier
-  final ValueNotifier<List<Regions>> regions = ValueNotifier([]);
+  final loadingNotifier = ValueNotifier<bool>(false);
+  final error = ValueNotifier<String?>(null);
 
-  final ValueNotifier<Regions?> selectedRegion = ValueNotifier(null);
-  final ValueNotifier<bool> refreshTrigger = ValueNotifier(false);
+  @override
+  bool get isLoading => loadingNotifier.value;
+
+  @override
+  void setLoading(bool value) {
+    loadingNotifier.value = value;
+    if (value) error.value = null;
+    notifyListeners();
+  }
 
   @override
   void init() {
-    _authClient.init();
-    _initServiceApiClient();
+    _initServices().then((_) => _loadData());
+  }
+
+  Future<void> _initServices() async {
+    if (_isInitialized) return;
+    try {
+      _serviceAuthClient = ServiceAuthClient()..init();
+      final token = await _serviceAuthClient.getToken();
+      if (token == null) throw Exception('Oturum açmanız gerekiyor');
+
+      _regionsService = SmartApiService<Regions>(
+        fromJson: Regions.fromJson,
+        toJson: (r) => r.toJson(),
+        endPoint: ApiEndpoints.regions,
+        baseUrl: StockTrackerApiUrl,
+        header: HeaderWithToken(token),
+      );
+
+      _citiesService = SmartApiService<Cities>(
+        fromJson: Cities.fromJson,
+        toJson: (c) => c.toJson(),
+        endPoint: ApiEndpoints.cities,
+        baseUrl: StockTrackerApiUrl,
+        header: HeaderWithToken(token),
+      );
+      _isInitialized = true;
+    } catch (e) {
+      error.value = 'Hata oluştu: $e';
+      rethrow;
+    }
+  }
+
+  Future<void> _loadData() async {
+    try {
+      setLoading(true);
+      final regionsData =
+          await _regionsService.getAll(priority: CachePriority.high);
+      regions.value = regionsData;
+      final citiesData =
+          await _citiesService.getAll(priority: CachePriority.high);
+      cities.value = citiesData;
+    } catch (e) {
+      error.value = 'Veriler yüklenemedi: $e';
+      regions.value = [];
+      cities.value = [];
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> createRegion(String description) async {
+    try {
+      setLoading(true);
+      final region = Regions.insert(description);
+      final created = await _regionsService.create(region);
+      await _loadData();
+      selectedRegion.value = regions.value.firstWhere(
+        (r) => r.id == created.id,
+        orElse: () => created,
+      );
+    } catch (e) {
+      error.value = 'Bölge oluşturulamadı: $e';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> updateRegion(int id, String description) async {
+    try {
+      setLoading(true);
+      final region = Regions.update(id, description);
+      await _regionsService.updateById(id, region);
+      await _loadData();
+      selectedRegion.value = regions.value.firstWhere(
+        (r) => r.id == id,
+        orElse: () => region,
+      );
+    } catch (e) {
+      error.value = 'Bölge güncellenemedi: $e';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> deleteRegion(int id) async {
+    try {
+      setLoading(true);
+      await _regionsService.deleteById(id);
+      await _loadData();
+    } catch (e) {
+      error.value = 'Bölge silinemedi: $e';
+    } finally {
+      setLoading(false);
+    }
   }
 
   @override
   void dispose() {
-    serviceApiClient?.dispose();
+    regions.dispose();
+    selectedRegion.dispose();
+    loadingNotifier.dispose();
+    error.dispose();
+    cities.dispose();
+    selectedCity.dispose();
     super.dispose();
-  }
-
-  Future<void> _initServiceApiClient() async {
-    final token = await _authClient.getAuthToken();
-    serviceApiClient = ServiceApiClient<Regions>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/regions',
-      fromJson: (json) => Regions.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-  }
-
-  Future<List<IModel>> getAllRegions() async {
-    try {
-      if (serviceApiClient == null) {
-        await _initServiceApiClient();
-      }
-      final response = await serviceApiClient!.getAll();
-      regions.value = response.map((e) => e as Regions).toList();
-
-      if (selectedRegion.value == null && response.isNotEmpty) {
-        selectedRegion.value = response.first as Regions;
-      }
-
-      return response;
-    } catch (e) {
-      print('Bölge yükleme hatası: $e');
-      return [];
-    }
-  }
-
-  Future<bool> deleteRegion(int regionId) async {
-    try {
-      if (serviceApiClient == null) {
-        await _initServiceApiClient();
-      }
-      final response = await serviceApiClient!.deleteById(regionId);
-      if (response) {
-        final updatedList = await getAllRegions();
-        regions.value = updatedList.map((e) => e as Regions).toList();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print('Bölge silme hatası: $e');
-      return false;
-    }
-  }
-
-  Future<bool> updateRegion(Regions region) async {
-    try {
-      if (serviceApiClient == null) {
-        await _initServiceApiClient();
-      }
-      final response =
-          await serviceApiClient!.updateById(region.region, region);
-      if (response == true) {
-        final updatedList = await getAllRegions();
-        regions.value = updatedList.map((e) => e as Regions).toList();
-
-        if (selectedRegion.value?.id == region.id) {
-          selectedRegion.value = region;
-        }
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print('Bölge güncelleme hatası: $e');
-      return false;
-    }
-  }
-
-  Future<bool> createRegion(Regions region) async {
-    try {
-      if (serviceApiClient == null) {
-        await _initServiceApiClient();
-      }
-      final response = await serviceApiClient!.create(region);
-      if (response == true) {
-        final updatedList = await getAllRegions();
-        regions.value = updatedList.map((e) => e as Regions).toList();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      print('Bölge oluşturma hatası: $e');
-      return false;
-    }
-  }
-
-  void refresh() {
-    refreshTrigger.value = !refreshTrigger.value;
   }
 }

@@ -35,13 +35,17 @@ class ProjectCode extends IModel<ProjectCode> {
       isDelete: false,
     );
   }
-  factory ProjectCode.insert(String description) {
+  factory ProjectCode.insert(
+    String description,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     return ProjectCode(
       project: 0,
       description: description,
       companyId: 0,
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
+      startDate: startDate,
+      endDate: endDate,
       id: 0,
       isActive: false,
       isDelete: false,
@@ -97,7 +101,7 @@ class ProjectCode extends IModel<ProjectCode> {
     return {
       'PROJECT': project,
       'DESCRIPTION': description,
-      'COMPANYID': companyId,
+      'COMPANY_ID': companyId,
       'START_DATE': startDate.toIso8601String(),
       'END_DATE': endDate.toIso8601String(),
       'ID': id,
@@ -108,7 +112,6 @@ class ProjectCode extends IModel<ProjectCode> {
 
   @override
   ProjectCode copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

@@ -1,4 +1,4 @@
-part of warehouses;
+part of '../warehouses_view.dart';
 
 class WarehousesEdit {
   final Warehouses warehouse;
@@ -17,30 +17,6 @@ class WarehousesEdit {
     final addressController = TextEditingController(text: warehouse.address);
     int? selectedRegionId = warehouse.regionId;
     int? selectedCityId = warehouse.cityId;
-
-    final authClient = ServiceAuthClient();
-    final token = await authClient.getAuthToken();
-
-    final warehouseService = ServiceApiClient<Warehouses>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/warehouses',
-      fromJson: (json) => Warehouses.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
-    final regionService = ServiceApiClient<Regions>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/regions',
-      fromJson: (json) => Regions.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
-    final cityService = ServiceApiClient<Cities>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/cities/1',
-      fromJson: (json) => Cities.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
 
     return showDialog(
       context: context,
@@ -69,55 +45,73 @@ class WarehousesEdit {
                             value?.isEmpty == true ? 'Adres gerekli' : null,
                       )
                       .paddingVertical(context.smallPadding),
-                  FutureBuilder<List<Regions>>(
-                    future: regionService.getAll(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
+                  ValueListenableBuilder<List<Regions>>(
+                    valueListenable: viewModel.regions,
+                    builder: (context, regions, _) {
+                      final uniqueRegions = regions
+                          .where((region) => region.isDelete != true)
+                          .toSet()
+                          .toList();
+
+                      if (selectedRegionId != null &&
+                          !uniqueRegions
+                              .any((region) => region.id == selectedRegionId)) {
+                        selectedRegionId = null;
                       }
-                      final regions = snapshot.data ?? [];
-                      return DropdownButtonFormField<int>(
-                        value: selectedRegionId,
-                        decoration: const InputDecoration(labelText: 'Bölge'),
-                        items: regions.map((region) {
-                          return DropdownMenuItem(
-                            value: region.id,
-                            child: Text(region.description),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          selectedRegionId = value;
-                          selectedCityId = null;
-                        },
-                        validator: (value) =>
-                            value == null ? 'Bölge seçiniz' : null,
-                      ).paddingVertical(context.smallPadding);
+
+                      return context
+                          .myDropdownButtonFormField<int>(
+                            labelText: 'Bölge',
+                            value: selectedRegionId,
+                            style: context.smallTextStyle,
+                            items: uniqueRegions.map((region) {
+                              return DropdownMenuItem(
+                                value: region.id,
+                                child: Text(region.description),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              selectedRegionId = value;
+                              selectedCityId = null;
+                            },
+                            validator: (value) =>
+                                value == null ? 'Bölge seçiniz' : null,
+                          )
+                          .paddingVertical(context.smallPadding);
                     },
                   ),
-                  if (selectedRegionId != null)
-                    FutureBuilder<List<Cities>>(
-                      future: cityService.getAll(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        final cities = snapshot.data ?? [];
-                        return DropdownButtonFormField<int>(
-                          value: selectedCityId,
-                          decoration: const InputDecoration(labelText: 'Şehir'),
-                          items: cities.map((city) {
-                            return DropdownMenuItem(
-                              value: city.id,
-                              child: Text(city.description),
-                            );
-                          }).toList(),
-                          onChanged: (value) => selectedCityId = value,
-                          validator: (value) =>
-                              value == null ? 'Şehir seçiniz' : null,
-                        ).paddingVertical(context.smallPadding);
-                      },
-                    ),
+                  ValueListenableBuilder<List<Cities>>(
+                    valueListenable: viewModel.cities,
+                    builder: (context, cities, _) {
+                      final uniqueCities = cities
+                          .where((city) => city.isDelete != true)
+                          .toSet()
+                          .toList();
+
+                      if (selectedCityId != null &&
+                          !uniqueCities
+                              .any((city) => city.id == selectedCityId)) {
+                        selectedCityId = null;
+                      }
+
+                      return context
+                          .myDropdownButtonFormField<int>(
+                            labelText: 'Şehir',
+                            value: selectedCityId,
+                            style: context.smallTextStyle,
+                            items: uniqueCities.map((city) {
+                              return DropdownMenuItem(
+                                value: city.id,
+                                child: Text(city.description),
+                              );
+                            }).toList(),
+                            onChanged: (value) => selectedCityId = value,
+                            validator: (value) =>
+                                value == null ? 'Şehir seçiniz' : null,
+                          )
+                          .paddingVertical(context.smallPadding);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -130,19 +124,21 @@ class WarehousesEdit {
             TextButton(
               onPressed: () async {
                 if (formKey.currentState?.validate() == true) {
-                  final updatedWarehouse = Warehouses.insert(
-                    nameController.text,
-                    selectedRegionId ?? 0,
-                    selectedCityId ?? 0,
-                    addressController.text,
-                  );
-                  final response = await warehouseService.updateById(
-                    warehouse.id!,
-                    updatedWarehouse,
-                  );
-                  viewModel.refreshTrigger.value =
-                      !viewModel.refreshTrigger.value;
-                  Navigator.pop(context, updatedWarehouse);
+                  try {
+                    await viewModel.updateWarehouse(
+                      nameController.text,
+                      selectedRegionId ?? 0,
+                      selectedCityId ?? 31,
+                      addressController.text,
+                    );
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  } catch (e) {
+                    // Hata durumunda dialog'u kapatma
+                    if (kDebugMode) {
+                      print('Güncelleme hatası: $e');
+                    }
+                  }
                 }
               },
               child: const Text('Kaydet'),

@@ -85,7 +85,6 @@ class CompanyUserWarehouses extends IModel<CompanyUserWarehouses> {
 
   @override
   CompanyUserWarehouses copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

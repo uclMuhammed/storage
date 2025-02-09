@@ -81,7 +81,6 @@ class Users extends IModel<Users> {
 
   @override
   Users copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

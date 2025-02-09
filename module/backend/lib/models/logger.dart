@@ -92,7 +92,6 @@ class Logger extends IModel<Logger> {
 
   @override
   Logger copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

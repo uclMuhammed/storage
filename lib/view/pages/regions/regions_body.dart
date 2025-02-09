@@ -1,97 +1,48 @@
-part of regions;
+part of 'regions_view.dart';
 
-class RegionsBody extends BaseBody {
+class RegionsBody {
   final RegionsViewModel viewModel;
-  RegionsBody({
-    required this.viewModel,
-  });
+  RegionsBody() : viewModel = RegionsViewModel()..init();
 
-  @override
-  Widget buildHeader(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: viewModel.refreshTrigger,
-      builder: (context, _, __) {
-        return FutureBuilder<List<IModel>>(
-          future: viewModel.getAllRegions(),
-          builder: (context, AsyncSnapshot<List<IModel>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<List<Regions>>(
+      valueListenable: viewModel.regions,
+      builder: (context, regions, _) {
+        return ValueListenableBuilder<bool>(
+          valueListenable: viewModel.loadingNotifier,
+          builder: (context, isLoading, _) {
+            if (isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (snapshot.hasError) {
-              return Center(child: Text('Hata: ${snapshot.error}'));
-            }
-
-            final regions = snapshot.data ?? [];
             if (regions.isEmpty) {
               return Center(
                 child: Tooltip(
                   message: 'Bölge oluşturmak için tıklayınız',
                   child: context.myCard(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
                     onTap: () {
                       RegionsCreate(context: context, viewModel: viewModel)
                           .show();
                     },
                     child: const Icon(Icons.add),
+                    width: 100,
+                    height: 100,
                   ),
                 ),
               );
             }
-            return context.responsiveGridView(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.smallPadding / 2,
-                vertical: context.smallPadding,
-              ),
-              crossAxisCount: 1,
-              childAspectRatio: 0.75,
-              children: regions
-                  .map(
-                    (regions) => context.myCard(
-                      onTap: () {
-                        viewModel.selectedRegion.value = regions as Regions?;
-                      },
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: context.mySubText(
-                                    text: (regions as Regions).description,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                context.myText(
-                                  text: '#${(regions as Regions).region}',
-                                  style: TextStyle(
-                                    fontSize: context.bodySize,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.warehouse,
-                                  size: context.iconSize,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                  .toList(),
+
+            if (viewModel.error.value != null) {
+              return Center(child: Text(viewModel.error.value!));
+            }
+
+            return Column(
+              children: [
+                Expanded(child: buildHeader(context)),
+                Expanded(child: buildBody(context)),
+              ],
             );
           },
         );
@@ -99,113 +50,143 @@ class RegionsBody extends BaseBody {
     );
   }
 
-  @override
-  Widget buildBody(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: viewModel.refreshTrigger,
-      builder: (context, value, child) {
-        return ValueListenableBuilder<Regions?>(
-          valueListenable: viewModel.selectedRegion,
-          builder: (context, selectedRegion, _) {
-            return Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(context.borderRadius),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Başlık
-                  Row(
+  Widget buildHeader(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: viewModel.regions,
+      builder: (context, regions, _) {
+        return context.responsiveGridView(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.smallPadding / 2,
+            vertical: context.smallPadding,
+          ),
+          crossAxisCount: 1,
+          childAspectRatio: 0.75,
+          children: regions
+              .map(
+                (region) => context.myCard(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  onTap: () {
+                    viewModel.selectedRegion.value = region;
+                  },
+                  child: Column(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.smallPadding,
-                          vertical: context.smallPadding,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius:
-                              BorderRadius.circular(context.borderRadius),
-                        ),
-                        child: context.mySubheadingText(
-                          text: '#${selectedRegion?.region}',
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child:
+                                  context.mySubText(text: region.description),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: context.smallPadding),
-                      context.mySubheadingText(text: 'Bölge Detayları'),
-                      const Spacer(),
-                      if (context.isLargeScreen || context.isMediumScreen) ...[
-                        buildFooter(context),
-                      ]
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            context.myText(
+                              text: '#${region.region}',
+                              style: TextStyle(
+                                fontSize: context.bodySize,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(
+                              Icons.map,
+                              size: context.iconSize,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  const Divider(),
-                  // Detaylar
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildDetailRow(
-                            context,
-                            icon: Icons.description,
-                            label: 'İsim',
-                            value: selectedRegion?.description ?? '',
-                          ),
-                          _buildDetailRow(
-                            context,
-                            icon: Icons.check_circle,
-                            label: 'Durum',
-                            value: selectedRegion?.isActive == true
-                                ? 'Aktif'
-                                : 'Pasif',
-                            valueColor: selectedRegion?.isActive == true
-                                ? Colors.green
-                                : Colors.red,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ).paddingAll(context.smallPadding),
-            ).paddingAll(context.smallPadding);
-          },
+                ),
+              )
+              .toList(),
         );
       },
     );
   }
 
-  Widget _buildDetailRow(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-    Color? valueColor,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(icon, size: context.iconSize),
-        SizedBox(width: context.smallPadding / 2),
-        Expanded(
-          flex: 1,
-          child: context.mySubText(text: '$label:'),
-        ),
-        Expanded(
-          flex: 6,
-          child: context.mySubText(
-            text: value,
-            style: TextStyle(color: valueColor, fontSize: context.subTextSize),
+  Widget buildBody(BuildContext context) {
+    return ValueListenableBuilder<Regions?>(
+      valueListenable: viewModel.selectedRegion,
+      builder: (context, selectedRegion, _) {
+        if (selectedRegion == null) {
+          return const Center(child: Text('Lütfen bir bölge seçiniz'));
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(context.borderRadius),
           ),
-        ),
-      ],
-    ).paddingVertical(context.smallPadding / 1.5);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Başlık
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.smallPadding,
+                      vertical: context.smallPadding,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(context.borderRadius),
+                    ),
+                    child: context.mySubheadingText(
+                      text: '#${selectedRegion.region}',
+                    ),
+                  ),
+                  SizedBox(width: context.smallPadding),
+                  context.mySubheadingText(text: 'Bölge Detayları'),
+                  const Spacer(),
+                  if (context.isLargeScreen || context.isMediumScreen) ...[
+                    buildFooter(context),
+                  ]
+                ],
+              ),
+              const Divider(),
+              // Detaylar
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      context.bodyDetailRow(
+                        context,
+                        icon: Icons.description,
+                        label: 'İsim',
+                        value: selectedRegion.description,
+                      ),
+                      context.bodyDetailRow(
+                        context,
+                        icon: Icons.check_circle,
+                        label: 'Durum',
+                        value:
+                            selectedRegion.isActive == true ? 'Aktif' : 'Pasif',
+                        valueColor: selectedRegion.isActive == true
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ).paddingAll(context.smallPadding),
+        ).paddingAll(context.smallPadding);
+      },
+    );
   }
 
-  @override
   Widget buildFooter(BuildContext context) {
     return ValueListenableBuilder<Regions?>(
       valueListenable: viewModel.selectedRegion,

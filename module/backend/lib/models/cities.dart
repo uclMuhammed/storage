@@ -65,7 +65,6 @@ class Cities extends IModel<Cities> {
 
   @override
   Cities copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 

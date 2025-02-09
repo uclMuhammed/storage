@@ -74,7 +74,6 @@ class UserModuleAuthority extends IModel<UserModuleAuthority> {
 
   @override
   UserModuleAuthority copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

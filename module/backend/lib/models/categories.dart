@@ -99,7 +99,7 @@ class Categories extends IModel<Categories> {
       description: '',
       isActive: false,
       isDelete: false,
-      createdAt: DateTime.now(),
+      createdAt: null,
       createdBy: '',
     );
   }
@@ -113,8 +113,8 @@ class Categories extends IModel<Categories> {
       description: description,
       isActive: true,
       isDelete: false,
-      createdAt: DateTime.now(),
-      createdBy: 'system',
+      createdAt: null,
+      createdBy: '',
     );
   }
 
@@ -124,9 +124,9 @@ class Categories extends IModel<Categories> {
       description: description,
       isActive: isActive,
       isDelete: false,
-      createdAt: DateTime.now(),
+      createdAt: null,
       createdBy: '',
-      updatedAt: DateTime.now(),
+      updatedAt: null,
       updatedBy: '',
       category: 0,
       companyId: 0,
@@ -142,12 +142,12 @@ class Categories extends IModel<Categories> {
       description: '',
       isActive: false,
       isDelete: true,
-      createdAt: DateTime.now(),
-      createdBy: 'system',
-      updatedAt: DateTime.now(),
-      updatedBy: 'system',
-      deletedAt: DateTime.now(),
-      deletedBy: 'system',
+      createdAt: null,
+      createdBy: '',
+      updatedAt: null,
+      updatedBy: '',
+      deletedAt: null,
+      deletedBy: '',
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:backend/backend.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/base/base_view_model.dart';
+
+import '../../../features/routes/routes.dart';
 
 class SignupViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -8,8 +11,11 @@ class SignupViewModel extends BaseViewModel {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
   final TextEditingController passConfirmController = TextEditingController();
+
   ValueNotifier<bool> isVisible = ValueNotifier<bool>(false);
   ValueNotifier<bool> isVisibleConfirm = ValueNotifier<bool>(false);
+
+  final _serviceAuthClient = ServiceAuthClient();
 
   String? companyNameValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -51,8 +57,27 @@ class SignupViewModel extends BaseViewModel {
   }
 
   Future<void> signup() async {
-    if (formKey.currentState!.validate()) {
-      init();
+    try {
+      if (formKey.currentState!.validate()) {
+        _serviceAuthClient.init();
+
+        final success = await _serviceAuthClient.signup(
+          companyNameController.text,
+          emailController.text,
+          passController.text,
+        );
+
+        if (success == true) {
+          routeController.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+            Routes.login.routeName,
+            (route) => false,
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

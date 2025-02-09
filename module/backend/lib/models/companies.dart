@@ -66,7 +66,6 @@ class Companies extends IModel<Companies> {
 
   @override
   Companies copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 

@@ -85,7 +85,6 @@ class Roles extends IModel<Roles> {
 
   @override
   Roles copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

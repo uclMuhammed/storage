@@ -86,6 +86,38 @@ extension ResponsiveWidgetExtension on BuildContext {
           ? Colors.black
           : Colors.white);
 
+  // bodyDetailRow
+  Widget bodyDetailRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, size: context.iconSize),
+        SizedBox(width: context.smallPadding),
+        context.mySubText(
+          text: '$label:  ',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        context.mySubText(
+          text: value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: valueColor,
+            fontSize: context.subTextSize,
+          ),
+        ),
+      ],
+    ).paddingVertical(context.smallPadding / 1.5);
+  }
+
   // Responsive Grid View
 
   Widget responsiveGridView({
@@ -221,10 +253,11 @@ extension ResponsiveWidgetExtension on BuildContext {
     bool? obscureText,
     String? Function(String?)? validator,
     InputDecoration? decoration,
+    TextStyle? style,
   }) =>
       TextFormField(
         controller: controller,
-        style: bodyStyle,
+        style: style ?? bodyStyle,
         obscureText: obscureText ?? false,
         validator: validator,
         decoration: (decoration ?? inputDecoration).copyWith(
@@ -233,6 +266,33 @@ extension ResponsiveWidgetExtension on BuildContext {
           prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
           suffixIcon: suffixIcon,
         ),
+      );
+
+  // My Dropdown Button Form Field
+  Widget myDropdownButtonFormField<T>({
+    required String labelText,
+    String? hintText,
+    required List<DropdownMenuItem<T>> items,
+    required Function(T?) onChanged,
+    T? value,
+    String? Function(T?)? validator,
+    InputDecoration? decoration,
+    IconData? prefixIcon,
+    Widget? suffixIcon,
+    TextStyle? style,
+  }) =>
+      DropdownButtonFormField<T>(
+        value: value,
+        style: style ?? bodyStyle,
+        decoration: (decoration ?? inputDecoration).copyWith(
+          labelText: labelText,
+          hintText: hintText,
+          prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+          suffixIcon: suffixIcon,
+        ),
+        items: items,
+        onChanged: onChanged,
+        validator: validator,
       );
 
   Widget myLottie({

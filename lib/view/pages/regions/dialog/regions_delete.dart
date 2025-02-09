@@ -1,4 +1,4 @@
-part of regions;
+part of '../regions_view.dart';
 
 class RegionsDelete {
   final Regions region;
@@ -12,16 +12,6 @@ class RegionsDelete {
   });
 
   Future<bool?> show() async {
-    final authClient = ServiceAuthClient();
-    final token = await authClient.getAuthToken();
-
-    final regionService = ServiceApiClient<Regions>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/regions',
-      fromJson: (json) => Regions.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
     return showDialog<bool>(
       context: context,
       builder: (context) {
@@ -37,11 +27,11 @@ class RegionsDelete {
             TextButton(
               onPressed: () async {
                 try {
-                  await regionService.deleteById(region.id!);
-                  viewModel.refreshTrigger.value =
-                      !viewModel.refreshTrigger.value;
+                  await viewModel.deleteRegion(region.id!);
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, true);
                 } catch (e) {
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, false);
                 }
               },

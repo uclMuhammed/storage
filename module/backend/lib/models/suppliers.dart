@@ -140,7 +140,6 @@ class Suppliers extends IModel<Suppliers> {
 
   @override
   Suppliers copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

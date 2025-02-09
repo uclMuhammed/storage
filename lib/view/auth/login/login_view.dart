@@ -25,6 +25,6 @@ class LoginView extends BaseView<LoginViewModel> {
 
   @override
   Widget buildTabletView(BuildContext context) {
-    return LoginTablet();
+    return LoginDesktop();
   }
 }

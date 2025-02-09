@@ -65,6 +65,28 @@ class Warehouses extends IModel<Warehouses> {
       deletedAt: DateTime.now(),
     );
   }
+
+  factory Warehouses.update(String description, String address, int regionId,
+      int cityId, bool? isActive) {
+    return Warehouses(
+      cityId: cityId,
+      warehouse: 0,
+      description: description,
+      regionId: regionId,
+      companyId: 0,
+      address: address,
+      id: 0,
+      isActive: isActive ?? true,
+      isDelete: false,
+      createdAt: DateTime.now(),
+      createdBy: "",
+      updatedAt: DateTime.now(),
+      updatedBy: "",
+      deletedBy: "",
+      deletedAt: DateTime.now(),
+    );
+  }
+
   factory Warehouses.fromJson(Map<String, dynamic> json) {
     if (json.isEmpty) return Warehouses.empty();
     return Warehouses(

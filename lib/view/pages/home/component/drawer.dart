@@ -6,9 +6,6 @@ class _Drawer extends BaseDrawerView {
     required super.viewKey,
     required this.viewModel,
     required super.drawerNotifier,
-    super.shape = const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.zero),
-    ),
   });
 
   @override
@@ -35,7 +32,7 @@ class _Drawer extends BaseDrawerView {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: DrawerData.reportDrawerModels
+          children: DrawerData.drawerModels
               .map(
                 (e) => context.myShortCutButton(
                   name: e.title,
@@ -58,36 +55,40 @@ class _Drawer extends BaseDrawerView {
     return ValueListenableBuilder(
       valueListenable: viewModel.drawerModels,
       builder: (context, value, child) {
-        return Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: DrawerData.drawerModels
-              .map(
-                (e) => context.myShortCutButton(
-                  name: e.title,
-                  icon: e.icon,
-                  onTap: () {
-                    if (e.title == 'LOGOUT') {
-                      try {
-                        ServiceAuthClient().logout();
-                        routeController.navigatorKey.currentState
-                            ?.pushNamedAndRemoveUntil(
-                          Routes.login.routeName,
-                          (route) => false,
-                        );
-                      } catch (e) {
-                        print(e);
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: DrawerData.drawerModels
+                .map(
+                  (e) => context.myShortCutButton(
+                    name: e.title,
+                    icon: e.icon,
+                    onTap: () {
+                      if (e.title == 'LOGOUT') {
+                        try {
+                          ServiceAuthClient().logout();
+                          routeController.navigatorKey.currentState
+                              ?.pushNamedAndRemoveUntil(
+                            Routes.login.routeName,
+                            (route) => false,
+                          );
+                        } catch (e) {
+                          if (kDebugMode) {
+                            print(e);
+                          }
+                        }
+                      } else {
+                        viewModel.currentPage.value = e.page!;
                       }
-                    } else {
-                      viewModel.currentPage.value = e.page!;
-                    }
-                  },
-                  tooltipMessage:
-                      drawerNotifier.value == DrawerMode.icon ? e.title : '',
-                ),
-              )
-              .toList(),
+                    },
+                    tooltipMessage:
+                        drawerNotifier.value == DrawerMode.icon ? e.title : '',
+                  ),
+                )
+                .toList(),
+          ),
         );
       },
     );

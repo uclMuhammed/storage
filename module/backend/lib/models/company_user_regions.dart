@@ -129,7 +129,6 @@ class CompanyUserRegions extends IModel<CompanyUserRegions> {
 
   @override
   CompanyUserRegions copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

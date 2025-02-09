@@ -14,7 +14,7 @@ class LoginViewModel extends BaseViewModel {
 
   final _authClient = ServiceAuthClient();
   String? _errorMessage;
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   String? get errorMessage => _errorMessage;
   @override
@@ -49,38 +49,23 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<void> login(BuildContext context) async {
-    if (formKey.currentState?.validate() ?? false) {
-      try {
-        _isLoading = true;
-        notifyListeners();
-
-        final result = await _authClient.login(
+    try {
+      if (formKey.currentState?.validate() == true) {
+        final success = await _authClient.login(
           int.parse(companyCodeController.text),
           emailController.text,
           passwordController.text,
         );
 
-        print('Login sonucu: $result');
-
-        if (result['success']) {
-          print('Login başarılı');
+        if (success == true) {
           routeController.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-              Routes.home.routeName, (route) => false);
-        } else {
-          print('Login başarısız: ${result['message']}');
-          _errorMessage = result['message'] ?? 'Giriş başarısız';
+            Routes.home.routeName,
+            (route) => false,
+          );
         }
-      } catch (e) {
-        print('Login hatası: $e');
-        if (e.toString().contains('İnternet bağlantısı yok')) {
-          _errorMessage = 'İnternet bağlantınızı kontrol edin';
-        } else {
-          _errorMessage = 'Bir hata oluştu: ${e.toString()}';
-        }
-      } finally {
-        _isLoading = false;
-        notifyListeners();
       }
+    } catch (e) {
+      _errorMessage = e.toString();
     }
   }
 

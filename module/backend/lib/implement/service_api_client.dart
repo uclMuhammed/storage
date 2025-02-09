@@ -1,15 +1,13 @@
 import 'dart:convert';
 
+import 'package:backend/backend.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-
-import '../abstract/models.dart';
-import '../abstract/service_api.dart';
-import '../exception/http_custom_exception.dart';
 import '../exception/unauthorized_exception.dart';
 
 class ServiceApiClient<T extends IModel> extends IApiService<T> {
   final T Function(Map<String, dynamic> json) fromJson;
+  final _storage = SharedPreferencesManager();
   //
   ServiceApiClient({
     required super.baseUrl,
@@ -18,13 +16,12 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
     required this.fromJson,
   });
   //
-
   @override
   Future<List<T>> getAll() async {
     try {
       final response = await client.get(url, headers: header);
       //
-      return _handlerResponse<List<T>>(response);
+      return handlerResponse<List<T>>(response);
       //
     } catch (e) {
       throw handlerException(e, message: 'Failed to get all data');
@@ -36,7 +33,7 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
     try {
       final response = await client.get(urlWithId(id), headers: header);
       //
-      return _handlerResponse<T>(response);
+      return handlerResponse<T>(response);
       //
     } catch (e) {
       throw handlerException(e, message: 'Failed to get data by id');
@@ -52,7 +49,7 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
         body: model.encodedJson(),
       );
       //
-      return _handlerResponse<T>(response);
+      return handlerResponse<T>(response);
       //
     } catch (e) {
       throw handlerException(e, message: 'Failed to create data');
@@ -68,7 +65,7 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
         body: model.encodedJson(),
       );
       //
-      return _handlerResponse<T>(response);
+      return handlerResponse<T>(response);
       //
     } catch (e) {
       throw handlerException(e, message: 'Failed to update data');
@@ -83,14 +80,14 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
         headers: header,
       );
       //
-      return _handlerResponse<bool>(response);
+      return handlerResponse<bool>(response);
       //
     } catch (e) {
       throw handlerException(e, message: 'Failed to delete data');
     }
   }
 
-  R _handlerResponse<R>(http.Response response) {
+  R handlerResponse<R>(http.Response response) {
     if (kDebugMode) {
       print('Service API Client');
       print('Response Status: ${response.statusCode}');
@@ -114,6 +111,7 @@ class ServiceApiClient<T extends IModel> extends IApiService<T> {
         return decodedBody as R;
       }
     } else if (response.statusCode == 401) {
+      _storage.clearAllTokens();
       throw UnauthorizedException(
         message: json.decode(response.body)['message'] ?? 'Token has expired',
         statusCode: response.statusCode,

@@ -37,15 +37,17 @@ class ReferenceCode extends IModel<ReferenceCode> {
     );
   }
 
-  factory ReferenceCode.insert(String description) {
-    final now = DateTime.now();
-    final end = now.add(const Duration(days: 30));
+  factory ReferenceCode.insert(
+    String description,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     return ReferenceCode(
       reference: 0,
       description: description,
       companyId: 0,
-      startDate: DateTime(now.year, now.month, now.day),
-      endDate: DateTime(end.year, end.month, end.day),
+      startDate: startDate,
+      endDate: endDate,
       id: 0,
       isActive: true,
       isDelete: false,
@@ -103,8 +105,8 @@ class ReferenceCode extends IModel<ReferenceCode> {
       'REFERENCE': reference,
       'DESCRIPTION': description,
       'COMPANY_ID': companyId,
-      'START_DATE': startDate,
-      'END_DATE': endDate,
+      'START_DATE': startDate.toIso8601String(),
+      'END_DATE': endDate.toIso8601String(),
       'ID': id,
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
@@ -113,7 +115,6 @@ class ReferenceCode extends IModel<ReferenceCode> {
 
   @override
   ReferenceCode copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

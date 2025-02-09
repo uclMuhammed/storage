@@ -1,4 +1,4 @@
-part of warehouses;
+part of '../warehouses_view.dart';
 
 class WarehousesCreate {
   final BuildContext context;
@@ -15,30 +15,6 @@ class WarehousesCreate {
     final addressController = TextEditingController();
     int? selectedRegionId;
     int? selectedCityId;
-
-    final authClient = ServiceAuthClient();
-    final token = await authClient.getAuthToken();
-
-    final warehouseService = ServiceApiClient<Warehouses>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/warehouses',
-      fromJson: (json) => Warehouses.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
-    final regionService = ServiceApiClient<Regions>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/regions',
-      fromJson: (json) => Regions.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
-    final cityService = ServiceApiClient<Cities>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/cities/1',
-      fromJson: (json) => Cities.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
 
     return showDialog<bool>(
       context: context,
@@ -67,51 +43,59 @@ class WarehousesCreate {
                             value?.isEmpty == true ? 'Adres gerekli' : null,
                       )
                       .paddingVertical(context.smallPadding),
-                  FutureBuilder<List<Regions>>(
-                    future: regionService.getAll(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      final regions = snapshot.data ?? [];
-                      return DropdownButtonFormField<int>(
-                        value: selectedRegionId,
-                        decoration: const InputDecoration(labelText: 'Bölge'),
-                        items: regions.map((region) {
-                          return DropdownMenuItem(
-                            value: region.id,
-                            child: Text(region.description),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          selectedRegionId = value;
-                          selectedCityId = null;
-                        },
-                        validator: (value) =>
-                            value == null ? 'Bölge seçiniz' : null,
-                      ).paddingVertical(context.smallPadding);
+                  ValueListenableBuilder<List<Regions>>(
+                    valueListenable: viewModel.regions,
+                    builder: (context, regions, _) {
+                      final uniqueRegions = regions
+                          .where((region) => region.isDelete != true)
+                          .toSet()
+                          .toList();
+
+                      return context
+                          .myDropdownButtonFormField<int>(
+                            labelText: 'Bölge',
+                            value: selectedRegionId,
+                            style: context.smallTextStyle,
+                            items: uniqueRegions.map((region) {
+                              return DropdownMenuItem(
+                                value: region.id,
+                                child: Text(region.description),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              selectedRegionId = value;
+                              selectedCityId = null;
+                            },
+                            validator: (value) =>
+                                value == null ? 'Bölge seçiniz' : null,
+                          )
+                          .paddingVertical(context.smallPadding);
                     },
                   ),
-                  FutureBuilder<List<Cities>>(
-                    future: cityService.getAll(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      final cities = snapshot.data ?? [];
-                      return DropdownButtonFormField<int>(
-                        value: selectedCityId,
-                        decoration: const InputDecoration(labelText: 'Şehir'),
-                        items: cities.map((city) {
-                          return DropdownMenuItem(
-                            value: city.id,
-                            child: Text(city.description),
-                          );
-                        }).toList(),
-                        onChanged: (value) => selectedCityId = value,
-                        validator: (value) =>
-                            value == null ? 'Şehir seçiniz' : null,
-                      ).paddingVertical(context.smallPadding);
+                  ValueListenableBuilder<List<Cities>>(
+                    valueListenable: viewModel.cities,
+                    builder: (context, cities, _) {
+                      final uniqueCities = cities
+                          .where((city) => city.isDelete != true)
+                          .toSet()
+                          .toList();
+
+                      return context
+                          .myDropdownButtonFormField<int>(
+                            labelText: 'Şehir',
+                            value: selectedCityId,
+                            style: context.smallTextStyle,
+                            items: uniqueCities.map((city) {
+                              return DropdownMenuItem(
+                                value: city.id,
+                                child: Text(city.description),
+                              );
+                            }).toList(),
+                            onChanged: (value) => selectedCityId = value,
+                            validator: (value) =>
+                                value == null ? 'Şehir seçiniz' : null,
+                          )
+                          .paddingVertical(context.smallPadding);
                     },
                   ),
                 ],
@@ -127,17 +111,16 @@ class WarehousesCreate {
               onPressed: () async {
                 if (formKey.currentState?.validate() == true) {
                   try {
-                    final newWarehouse = Warehouses.insert(
+                    await viewModel.createWarehouse(
                       nameController.text,
                       selectedRegionId ?? 0,
                       selectedCityId ?? 31,
                       addressController.text,
                     );
-                    await warehouseService.create(newWarehouse);
-                    viewModel.refreshTrigger.value =
-                        !viewModel.refreshTrigger.value;
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context, true);
                   } catch (e) {
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context, false);
                   }
                 }

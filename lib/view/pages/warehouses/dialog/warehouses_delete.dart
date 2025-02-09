@@ -1,4 +1,4 @@
-part of warehouses;
+part of '../warehouses_view.dart';
 
 class WarehousesDelete {
   final Warehouses warehouse;
@@ -11,18 +11,8 @@ class WarehousesDelete {
     required this.viewModel,
   });
 
-  Future<bool?> show() async {
-    final authClient = ServiceAuthClient();
-    final token = await authClient.getAuthToken();
-
-    final warehouseService = ServiceApiClient<Warehouses>(
-      baseUrl: StockTrackerApiUrl,
-      endPoint: '/warehouses',
-      fromJson: (json) => Warehouses.fromJson(json),
-      header: HeaderWithToken(token ?? ''),
-    )..init();
-
-    return showDialog<bool>(
+  Future<void> show() async {
+    return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -37,11 +27,11 @@ class WarehousesDelete {
             TextButton(
               onPressed: () async {
                 try {
-                  await warehouseService.deleteById(warehouse.id!);
-                  viewModel.refreshTrigger.value =
-                      !viewModel.refreshTrigger.value;
+                  await viewModel.deleteWarehouse(warehouse.id!);
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, true);
                 } catch (e) {
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, false);
                 }
               },

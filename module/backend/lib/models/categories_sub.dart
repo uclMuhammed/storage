@@ -15,12 +15,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
     required super.id,
     required super.isActive,
     required super.isDelete,
-    required super.createdAt,
-    required super.createdBy,
-    required super.updatedAt,
-    required super.updatedBy,
-    required super.deletedBy,
-    required super.deletedAt,
   });
 
   factory CategoriesSub.fromJson(Map<String, dynamic> json) {
@@ -43,18 +37,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
         description: json['DESCRIPTION'] as String,
         isActive: json['ISACTIVE'] as bool,
         isDelete: json['ISDELETE'] as bool,
-        createdAt: json['CREATEDAT'] != null
-            ? DateTime.parse(json['CREATEDAT'].toString())
-            : DateTime.now(),
-        createdBy: json['CREATEDBY'] as String? ?? '',
-        updatedAt: json['UPDATEDAT'] != null
-            ? DateTime.tryParse(json['UPDATEDAT'].toString())
-            : null,
-        updatedBy: json['UPDATEDBY'] as String?,
-        deletedAt: json['DELETEDAT'] != null
-            ? DateTime.tryParse(json['DELETEDAT'].toString())
-            : null,
-        deletedBy: json['DELETEDBY'] as String?,
       );
 
       if (kDebugMode) {
@@ -85,12 +67,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
         'ID': id,
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
-        'CREATEDAT': createdAt,
-        'CREATEDBY': createdBy,
-        'UPDATEDAT': updatedAt,
-        'UPDATEDBY': updatedBy,
-        'DELETEDAT': deletedAt,
-        'DELETEDBY': deletedBy,
       };
 
   @override
@@ -117,12 +93,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
       id: id ?? this.id,
       isActive: isActive ?? this.isActive,
       isDelete: isDelete ?? this.isDelete,
-      createdAt: createdAt ?? this.createdAt,
-      createdBy: createdBy ?? this.createdBy,
-      updatedAt: updatedAt ?? this.updatedAt,
-      updatedBy: updatedBy ?? this.updatedBy,
-      deletedAt: deletedAt ?? this.deletedAt,
-      deletedBy: deletedBy ?? this.deletedBy,
     );
   }
 
@@ -135,12 +105,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
       id: 0,
       isActive: false,
       isDelete: false,
-      createdAt: DateTime(1950),
-      createdBy: "",
-      updatedAt: DateTime(1950),
-      updatedBy: "",
-      deletedBy: "",
-      deletedAt: DateTime(1950),
     );
   }
 
@@ -156,12 +120,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
       description: description,
       isActive: true,
       isDelete: false,
-      createdAt: DateTime.now(),
-      createdBy: '',
-      updatedAt: null,
-      updatedBy: null,
-      deletedAt: null,
-      deletedBy: null,
     );
   }
   factory CategoriesSub.update(String description, int categoryId) {
@@ -173,12 +131,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
       id: 0,
       isActive: true,
       isDelete: false,
-      createdAt: DateTime(1950),
-      createdBy: "",
-      updatedAt: DateTime(1950),
-      updatedBy: "",
-      deletedBy: "",
-      deletedAt: DateTime(1950),
     );
   }
 
@@ -191,12 +143,6 @@ class CategoriesSub extends IModel<CategoriesSub> {
       id: id,
       isActive: false,
       isDelete: true,
-      createdAt: DateTime(1950),
-      createdBy: "",
-      updatedAt: DateTime(1950),
-      updatedBy: "",
-      deletedBy: "",
-      deletedAt: DateTime(1950),
     );
   }
 }

@@ -1,12 +1,12 @@
 import 'package:backend/abstract/models.dart';
 
 class LoginPostModel extends IModel {
-  final int companyName;
+  final int companyCode;
   final String email;
   final String password;
 
   LoginPostModel({
-    required this.companyName,
+    required this.companyCode,
     required this.email,
     required this.password,
   });
@@ -14,7 +14,7 @@ class LoginPostModel extends IModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'COMPANYCODE': companyName,
+      'COMPANYCODE': companyCode,
       'EMAIL': email,
       'PASSWORD': password,
     };
@@ -22,7 +22,7 @@ class LoginPostModel extends IModel {
 
   factory LoginPostModel.fromJson(Map<String, dynamic> json) {
     return LoginPostModel(
-      companyName: json['COMPANYCODE'],
+      companyCode: json['COMPANYCODE'],
       email: json['EMAIL'],
       password: json['PASSWORD'],
     );
@@ -30,12 +30,12 @@ class LoginPostModel extends IModel {
 
   @override
   LoginPostModel copyWith({
-    int? companyName,
+    int? companyCode,
     String? email,
     String? password,
   }) {
     return LoginPostModel(
-      companyName: companyName ?? this.companyName,
+      companyCode: companyCode ?? this.companyCode,
       email: email ?? this.email,
       password: password ?? this.password,
     );

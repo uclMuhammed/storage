@@ -118,7 +118,6 @@ class ProductUnits extends IModel<ProductUnits> {
 
   @override
   ProductUnits copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

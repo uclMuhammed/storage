@@ -157,7 +157,6 @@ class Plans extends IModel<Plans> {
 
   @override
   Plans copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

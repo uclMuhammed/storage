@@ -1,7 +1,6 @@
 import 'package:backend/backend.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/features/routes/routes.dart';
-import 'package:storage/view/pages/home/home_view.dart';
 
 // AppInterceptors'dan navigator key'i alalım
 
@@ -45,7 +44,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         onGenerateRoute: routeController.onGenerateRoute,
         initialRoute: initialRoute,
-        home: HomeView(),
       ),
     );
   }

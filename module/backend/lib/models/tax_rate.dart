@@ -91,7 +91,6 @@ class TaxRate extends IModel<TaxRate> {
 
   @override
   TaxRate copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

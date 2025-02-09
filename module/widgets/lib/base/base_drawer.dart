@@ -44,17 +44,15 @@ abstract class BaseDrawerView extends StatelessWidget {
                 backgroundColor ?? context.drawerTheme.backgroundColor,
             width: mode.width,
             elevation: elevation ?? context.drawerTheme.elevation,
-            shape: shape ?? context.drawerTheme.shape,
+            shape: shape ??
+                const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.zero),
+                ),
             // -------------
             child: SafeArea(
               child: Column(
                 children: [
                   buildDrawerButton(context),
-                  const Divider(),
-                  Expanded(
-                    flex: 3,
-                    child: buildDrawerHeader(context),
-                  ),
                   const Divider(),
                   Expanded(
                     flex: 10,
@@ -86,15 +84,13 @@ class _ChildAnimated extends StatelessWidget {
       duration: duration300Ms,
       curve: Curves.easeInOut,
       width: drawerNotifier.value.width,
-      child: SingleChildScrollView(
-        child: SizedBox(
-          width: drawerNotifier.value.width,
-          height: context.height > 800 ? context.height : 800,
-          child: Stack(
-            children: [
-              child,
-            ],
-          ),
+      child: SizedBox(
+        width: drawerNotifier.value.width,
+        height: context.height > 800 ? context.height : 800,
+        child: Stack(
+          children: [
+            child,
+          ],
         ),
       ),
     );

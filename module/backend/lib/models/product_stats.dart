@@ -121,7 +121,6 @@ class ProductStats extends IModel<ProductStats> {
 
   @override
   ProductStats copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

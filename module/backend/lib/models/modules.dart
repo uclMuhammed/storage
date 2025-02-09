@@ -112,7 +112,6 @@ class Modules extends IModel<Modules> {
 
   @override
   Modules copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }

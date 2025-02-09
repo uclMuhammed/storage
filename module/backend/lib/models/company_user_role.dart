@@ -73,7 +73,6 @@ class CompanyUserRole extends IModel<CompanyUserRole> {
 
   @override
   CompanyUserRole copyWith() {
-    // TODO: implement copyWith
     throw UnimplementedError();
   }
 }
