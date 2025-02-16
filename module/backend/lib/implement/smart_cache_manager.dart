@@ -1,3 +1,5 @@
+// ignore_for_file: await_only_futures
+
 import 'dart:async';
 
 // Cache öncelik seviyeleri
@@ -287,5 +289,9 @@ class SmartCacheManager {
       _cache.remove(sortedItems[i].key);
       _metrics.recordEviction(sortedItems[i].key);
     }
+  }
+
+  Future<void> remove(String key) async {
+    await _cache.remove(key);
   }
 }

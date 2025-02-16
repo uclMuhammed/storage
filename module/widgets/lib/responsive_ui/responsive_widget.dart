@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lottie/lottie.dart';
@@ -130,7 +131,6 @@ extension ResponsiveWidgetExtension on BuildContext {
     return GridView.builder(
       shrinkWrap: true,
       padding: padding,
-      physics: const ClampingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount, // Tek sütun
         crossAxisSpacing: smallPadding,
@@ -151,6 +151,12 @@ extension ResponsiveWidgetExtension on BuildContext {
     double? height,
     Color? backgroundColor,
     Color? textColor,
+    double? borderRadius,
+    bool? isOutlined,
+    Color? borderColor,
+    TextStyle? textStyle,
+    double? iconSize,
+    Color? iconColor,
   }) =>
       SizedBox(
         width: width ?? double.infinity,
@@ -158,10 +164,28 @@ extension ResponsiveWidgetExtension on BuildContext {
         child: ElevatedButton(
           onPressed: onPressed,
           style: elevatedButtonStyle.copyWith(
+            minimumSize: WidgetStateProperty.all(
+                Size(width ?? double.infinity, height ?? buttonHeight)),
+            maximumSize: WidgetStateProperty.all(
+                Size(width ?? double.infinity, height ?? buttonHeight)),
+            iconColor: WidgetStateProperty.all(iconColor),
+            iconSize: WidgetStateProperty.all(iconSize),
             backgroundColor: WidgetStateProperty.all(backgroundColor),
             foregroundColor: WidgetStateProperty.all(textColor),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(borderRadius ?? smallBorderRadius),
+                side: isOutlined == true
+                    ? BorderSide(color: borderColor ?? Colors.transparent)
+                    : BorderSide.none,
+              ),
+            ),
           ),
-          child: Text(buttonText),
+          child: Text(
+            buttonText,
+            style: textStyle ?? smallTextStyle,
+          ),
         ),
       );
 
@@ -208,15 +232,15 @@ extension ResponsiveWidgetExtension on BuildContext {
     required String name,
     required IconData icon,
     required Function() onTap,
+    DrawerMode? drawerMode,
     String? tooltipMessage = '',
   }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: Tooltip(
-        message: tooltipMessage,
+    return Tooltip(
+      message: tooltipMessage,
+      child: SizedBox(
+        height: 50,
         child: InkWell(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(smallBorderRadius),
           hoverColor: Colors.grey[800],
           onTap: onTap,
           child: Row(
@@ -225,8 +249,8 @@ extension ResponsiveWidgetExtension on BuildContext {
                 icon,
                 size: isLargeScreen ? smallIconSize : iconSize,
               ).paddingLeft(smallPadding),
-              SizedBox(width: smallPadding),
-              Expanded(
+              SizedBox(width: smallPadding / 2),
+              Flexible(
                 child: Text(
                   name,
                   style: TextStyle(
@@ -237,11 +261,13 @@ extension ResponsiveWidgetExtension on BuildContext {
                 ),
               ),
             ],
-          ).paddingHorizontal(isSmallScreen ? smallPadding : 0),
+          ),
         ),
       ),
     );
   }
+
+  /* */
 
   // My Text Form Field
   Widget myTextFormField({
@@ -311,4 +337,62 @@ extension ResponsiveWidgetExtension on BuildContext {
           return errorWidget ?? const SizedBox.shrink();
         },
       );
+
+  // My Bar Chart
+
+  BarChart myBarChart(BuildContext context,
+      {required double maxY,
+      required List<BarChartGroupData> barChartGroupData}) {
+    return BarChart(
+      BarChartData(
+        maxY: maxY,
+        barGroups: barChartGroupData,
+        borderData: FlBorderData(show: false),
+        gridData: const FlGridData(show: false),
+        titlesData: FlTitlesData(
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                switch (value.toInt()) {
+                  case 0:
+                    return context.mySmallText(text: 'Jan');
+                  case 1:
+                    return context.mySmallText(text: 'Feb');
+                  case 2:
+                    return context.mySmallText(text: 'Mar');
+                  case 3:
+                    return context.mySmallText(text: 'Apr');
+                  case 4:
+                    return context.mySmallText(text: 'May');
+                  case 5:
+                    return context.mySmallText(text: 'Jun');
+                  case 6:
+                    return context.mySmallText(text: 'Jul');
+                  case 7:
+                    return context.mySmallText(text: 'Aug');
+                  case 8:
+                    return context.mySmallText(text: 'Sep');
+                  case 9:
+                    return context.mySmallText(text: 'Oct');
+                  case 10:
+                    return context.mySmallText(text: 'Nov');
+                  case 11:
+                    return context.mySmallText(text: 'Dec');
+                  default:
+                    return context.mySmallText(text: 'not supported');
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -16,7 +16,7 @@ class ServiceAuthClient implements IServiceAuthClient {
   ServiceAuthClient();
 
   Future<void> init() async {
-    _baseUrl = StockTrackerAuthUrl;
+    _baseUrl = StockTrackerApiUrl;
     _header = StockTrackerAuthHeader;
   }
 
@@ -163,6 +163,23 @@ class ServiceAuthClient implements IServiceAuthClient {
       //
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<bool> isValidToken() async {
+    try {
+      final token = await getToken();
+      if (token == null) return false;
+
+      // Token'ın geçerliliğini kontrol et
+      final response = await client.get(
+        Uri.parse('$StockTrackerAuthUrl/verify'),
+        headers: HeaderWithToken(token),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
     }
   }
 }

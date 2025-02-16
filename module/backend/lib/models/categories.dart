@@ -24,7 +24,7 @@ class Categories extends IModel<Categories> {
         id: int.tryParse(json['ID'].toString()) ?? -1,
         category: int.tryParse(json['CATEGORY'].toString()) ?? -1,
         companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? -1,
-        description: json['DESCRIPTION'],
+        description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
         isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
         isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
         createdAt: DateTime.tryParse(json['CREATEDAT'] ?? '') ?? DateTime(1950),
@@ -43,7 +43,7 @@ class Categories extends IModel<Categories> {
   Map<String, dynamic> toJson() => {
         'CATEGORY': category,
         'COMPANY_ID': companyId,
-        'DESCRIPTION': description,
+        'DESCRIPTION': description.trim().toUpperCase(),
         'ID': id,
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,
@@ -110,7 +110,7 @@ class Categories extends IModel<Categories> {
       id: 0,
       category: 0,
       companyId: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       isActive: true,
       isDelete: false,
       createdAt: null,
@@ -121,7 +121,7 @@ class Categories extends IModel<Categories> {
   factory Categories.update(String description, bool isActive) {
     return Categories(
       id: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       isActive: isActive,
       isDelete: false,
       createdAt: null,

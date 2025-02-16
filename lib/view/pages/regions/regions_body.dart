@@ -40,8 +40,14 @@ class RegionsBody {
 
             return Column(
               children: [
-                Expanded(child: buildHeader(context)),
-                Expanded(child: buildBody(context)),
+                Expanded(
+                  flex: 1,
+                  child: buildHeader(context),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: buildBody(context),
+                ),
               ],
             );
           },
@@ -146,11 +152,10 @@ class RegionsBody {
                     ),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Bölge Detayları'),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubheadingText(text: 'Bölge Detayları'),
                   const Spacer(),
-                  if (context.isLargeScreen || context.isMediumScreen) ...[
-                    buildFooter(context),
-                  ]
+                  buildFooter(context),
                 ],
               ),
               const Divider(),

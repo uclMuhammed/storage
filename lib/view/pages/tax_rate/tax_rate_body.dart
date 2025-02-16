@@ -147,7 +147,9 @@ class TaxRateBody {
                             text: '#${selectedTaxRate?.id}'),
                       ),
                       SizedBox(width: context.smallPadding),
-                      context.mySubheadingText(text: 'Vergi Oranı Detayları'),
+                      if (context.isLargeScreen || context.isMediumScreen)
+                        context.mySubheadingText(text: 'Vergi Oranı Detayları'),
+                      const Spacer(),
                       buildFooter(context),
                     ],
                   ),
@@ -186,49 +188,47 @@ class TaxRateBody {
   }
 
   Widget buildFooter(BuildContext context) {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            tooltip: 'Vergi Sil',
-            heroTag: 'delete',
-            onPressed: () {
-              TaxRateDelete(
-                context: context,
-                viewModel: viewModel,
-                taxRate: viewModel.selectedTaxRate.value ?? TaxRate.empty(),
-              ).show(context);
-            },
-            child: const Icon(Icons.delete),
-          ),
-          SizedBox(width: context.smallPadding),
-          FloatingActionButton(
-            tooltip: 'Vergi Düzenle',
-            heroTag: 'edit',
-            onPressed: () {
-              TaxRateUpdate(
-                context: context,
-                viewModel: viewModel,
-                taxRate: viewModel.selectedTaxRate.value ?? TaxRate.empty(),
-              ).show();
-            },
-            child: const Icon(Icons.edit),
-          ),
-          SizedBox(width: context.smallPadding),
-          FloatingActionButton(
-            tooltip: 'Vergi Ekle',
-            heroTag: 'add',
-            onPressed: () {
-              TaxRateCreate(
-                context: context,
-                viewModel: viewModel,
-              ).show();
-            },
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton(
+          tooltip: 'Vergi Sil',
+          heroTag: 'delete',
+          onPressed: () {
+            TaxRateDelete(
+              context: context,
+              viewModel: viewModel,
+              taxRate: viewModel.selectedTaxRate.value ?? TaxRate.empty(),
+            ).show(context);
+          },
+          child: const Icon(Icons.delete),
+        ),
+        SizedBox(width: context.smallPadding),
+        FloatingActionButton(
+          tooltip: 'Vergi Düzenle',
+          heroTag: 'edit',
+          onPressed: () {
+            TaxRateUpdate(
+              context: context,
+              viewModel: viewModel,
+              taxRate: viewModel.selectedTaxRate.value ?? TaxRate.empty(),
+            ).show();
+          },
+          child: const Icon(Icons.edit),
+        ),
+        SizedBox(width: context.smallPadding),
+        FloatingActionButton(
+          tooltip: 'Vergi Ekle',
+          heroTag: 'add',
+          onPressed: () {
+            TaxRateCreate(
+              context: context,
+              viewModel: viewModel,
+            ).show();
+          },
+          child: const Icon(Icons.add),
+        ),
+      ],
     );
   }
 }

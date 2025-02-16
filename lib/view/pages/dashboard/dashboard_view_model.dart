@@ -1,35 +1,51 @@
+import 'dart:convert';
+
 import 'package:backend/backend.dart';
+import 'package:backend/models/product_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets/base/base_view_model.dart';
 
+enum TransactionType {
+  all('Tümü'),
+  purchase('Alış'),
+  sale('Satış');
+
+  final String label;
+  const TransactionType(this.label);
+}
+
 class DashboardViewModel extends BaseViewModel {
+  final pieChartKey = GlobalKey();
+
   late final ServiceAuthClient _serviceAuthClient;
-  late final SmartApiService<Products> _productsService;
-  late final SmartApiService<Warehouses> _warehousesService;
-  late final SmartApiService<Categories> _categoriesService;
-  late final SmartApiService<Suppliers> _suppliersService;
+  late final SmartApiService<ProductMovement> _productMovementService;
+  late final SmartApiService<ProductStats> _productStatsService;
   bool _isInitialized = false;
 
-  // ValueNotifier'lar
-  final products = ValueNotifier<List<Products>>([]);
-  final warehouses = ValueNotifier<List<Warehouses>>([]);
-  final categories = ValueNotifier<List<Categories>>([]);
-  final suppliers = ValueNotifier<List<Suppliers>>([]);
+  final productStats = ValueNotifier<List<ProductStats>>([]);
+  final productMovements = ValueNotifier<List<ProductMovement>>([]);
+
+  final selectedProductStats = ValueNotifier<ProductStats?>(null);
+  final selectedProductMovement = ValueNotifier<ProductMovement?>(null);
+
   final error = ValueNotifier<String?>(null);
   final loadingNotifier = ValueNotifier<bool>(false);
-  final refreshTrigger = ValueNotifier<bool>(false);
+
+  final touchedIndex = ValueNotifier<int?>(null);
 
   @override
   bool get isLoading => loadingNotifier.value;
-  set isLoading(bool value) {
+
+  @override
+  void setLoading(bool value) {
     loadingNotifier.value = value;
     if (value) error.value = null;
+    notifyListeners();
   }
 
   @override
   void init() {
     _initServices().then((_) => _loadData());
-    refreshTrigger.addListener(_loadData);
   }
 
   Future<void> _initServices() async {
@@ -39,40 +55,25 @@ class DashboardViewModel extends BaseViewModel {
       final token = await _serviceAuthClient.getToken();
       if (token == null) throw Exception('Oturum açmanız gerekiyor');
 
-      _productsService = SmartApiService<Products>(
-        fromJson: Products.fromJson,
+      _productMovementService = SmartApiService<ProductMovement>(
+        fromJson: ProductMovement.fromJson,
         toJson: (p) => p.toJson(),
-        endPoint: ApiEndpoints.products,
+        endPoint: ApiEndpoints.productMovements,
         baseUrl: StockTrackerApiUrl,
         header: HeaderWithToken(token),
       )..init();
 
-      _warehousesService = SmartApiService<Warehouses>(
-        fromJson: Warehouses.fromJson,
-        toJson: (w) => w.toJson(),
-        endPoint: ApiEndpoints.warehouses,
-        baseUrl: StockTrackerApiUrl,
-        header: HeaderWithToken(token),
-      )..init();
-
-      _categoriesService = SmartApiService<Categories>(
-        fromJson: Categories.fromJson,
-        toJson: (c) => c.toJson(),
-        endPoint: ApiEndpoints.categories,
-        baseUrl: StockTrackerApiUrl,
-        header: HeaderWithToken(token),
-      )..init();
-
-      _suppliersService = SmartApiService<Suppliers>(
-        fromJson: Suppliers.fromJson,
-        toJson: (s) => s.toJson(),
-        endPoint: ApiEndpoints.suppliers,
+      _productStatsService = SmartApiService<ProductStats>(
+        fromJson: ProductStats.fromJson,
+        toJson: (p) => p.toJson(),
+        endPoint: ApiEndpoints.productStats,
         baseUrl: StockTrackerApiUrl,
         header: HeaderWithToken(token),
       )..init();
 
       _isInitialized = true;
     } catch (e) {
+      _isInitialized = false;
       error.value = 'Servis başlatılamadı: $e';
       rethrow;
     }
@@ -80,39 +81,30 @@ class DashboardViewModel extends BaseViewModel {
 
   Future<void> _loadData() async {
     try {
-      isLoading = true;
+      setLoading(true);
+      final productStatsData =
+          await _productStatsService.getAll(priority: CachePriority.high);
+      productStats.value = productStatsData;
 
-      final productsData =
-          await _productsService.getAll(priority: CachePriority.high);
-      products.value = productsData;
+      final productMovementsData =
+          await _productMovementService.getAll(priority: CachePriority.high);
+      productMovements.value = productMovementsData;
 
-      final warehousesData =
-          await _warehousesService.getAll(priority: CachePriority.high);
-      warehouses.value = warehousesData;
+      if (productStatsData.isNotEmpty && selectedProductStats.value == null) {
+        selectedProductStats.value = productStatsData.first;
+      }
 
-      final categoriesData =
-          await _categoriesService.getAll(priority: CachePriority.high);
-      categories.value = categoriesData;
+      if (productMovementsData.isNotEmpty &&
+          selectedProductMovement.value == null) {
+        selectedProductMovement.value = productMovementsData.first;
+      }
 
-      final suppliersData =
-          await _suppliersService.getAll(priority: CachePriority.high);
-      suppliers.value = suppliersData;
+      debugPrint('productStatsData: ${jsonEncode(productStatsData)}');
+      debugPrint('productMovementsData: ${jsonEncode(productMovementsData)}');
     } catch (e) {
-      error.value = 'Veriler yüklenemedi: $e';
+      error.value = 'Veriler yüklenirken hata oluştu: $e';
     } finally {
-      isLoading = false;
+      setLoading(false);
     }
-  }
-
-  @override
-  void dispose() {
-    products.dispose();
-    warehouses.dispose();
-    categories.dispose();
-    suppliers.dispose();
-    error.dispose();
-    loadingNotifier.dispose();
-    refreshTrigger.dispose();
-    super.dispose();
   }
 }

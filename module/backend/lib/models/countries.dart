@@ -37,7 +37,7 @@ class Countries extends IModel<Countries> {
     return Countries(
       id: 0,
       country: country,
-      description: description,
+      description: description.trim().toUpperCase(),
       isActive: true,
       isDelete: false,
       createdAt: DateTime.now(),
@@ -52,7 +52,7 @@ class Countries extends IModel<Countries> {
   factory Countries.update(int id, String description) {
     return Countries(
       country: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       id: id,
       isActive: true,
       isDelete: false,
@@ -87,7 +87,7 @@ class Countries extends IModel<Countries> {
     }
     return Countries(
       country: int.tryParse(json['COUNTRY'].toString()) ?? 0,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       id: int.tryParse(json['ID'].toString()) ?? 0,
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
       isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
@@ -111,7 +111,7 @@ class Countries extends IModel<Countries> {
     return {
       'ID': id,
       'COUNTRY': country,
-      'DESCRIPTION': description,
+      'DESCRIPTION': description.trim().toUpperCase(),
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
     };

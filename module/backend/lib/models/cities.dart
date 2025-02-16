@@ -24,7 +24,7 @@ class Cities extends IModel<Cities> {
     return Cities(
       city: int.tryParse(json['CITY'].toString()) ?? -1,
       countryId: int.tryParse(json['COUNTRY_ID'].toString()) ?? -1,
-      description: json['DESCRIPTION'].toString(),
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       id: int.tryParse(json['ID'].toString()) ?? -1,
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
       isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
@@ -51,7 +51,7 @@ class Cities extends IModel<Cities> {
     return <String, dynamic>{
       'CITY': city,
       'COUNTRYID': countryId,
-      'DESCRIPTION': description,
+      'DESCRIPTION': description.trim().toUpperCase(),
       'ISACTIVE': isActive,
       'ISDELETE': isDelete,
       'CREATEDAT': createdAt,
@@ -89,7 +89,7 @@ class Cities extends IModel<Cities> {
     return Cities(
       city: -1,
       countryId: -1,
-      description: description,
+      description: description.trim().toUpperCase(),
       id: -1,
       isActive: false,
       isDelete: false,
@@ -106,7 +106,7 @@ class Cities extends IModel<Cities> {
     return Cities(
       city: -1,
       countryId: -1,
-      description: description,
+      description: description.trim().toUpperCase(),
       id: id,
       isActive: false,
       isDelete: false,

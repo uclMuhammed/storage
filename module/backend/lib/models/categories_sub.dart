@@ -34,7 +34,7 @@ class CategoriesSub extends IModel<CategoriesSub> {
         companyId: json['COMPANY_ID'] is int
             ? json['COMPANY_ID']
             : int.parse(json['COMPANY_ID'].toString()),
-        description: json['DESCRIPTION'] as String,
+        description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
         isActive: json['ISACTIVE'] as bool,
         isDelete: json['ISDELETE'] as bool,
       );
@@ -61,7 +61,7 @@ class CategoriesSub extends IModel<CategoriesSub> {
   @override
   Map<String, dynamic> toJson() => {
         'CATEGORY_SUB': categorySub,
-        'DESCRIPTION': description,
+        'DESCRIPTION': description.trim().toUpperCase(),
         'CATEGORY_ID': categoryId,
         'COMPANY_ID': companyId,
         'ID': id,
@@ -87,7 +87,7 @@ class CategoriesSub extends IModel<CategoriesSub> {
   }) {
     return CategoriesSub(
       categorySub: categorySub ?? this.categorySub,
-      description: description ?? this.description,
+      description: description ?? this.description.trim().toUpperCase(),
       categoryId: categoryId ?? this.categoryId,
       companyId: companyId ?? this.companyId,
       id: id ?? this.id,
@@ -117,7 +117,7 @@ class CategoriesSub extends IModel<CategoriesSub> {
       categorySub: 0,
       categoryId: categoryId,
       companyId: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       isActive: true,
       isDelete: false,
     );
@@ -125,7 +125,7 @@ class CategoriesSub extends IModel<CategoriesSub> {
   factory CategoriesSub.update(String description, int categoryId) {
     return CategoriesSub(
       categorySub: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       categoryId: categoryId,
       companyId: 0,
       id: 0,

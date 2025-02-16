@@ -1,6 +1,9 @@
 import 'package:backend/backend.dart';
+import 'package:backend/errors/api_exception.dart';
+import 'package:backend/errors/error_codes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:widgets/base/base_view_model.dart';
+import 'package:backend/errors/error_handler.dart';
 
 class ProductViewModel extends BaseViewModel {
   late final ServiceAuthClient _serviceAuthClient;
@@ -51,7 +54,14 @@ class ProductViewModel extends BaseViewModel {
 
     try {
       _serviceAuthClient = ServiceAuthClient()..init();
-      final token = await _serviceAuthClient.getToken() ?? '';
+      final token = await _serviceAuthClient.getToken();
+
+      if (token == null) {
+        throw ApiException(
+          errorCode: ApiErrorCode.unauthorized,
+          customMessage: 'Oturum süresi doldu',
+        );
+      }
 
       _productsService = SmartApiService<Products>(
         fromJson: Products.fromJson,
@@ -95,6 +105,9 @@ class ProductViewModel extends BaseViewModel {
 
       _isInitialized = true;
     } catch (e) {
+      if (e is ApiException) {
+        rethrow;
+      }
       error.value = 'Servis başlatılamadı: $e';
       rethrow;
     }
@@ -109,34 +122,25 @@ class ProductViewModel extends BaseViewModel {
       await _loadProductUnits();
     } catch (e) {
       error.value = 'Veriler yüklenirken hata oluştu: $e';
-      products.value = [];
-      selectedProduct.value = null;
-      selectedBrand.value = null;
-      selectedCategory.value = null;
-      selectedProductUnit.value = null;
-      if (kDebugMode) {
-        print('Veri yükleme hatası: $e');
-      }
     } finally {
       setLoading(false);
     }
   }
 
   Future<void> _loadProducts() async {
-    try {
-      final productsData =
-          await _productsService.getAll(priority: CachePriority.high);
-      products.value = productsData;
-      if (productsData.isNotEmpty && selectedProduct.value == null) {
-        selectedProduct.value = productsData.first;
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ürün verisi yüklenirken hata: $e');
-      }
-      error.value = 'Ürün verisi yüklenemedi: $e';
-      rethrow;
-    }
+    await ErrorHandler().handleError(
+      operation: () async {
+        final productsData = await _productsService.getAll(
+          priority: CachePriority.high,
+        );
+        products.value = productsData;
+        if (productsData.isNotEmpty && selectedProduct.value == null) {
+          selectedProduct.value = productsData.first;
+        }
+      },
+      context: context,
+      customMessage: 'Ürünler yüklenirken bir hata oluştu',
+    );
   }
 
   Future<void> _loadBrands() async {
@@ -229,8 +233,18 @@ class ProductViewModel extends BaseViewModel {
   ) async {
     try {
       setLoading(true);
-      final product = Products.insert(barcode, code, description, brandId,
-          categoryId, categorySubId, unitId, price, dimensions, weight);
+      final product = Products.insert(
+        barcode,
+        code,
+        description,
+        brandId,
+        categoryId,
+        categorySubId,
+        unitId,
+        price,
+        dimensions,
+        weight,
+      );
       await _productsService.create(product);
       await _loadData();
       selectedProduct.value = products.value.firstWhere(
@@ -287,20 +301,22 @@ class ProductViewModel extends BaseViewModel {
   }
 
   Future<void> deleteProduct(int id) async {
-    try {
-      setLoading(true);
-      await _productsService.deleteById(id);
-      if (selectedProduct.value?.id == id) {
-        selectedProduct.value =
-            products.value.isNotEmpty ? products.value.first : null;
-      }
-      await _loadData();
-    } catch (e) {
-      error.value = 'Ürün silinemedi: $e';
-      rethrow;
-    } finally {
-      setLoading(false);
-    }
+    await ErrorHandler().handleError(
+      operation: () async {
+        await _productsService.deleteById(id);
+        if (selectedProduct.value?.id == id) {
+          selectedProduct.value =
+              products.value.isNotEmpty ? products.value.first : null;
+        }
+        await _loadData();
+      },
+      context: context,
+      customMessage: 'Ürün silinirken bir hata oluştu',
+      onError: () {
+        setLoading(false);
+        error.value = 'Ürün silinemedi';
+      },
+    );
   }
 
   @override

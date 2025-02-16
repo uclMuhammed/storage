@@ -32,10 +32,13 @@
   <title>storage</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- CORS ve güvenlik politikaları -->
+  <!-- HTTP isteklerine izin ver -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+  <!-- Güvenlik politikasını güncelle -->
   <meta http-equiv="Content-Security-Policy" 
-        content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content: https://ssl.gstatic.com;
-                 connect-src * 'self' http://localhost:* https://* http://* ws://*;
+        content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:;
+                 connect-src * 'self' http: https: ws://*;
                  style-src * 'self' 'unsafe-inline';
                  img-src * 'self' data: content:;
                  media-src * blob: data: content:;

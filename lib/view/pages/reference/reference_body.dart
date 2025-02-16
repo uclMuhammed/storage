@@ -148,7 +148,8 @@ class ReferenceBody {
                         text: '#${selectedReference?.id}'),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Referans Detayları'),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubheadingText(text: 'Referans Detayları'),
                   buildFooter(context),
                 ],
               ),

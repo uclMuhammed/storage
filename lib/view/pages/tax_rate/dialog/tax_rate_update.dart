@@ -24,11 +24,14 @@ class TaxRateUpdate {
           content: Form(
             key: formKey,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                context.myTextFormField(
-                  labelText: 'Açıklama',
-                  controller: descriptionController,
-                ),
+                context
+                    .myTextFormField(
+                      labelText: 'Açıklama',
+                      controller: descriptionController,
+                    )
+                    .paddingBottom(context.smallPadding),
                 context.myTextFormField(
                   labelText: 'Vergi Oranı',
                   controller: taxRateController,

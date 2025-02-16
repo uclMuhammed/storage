@@ -2,7 +2,12 @@
 
 const Map<String, String> DefaultHeader = {
   'Content-Type': 'application/json',
-  'Accept': 'application/json',
+  'Accept': '*/*',
+  // CORS için gerekli header'lar
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers':
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, Secure-Code',
 };
 
 const Map<String, String> StockTrackerAuthHeader = {

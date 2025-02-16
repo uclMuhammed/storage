@@ -134,15 +134,14 @@ class BrandsBody {
                       borderRadius: BorderRadius.circular(context.borderRadius),
                     ),
                     child: context.mySubheadingText(
-                      text: '#${selectedBrand.brand}',
+                      text: '#${selectedBrand.id}',
                     ),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Marka Detayları'),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubheadingText(text: 'Marka Detayları'),
                   const Spacer(),
-                  if (context.isLargeScreen || context.isMediumScreen) ...[
-                    buildFooter(context),
-                  ]
+                  buildFooter(context),
                 ],
               ),
               const Divider(),

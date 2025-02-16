@@ -188,7 +188,8 @@ class UnitBody {
                         ),
                       ),
                       SizedBox(width: context.smallPadding),
-                      context.mySubheadingText(text: 'Birim Detayları'),
+                      if (context.isLargeScreen || context.isMediumScreen)
+                        context.mySubheadingText(text: 'Birim Detayları'),
                       const Spacer(),
                       if (context.isLargeScreen || context.isMediumScreen) ...[
                         buildFooter(context),

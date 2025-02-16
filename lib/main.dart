@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:backend/backend.dart';
 import 'package:flutter/material.dart';
 import 'package:storage/features/routes/routes.dart';
@@ -5,6 +7,9 @@ import 'package:storage/features/routes/routes.dart';
 // AppInterceptors'dan navigator key'i alalım
 
 void main() async {
+  // HttpOverrides'ı global olarak ayarla
+  HttpOverrides.global = _HttpOverrides();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // ServiceAuthClient'i başlat ve token kontrolü yap
@@ -19,6 +24,15 @@ void main() async {
     initialRoute:
         isAuthenticated ? Routes.home.routeName : Routes.login.routeName,
   ));
+}
+
+class _HttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 // Test

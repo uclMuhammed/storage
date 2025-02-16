@@ -1,17 +1,23 @@
+// ignore_for_file: avoid_shadowing_type_parameters
+
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import '../abstract/index.dart';
+import '../errors/api_exception.dart';
+import '../errors/error_codes.dart';
 import 'smart_cache_manager.dart';
 import '../models/paginated_response.dart';
 import '../exception/unauthorized_exception.dart';
 import 'package:flutter/foundation.dart';
 import '../exception/http_custom_exception.dart';
+import 'service_auth_client.dart';
+import 'package:http/http.dart' as http;
 
 class SmartApiService<T extends IModel> extends IApiService<T> {
   final T Function(Map<String, dynamic>) fromJson;
   final Map<String, dynamic> Function(T) toJson;
   final SmartCacheManager _cacheManager;
-  final Dio _dio;
+  @override
+  final client = http.Client();
 
   SmartApiService({
     required this.fromJson,
@@ -19,11 +25,78 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
     required super.header,
     required super.endPoint,
     required super.baseUrl,
-  })  : _cacheManager = SmartCacheManager(),
-        _dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 30),
-        ));
+  }) : _cacheManager = SmartCacheManager();
+
+  Map<String, String> _getHeadersWithToken(String token) {
+    return {
+      ...?header,
+      'Authorization': 'Bearer $token',
+    };
+  }
+
+  Future<T> _handleApiError<T>({
+    required Future<T> Function() operation,
+    String? customMessage,
+  }) async {
+    try {
+      // Token kontrolü
+      final token = await ServiceAuthClient().getToken();
+      if (token == null) {
+        throw ApiException(
+          errorCode: ApiErrorCode.unauthorized,
+          customMessage: 'Oturum süresi doldu',
+        );
+      }
+
+      // Header'ı güncelle
+      header = _getHeadersWithToken(token);
+
+      return await operation();
+    } on UnauthorizedException {
+      throw ApiException(
+        errorCode: ApiErrorCode.unauthorized,
+        customMessage: 'Oturum süresi doldu',
+      );
+    } on HttpCustomException catch (e) {
+      if (e.statusCode == 401) {
+        throw ApiException(
+          errorCode: ApiErrorCode.unauthorized,
+          customMessage: 'Oturum süresi doldu',
+        );
+      }
+      throw ApiException(
+        errorCode: _mapStatusCodeToErrorCode(e.statusCode),
+        customMessage: customMessage ?? e.message,
+        metaData: {
+          'statusCode': e.statusCode,
+          'error': e.toString(),
+        },
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException(
+        errorCode: ApiErrorCode.unknown,
+        customMessage: customMessage ?? 'Beklenmeyen bir hata oluştu',
+        metaData: {'error': e.toString()},
+      );
+    }
+  }
+
+  ApiErrorCode _mapStatusCodeToErrorCode(int statusCode) {
+    switch (statusCode) {
+      case 401:
+        return ApiErrorCode.unauthorized;
+      case 403:
+        return ApiErrorCode.forbidden;
+      case 404:
+        return ApiErrorCode.notFound;
+      case 408:
+      case 504:
+        return ApiErrorCode.networkError;
+      default:
+        return ApiErrorCode.unknown;
+    }
+  }
 
   // CRUD Operations with Cache
   @override
@@ -31,136 +104,132 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
     Map<String, dynamic>? queryParameters,
     CachePriority priority = CachePriority.medium,
   }) async {
-    try {
-      final cacheKey = _generateCacheKey('getAll', queryParameters);
-
-      return await _cacheManager.getOrFetch<List<T>>(
-        cacheKey,
-        () => _fetchAll(queryParameters),
-        priority: priority,
-      );
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to get all data');
-    }
+    return _handleApiError(
+      operation: () async {
+        final cacheKey = _generateCacheKey('getAll', queryParameters);
+        return await _cacheManager.getOrFetch<List<T>>(
+          cacheKey,
+          () => _fetchAll(),
+          priority: priority,
+        );
+      },
+      customMessage: 'Veriler yüklenirken bir hata oluştu',
+    );
   }
 
   @override
-  Future<T> getById(
-    dynamic id, {
-    CachePriority priority = CachePriority.high,
-  }) async {
-    try {
-      final cacheKey = _generateCacheKey('getById', {'id': id});
-
-      return (await _cacheManager.getOrFetch<T>(
-        cacheKey,
-        () async => (await _fetchById(id))!,
-        priority: priority,
-      ));
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to get data by id');
-    }
+  Future<T> getById(dynamic id) async {
+    return _handleApiError(
+      operation: () async {
+        final cacheKey = _generateCacheKey('getById', {'id': id});
+        final result = await _cacheManager.getOrFetch<T?>(
+          cacheKey,
+          () => _fetchById(id),
+          priority: CachePriority.medium,
+        );
+        if (result == null) {
+          throw ApiException(
+            errorCode: ApiErrorCode.notFound,
+            customMessage: 'Kayıt bulunamadı',
+          );
+        }
+        return result;
+      },
+      customMessage: 'Kayıt bulunamadı',
+    );
   }
 
   @override
   Future<T> create(T model) async {
-    try {
-      final response = await _dio.post(
-        endPoint,
-        data: toJson(model),
-        options: Options(headers: header),
-      );
-
-      if (kDebugMode) {
-        print('Smart API Service - Create');
-        print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.data}');
-      }
-
-      if (response.statusCode == 401) {
-        throw UnauthorizedException(
-          message: 'Token has expired',
-          statusCode: response.statusCode ?? 401,
-          stackTrace: StackTrace.current,
+    return _handleApiError(
+      operation: () async {
+        final response = await client.post(
+          url,
+          headers: {
+            ...?header,
+            'Content-Type': 'application/json',
+          },
+          body: json.encode(toJson(model)),
         );
-      }
 
-      final decodedBody = response.data;
-      final createdEntity = fromJson(
-          decodedBody is Map<String, dynamic> && decodedBody.containsKey('data')
-              ? decodedBody['data'] as Map<String, dynamic>
-              : decodedBody as Map<String, dynamic>);
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          await _invalidateCache('getAll');
 
-      // Tüm ilgili cache'leri temizle
-      await _cacheManager.invalidate(_generateCacheKey('getAll'));
-      await _cacheManager.invalidate(_generateCacheKey('getPaginated'));
+          final decodedBody = json.decode(response.body);
+          return fromJson(decodedBody['data'] ?? decodedBody);
+        }
 
-      // Yeni veriyi cache'e ekle
-      final allCacheKey = _generateCacheKey('getAll');
-      final existingData = await _cacheManager.get<List<T>>(allCacheKey);
-      if (existingData != null) {
-        await _cacheManager.set(allCacheKey, [createdEntity, ...existingData]);
-      }
-
-      return createdEntity;
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to create data');
-    }
+        throw HttpCustomException(
+          message: response.body,
+          statusCode: response.statusCode,
+          stackTrace: StackTrace.current,
+          name: 'Smart Api Service',
+        );
+      },
+      customMessage: 'Kayıt oluşturulamadı',
+    );
   }
 
   @override
   Future<T> updateById(dynamic id, T model) async {
-    try {
-      final response = await _dio.put(
-        '$endPoint/$id',
-        data: toJson(model),
-        options: Options(headers: header),
-      );
-
-      if (response.statusCode == 401) {
-        throw UnauthorizedException(
-          message: 'Token has expired',
-          statusCode: response.statusCode ?? 401,
-          stackTrace: StackTrace.current,
+    return _handleApiError(
+      operation: () async {
+        final response = await client.put(
+          urlWithId(id),
+          headers: {
+            ...?header,
+            'Content-Type': 'application/json',
+          },
+          body: json.encode(toJson(model)),
         );
-      }
 
-      final decodedBody = response.data;
-      final updatedEntity =
-          fromJson(decodedBody['data'] as Map<String, dynamic>);
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          await Future.wait([
+            _invalidateCache('getAll'),
+            _invalidateCache('getById', {'id': id}),
+          ]);
 
-      // Invalidate related caches
-      await _cacheManager.invalidate(_generateCacheKey('getAll'));
-      await _cacheManager.invalidate(_generateCacheKey('getById', {'id': id}));
+          final decodedBody = json.decode(response.body);
+          return fromJson(decodedBody['data'] ?? decodedBody);
+        }
 
-      return updatedEntity;
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to update data by id');
-    }
+        throw HttpCustomException(
+          message: response.body,
+          statusCode: response.statusCode,
+          stackTrace: StackTrace.current,
+          name: 'Smart Api Service',
+        );
+      },
+      customMessage: 'Kayıt güncellenemedi',
+    );
   }
 
   @override
-  Future<bool> deleteById(int id) async {
-    try {
-      final response = await _dio.delete(
-        '$endPoint/$id',
-        options: Options(headers: header),
-      );
-
-      if (response.statusCode == 401) {
-        throw UnauthorizedException(
-          message: 'Token has expired',
-          statusCode: response.statusCode ?? 401,
-          stackTrace: StackTrace.current,
+  Future<bool> deleteById(dynamic id) async {
+    return _handleApiError(
+      operation: () async {
+        final response = await client.delete(
+          urlWithId(id),
+          headers: header,
         );
-      }
 
-      // Invalidate related caches
-      await _cacheManager.invalidate(_generateCacheKey('getAll'));
-      return true;
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to delete data by id');
-    }
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          await Future.wait([
+            _invalidateCache('getAll'),
+            _invalidateCache('getById', {'id': id}),
+          ]);
+          return true;
+        }
+
+        throw HttpCustomException(
+          message: response.body,
+          statusCode: response.statusCode,
+          stackTrace: StackTrace.current,
+          name: 'Smart Api Service',
+        );
+      },
+      customMessage: 'Kayıt silinemedi',
+    );
   }
 
   // Pagination support
@@ -170,165 +239,96 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
     Map<String, dynamic>? filters,
     CachePriority priority = CachePriority.high,
   }) async {
-    try {
-      final cacheKey = _generateCacheKey('getPaginated', {
-        'page': page,
-        'pageSize': pageSize,
-        ...?filters,
-      });
+    return _handleApiError(
+      operation: () async {
+        final cacheKey = _generateCacheKey('getPaginated', {
+          'page': page,
+          'pageSize': pageSize,
+          ...?filters,
+        });
 
-      return await _cacheManager.getOrFetch<PaginatedResponse<T>>(
-        cacheKey,
-        () => _fetchPaginated(page, pageSize, filters),
-        priority: priority,
-      );
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to get paginated data');
-    }
-  }
-
-  // Search support
-  Future<List<T>> search(
-    String query, {
-    CachePriority priority = CachePriority.critical,
-  }) async {
-    try {
-      final cacheKey = _generateCacheKey('search', {'query': query});
-
-      return await _cacheManager.getOrFetch<List<T>>(
-        cacheKey,
-        () => _fetchSearch(query),
-        priority: priority,
-      );
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to search data');
-    }
+        return await _cacheManager.getOrFetch<PaginatedResponse<T>>(
+          cacheKey,
+          () => _fetchPaginated(page, pageSize, filters),
+          priority: priority,
+        );
+      },
+      customMessage: 'Sayfalı veri alınamadı',
+    );
   }
 
   // Private helper methods
-  Future<List<T>> _fetchAll(Map<String, dynamic>? queryParameters) async {
+  Future<List<T>> _fetchAll() async {
     try {
-      final response = await _dio.get(
-        endPoint,
-        queryParameters: queryParameters,
-        options: Options(headers: header),
+      final response = await client.get(url, headers: header);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decodedBody = json.decode(response.body);
+        final data = decodedBody['data'] ?? decodedBody;
+
+        if (data is List) {
+          return data.map((item) {
+            try {
+              final processedItem = Map<String, dynamic>.from(item);
+              // Sadece String, num, bool ve null değerleri kabul et
+              processedItem.forEach((key, value) {
+                if (value is List) {
+                  if (value.isEmpty) {
+                    processedItem[key] = null;
+                  } else {
+                    processedItem[key] = value.first.toString();
+                  }
+                } else if (!(value is String ||
+                    value is num ||
+                    value is bool ||
+                    value == null)) {
+                  processedItem[key] = value.toString();
+                }
+              });
+              return fromJson(processedItem);
+            } catch (e) {
+              debugPrint('Item processing error: $e for item: $item');
+              rethrow;
+            }
+          }).toList();
+        } else if (data is Map) {
+          final processedData = Map<String, dynamic>.from(data);
+          processedData.forEach((key, value) {
+            if (value is List) {
+              if (value.isEmpty) {
+                processedData[key] = null;
+              } else {
+                processedData[key] = value.first.toString();
+              }
+            } else if (!(value is String ||
+                value is num ||
+                value is bool ||
+                value == null)) {
+              processedData[key] = value.toString();
+            }
+          });
+          return [fromJson(processedData)];
+        }
+        throw Exception('Invalid response format');
+      }
+
+      throw HttpCustomException(
+        message: 'Failed to get all data',
+        statusCode: response.statusCode,
+        stackTrace: StackTrace.current,
       );
-
-      if (kDebugMode) {
-        print('Smart API Service - GetAll');
-        print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.data}');
-      }
-
-      if (response.statusCode == 401) {
-        throw UnauthorizedException(
-          message: 'Token has expired',
-          statusCode: response.statusCode ?? 401,
-          stackTrace: StackTrace.current,
-        );
-      }
-
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        final decodedBody = response.data;
-        if (kDebugMode) {
-          print('Decoded Body Structure: ${decodedBody.runtimeType}');
-          print('Decoded Body: $decodedBody');
-        }
-
-        // API response yapısına göre kontrol
-        if (decodedBody is Map<String, dynamic>) {
-          if (decodedBody.containsKey('data')) {
-            final List<dynamic> data = decodedBody['data'] as List;
-            return data
-                .map((e) => fromJson(e as Map<String, dynamic>))
-                .toList();
-          } else {
-            // Direkt liste dönüyorsa
-            return (decodedBody as List)
-                .map((e) => fromJson(e as Map<String, dynamic>))
-                .toList();
-          }
-        } else if (decodedBody is List) {
-          // Direkt liste dönüyorsa
-          return decodedBody
-              .map((e) => fromJson(e as Map<String, dynamic>))
-              .toList();
-        } else {
-          throw HttpCustomException(
-            message: 'Unexpected response format',
-            statusCode: response.statusCode ?? 500,
-            stackTrace: StackTrace.current,
-            name: 'Smart Api Service',
-            operation: 'Fetch All',
-            type: 'Format',
-            metaData: {
-              'response': response.toString(),
-              'decodedBodyType': decodedBody.runtimeType.toString(),
-            },
-          );
-        }
-      } else {
-        throw HttpCustomException(
-          message: response.data.toString(),
-          statusCode: response.statusCode ?? 500,
-          stackTrace: StackTrace.current,
-          name: 'Smart Api Service',
-          operation: 'Fetch All',
-          type: 'Check',
-          metaData: {
-            'response': response.toString(),
-          },
-        );
-      }
     } catch (e) {
-      throw handlerException(e, message: 'Failed to get all data');
+      debugPrint('Error in _fetchAll: $e');
+      throw _handleError(e, 'Failed to get all data');
     }
   }
 
   Future<T?> _fetchById(dynamic id) async {
     try {
-      final response = await _dio.get(
-        '$endPoint/$id',
-        options: Options(headers: header),
-      );
-
-      if (kDebugMode) {
-        print('Smart API Service - GetById');
-        print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.data}');
-        print('Response Headers: ${response.headers}');
-      }
-
-      if (response.statusCode == 401) {
-        throw UnauthorizedException(
-          message: 'Token has expired',
-          statusCode: response.statusCode ?? 401,
-          stackTrace: StackTrace.current,
-        );
-      }
-
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        final decodedBody = response.data;
-        if (kDebugMode) {
-          print('Decoded Body: $decodedBody');
-        }
-
-        return fromJson(decodedBody['data'] as Map<String, dynamic>);
-      } else {
-        throw HttpCustomException(
-          message: response.data.toString(),
-          statusCode: response.statusCode ?? 500,
-          stackTrace: StackTrace.current,
-          name: 'Smart Api Service',
-          operation: 'Fetch By Id',
-          type: 'Check',
-          metaData: {
-            'response': response.toString(),
-          },
-        );
-      }
+      final response = await client.get(urlWithId(id), headers: header);
+      return _handleResponse(response);
     } catch (e) {
-      throw handlerException(e, message: 'Failed to get data by id');
+      _handleError(e, 'Failed to get data by id');
     }
   }
 
@@ -338,32 +338,27 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
     Map<String, dynamic>? filters,
   ) async {
     try {
-      final response = await _dio.get(
-        endPoint,
-        queryParameters: {
-          'page': page,
-          'pageSize': pageSize,
-          if (filters != null) ...filters,
-        },
-        options: Options(headers: header),
+      final response = await client.get(
+        endPoint as Uri,
+        headers: header,
       );
 
       if (kDebugMode) {
         print('Smart API Service - GetPaginated');
         print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.data}');
+        print('Response Body: ${response.body}');
       }
 
       if (response.statusCode == 401) {
         throw UnauthorizedException(
           message: 'Token has expired',
-          statusCode: response.statusCode ?? 401,
+          statusCode: response.statusCode,
           stackTrace: StackTrace.current,
         );
       }
 
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        final decodedBody = response.data;
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decodedBody = json.decode(response.body);
         if (kDebugMode) {
           print('Decoded Body Structure: ${decodedBody.runtimeType}');
           print('Decoded Body: $decodedBody');
@@ -403,7 +398,7 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
         } else {
           throw HttpCustomException(
             message: 'Unexpected response format',
-            statusCode: response.statusCode ?? 500,
+            statusCode: response.statusCode,
             stackTrace: StackTrace.current,
             name: 'Smart Api Service',
             operation: 'Fetch Paginated',
@@ -416,8 +411,8 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
         }
       } else {
         throw HttpCustomException(
-          message: response.data.toString(),
-          statusCode: response.statusCode ?? 500,
+          message: response.body,
+          statusCode: response.statusCode,
           stackTrace: StackTrace.current,
           name: 'Smart Api Service',
           operation: 'Fetch Paginated',
@@ -429,21 +424,6 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
       }
     } catch (e) {
       throw handlerException(e, message: 'Failed to get paginated data');
-    }
-  }
-
-  Future<List<T>> _fetchSearch(String query) async {
-    try {
-      final response = await _dio.get(
-        '$endPoint/search',
-        queryParameters: {'q': query},
-      );
-
-      return (response.data as List)
-          .map((item) => fromJson(item as Map<String, dynamic>))
-          .toList();
-    } catch (e) {
-      throw handlerException(e, message: 'Failed to search data');
     }
   }
 
@@ -460,5 +440,58 @@ class SmartApiService<T extends IModel> extends IApiService<T> {
       }
       return '';
     }
+  }
+
+  // Ortak response işleme metodu
+  T _handleResponse(http.Response response) {
+    if (response.statusCode == 401) {
+      throw UnauthorizedException(
+        message: 'Token has expired',
+        statusCode: response.statusCode,
+        stackTrace: StackTrace.current,
+      );
+    }
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final decodedBody = json.decode(response.body);
+      if (decodedBody is Map<String, dynamic> &&
+          decodedBody.containsKey('data')) {
+        return fromJson(decodedBody['data']);
+      }
+      throw HttpCustomException(
+        message: 'Unexpected response format',
+        statusCode: response.statusCode,
+        stackTrace: StackTrace.current,
+        name: 'Smart Api Service',
+      );
+    }
+
+    throw HttpCustomException(
+      message: response.body,
+      statusCode: response.statusCode,
+      stackTrace: StackTrace.current,
+      name: 'Smart Api Service',
+    );
+  }
+
+  // Ortak hata işleme metodu
+  Never _handleError(dynamic error, String message) {
+    if (error is UnauthorizedException || error is HttpCustomException) {
+      throw error;
+    }
+    throw HttpCustomException(
+      message: message,
+      statusCode: 500,
+      stackTrace: StackTrace.current,
+      name: 'Smart Api Service',
+      metaData: {'error': error.toString()},
+    );
+  }
+
+  // Cache invalidation için yardımcı metod
+  Future<void> _invalidateCache(String operation,
+      [Map<String, dynamic>? params]) async {
+    final cacheKey = _generateCacheKey(operation, params);
+    await _cacheManager.remove(cacheKey);
   }
 }

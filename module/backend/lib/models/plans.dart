@@ -52,7 +52,7 @@ class Plans extends IModel<Plans> {
   factory Plans.insert(String description) {
     return Plans(
       plans: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       price: 0,
       subUser: 0,
       region: 0,
@@ -73,7 +73,7 @@ class Plans extends IModel<Plans> {
   factory Plans.update(int id, String description) {
     return Plans(
       plans: 0,
-      description: description,
+      description: description.trim().toUpperCase(),
       price: 0,
       subUser: 0,
       region: 0,
@@ -116,7 +116,7 @@ class Plans extends IModel<Plans> {
     if (json.isEmpty) return Plans.empty();
     return Plans(
       plans: int.tryParse(json['PLANS'].toString()) ?? 0,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       price: int.tryParse(json['PRICE'].toString()) ?? 0,
       subUser: int.tryParse(json['SUB_USER'].toString()) ?? 0,
       region: int.tryParse(json['REGION'].toString()) ?? 0,
@@ -144,7 +144,7 @@ class Plans extends IModel<Plans> {
   @override
   Map<String, dynamic> toJson() => {
         'PLANS': plans,
-        'DESCRIPTION': description,
+        'DESCRIPTION': description.trim().toUpperCase(),
         'PRICE': price,
         'SUB_USER': subUser,
         'REGION': region,

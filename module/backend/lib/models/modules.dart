@@ -36,7 +36,7 @@ class Modules extends IModel<Modules> {
   factory Modules.insert(String description) {
     return Modules(
       module: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       id: 0,
       isActive: false,
       isDelete: false,

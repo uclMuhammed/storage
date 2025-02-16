@@ -42,7 +42,7 @@ class ProjectCode extends IModel<ProjectCode> {
   ) {
     return ProjectCode(
       project: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       companyId: 0,
       startDate: startDate,
       endDate: endDate,
@@ -54,7 +54,7 @@ class ProjectCode extends IModel<ProjectCode> {
   factory ProjectCode.update(int id, String description) {
     return ProjectCode(
       project: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       companyId: 0,
       startDate: DateTime.now(),
       endDate: DateTime.now(),
@@ -81,7 +81,7 @@ class ProjectCode extends IModel<ProjectCode> {
     if (json.isEmpty) return ProjectCode.empty();
     return ProjectCode(
       project: int.tryParse(json['PROJECT'].toString()) ?? 0,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       startDate: DateTime.tryParse(json['START_DATE'] ?? '') ?? DateTime(1950),
       endDate: DateTime.tryParse(json['END_DATE'] ?? '') ?? DateTime(1950),
@@ -100,7 +100,7 @@ class ProjectCode extends IModel<ProjectCode> {
   Map<String, dynamic> toJson() {
     return {
       'PROJECT': project,
-      'DESCRIPTION': description,
+      'DESCRIPTION': description.trim().toUpperCase(),
       'COMPANY_ID': companyId,
       'START_DATE': startDate.toIso8601String(),
       'END_DATE': endDate.toIso8601String(),

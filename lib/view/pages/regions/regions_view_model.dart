@@ -70,6 +70,8 @@ class RegionsViewModel extends BaseViewModel {
       final citiesData =
           await _citiesService.getAll(priority: CachePriority.high);
       cities.value = citiesData;
+      selectedRegion.value = regions.value.first;
+      selectedCity.value = cities.value.first;
     } catch (e) {
       error.value = 'Veriler yüklenemedi: $e';
       regions.value = [];

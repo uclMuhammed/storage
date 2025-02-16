@@ -1,21 +1,20 @@
 import 'package:http/http.dart' as http;
-
 import '../exception/http_custom_exception.dart';
 
 abstract class IService<T> {
   final String baseUrl;
   final String endPoint;
-  final Map<String, String>? header;
+  Map<String, String>? header;
   late http.Client _client;
-  //
+
   IService({
     required this.endPoint,
     required this.baseUrl,
     this.header,
   });
-  //
+
   http.Client get client => _client;
-  //
+
   Future<void> init() async {
     try {
       _client = http.Client();
@@ -32,7 +31,6 @@ abstract class IService<T> {
     }
   }
 
-  //
   Exception handlerException(dynamic error, {String message = ''}) {
     if (error is HttpCustomException) {
       return error;
@@ -44,8 +42,6 @@ abstract class IService<T> {
     );
   }
 
-  //
   Uri get url => Uri.parse('$baseUrl$endPoint');
   Uri urlWithId(int id) => Uri.parse('$baseUrl$endPoint/$id');
-  //
 }

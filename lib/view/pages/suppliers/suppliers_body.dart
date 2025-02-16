@@ -186,15 +186,13 @@ class SuppliersBody {
                     ),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Tedarikçi Detayları'),
+                  if (context.isLargeScreen || context.isMediumScreen)
+                    context.mySubheadingText(text: 'Tedarikçi Detayları'),
                   const Spacer(),
-                  if (context.isLargeScreen || context.isMediumScreen) ...[
-                    buildFooter(context),
-                  ]
+                  buildFooter(context),
                 ],
               ),
               const Divider(),
-
               // Detaylar
               Expanded(
                 child: SingleChildScrollView(

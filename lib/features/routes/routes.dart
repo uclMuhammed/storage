@@ -4,7 +4,7 @@ import 'package:storage/view/welcome/welcome_view.dart';
 
 import '../../view/auth/login/login_view.dart';
 import '../../view/auth/signup/signup_view.dart';
-import '../../view/pages/home/home_view.dart';
+import '../../view/home/home_view.dart';
 
 final routeController = RouteController(
   notFoundPage: const Center(child: Text('Sayfa Bulunamadı')),

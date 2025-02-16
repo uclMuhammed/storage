@@ -42,7 +42,7 @@ class ProductUnits extends IModel<ProductUnits> {
   factory ProductUnits.insert(String description, double quantity) {
     return ProductUnits(
       unit: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       quantity: quantity,
       companyid: 0,
       id: 0,
@@ -61,7 +61,7 @@ class ProductUnits extends IModel<ProductUnits> {
       String description, double quantity, bool? isActive) {
     return ProductUnits(
       unit: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       quantity: quantity,
       companyid: 0,
       id: 0,
@@ -80,7 +80,7 @@ class ProductUnits extends IModel<ProductUnits> {
     if (json.isEmpty) return ProductUnits.empty();
     return ProductUnits(
       unit: int.tryParse(json['UNIT'].toString()) ?? 0,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       quantity: double.tryParse(json['QUANTITY'].toString()) ?? 0,
       companyid: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       id: int.tryParse(json['ID'].toString()) ?? 0,
@@ -107,7 +107,7 @@ class ProductUnits extends IModel<ProductUnits> {
   Map<String, dynamic> toJson() {
     return {
       'UNIT': unit,
-      'DESCRIPTION': description,
+      'DESCRIPTION': description.trim().toUpperCase(),
       'QUANTITY': quantity,
       'COMPANY_ID': companyid,
       'ID': id,

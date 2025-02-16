@@ -99,7 +99,7 @@ class WarehousesBody {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             context.myText(
-                              text: '#${warehouse.warehouse}',
+                              text: '#${warehouse.id}',
                               style: TextStyle(
                                 fontSize: context.bodySize,
                                 fontWeight: FontWeight.w600,
@@ -148,11 +148,12 @@ class WarehousesBody {
                       borderRadius: BorderRadius.circular(context.borderRadius),
                     ),
                     child: context.mySubheadingText(
-                      text: '#${selectedWarehouse.warehouse}',
+                      text: '#${selectedWarehouse.id}',
                     ),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Depo Detayları'),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubheadingText(text: 'Depo Detayları'),
                   const Spacer(),
                   buildFooter(context),
                 ],

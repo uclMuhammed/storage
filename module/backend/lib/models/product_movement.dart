@@ -2,6 +2,7 @@ import '../abstract/models.dart';
 
 class ProductMovement extends IModel<ProductMovement> {
   final int warehouseId;
+  final String warehouseName;
   final int supplierId;
   final int companyId;
   final int productId;
@@ -22,6 +23,7 @@ class ProductMovement extends IModel<ProductMovement> {
   ProductMovement({
     required this.taxId,
     required this.warehouseId,
+    required this.warehouseName,
     required this.supplierId,
     required this.companyId,
     required this.productId,
@@ -52,6 +54,7 @@ class ProductMovement extends IModel<ProductMovement> {
     return ProductMovement(
       taxId: 0,
       warehouseId: 0,
+      warehouseName: '',
       supplierId: 0,
       companyId: 0,
       productId: 0,
@@ -75,6 +78,7 @@ class ProductMovement extends IModel<ProductMovement> {
 
   factory ProductMovement.insert(
     int warehouseId,
+    String warehouseName,
     int supplierId,
     int productId,
     int price,
@@ -91,6 +95,7 @@ class ProductMovement extends IModel<ProductMovement> {
     return ProductMovement(
       taxId: taxId,
       warehouseId: warehouseId,
+      warehouseName: warehouseName,
       supplierId: supplierId,
       companyId: 0,
       productId: productId,
@@ -114,6 +119,7 @@ class ProductMovement extends IModel<ProductMovement> {
 
   factory ProductMovement.update(
     int warehouseId,
+    String warehouseName,
     int supplierId,
     int productId,
     int price,
@@ -130,6 +136,7 @@ class ProductMovement extends IModel<ProductMovement> {
     return ProductMovement(
       taxId: taxId,
       warehouseId: warehouseId,
+      warehouseName: warehouseName,
       supplierId: supplierId,
       companyId: 0,
       productId: productId,
@@ -155,6 +162,7 @@ class ProductMovement extends IModel<ProductMovement> {
     return ProductMovement(
       taxId: 0,
       warehouseId: 0,
+      warehouseName: '',
       supplierId: 0,
       companyId: 0,
       productId: 0,
@@ -184,6 +192,7 @@ class ProductMovement extends IModel<ProductMovement> {
       referenceId: int.tryParse(json['REFERENCE_ID'].toString()) ?? 0,
       price: int.tryParse(json['PRICE'].toString()) ?? 0,
       warehouseId: int.tryParse(json['WAREHOUSE_ID'].toString()) ?? 0,
+      warehouseName: json['WAREHOUSE_DESCRIPTION'].toString(),
       supplierId: int.tryParse(json['SUPPLIER_ID'].toString()) ?? 0,
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       productId: int.tryParse(json['PRODUCT_ID'].toString()) ?? 0,
@@ -213,6 +222,7 @@ class ProductMovement extends IModel<ProductMovement> {
       'REFERENCE_ID': referenceId,
       'PRICE': price,
       'WAREHOUSE_ID': warehouseId,
+      'WAREHOUSE_DESCRIPTION': warehouseName,
       'SUPPLIER_ID': supplierId,
       'COMPANY_ID': companyId,
       'PRODUCT_ID': productId,

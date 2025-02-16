@@ -150,7 +150,8 @@ class ProjectBody {
                     ),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Proje Detayları'),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubheadingText(text: 'Proje Detayları'),
                   const Spacer(),
                   buildFooter(context),
                 ],

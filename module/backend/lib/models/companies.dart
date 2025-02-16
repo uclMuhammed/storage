@@ -30,7 +30,7 @@ class Companies extends IModel<Companies> {
       planID: int.tryParse(json['PLAN_ID'].toString()) ?? -1,
       planAt: DateTime.tryParse(json['PLANAT'] ?? '') ?? DateTime(1950),
       company: int.tryParse(json['COMPANY'].toString()) ?? -1,
-      name: json['NAME'],
+      name: json['NAME']?.toString().trim().toUpperCase() ?? '',
       ownerId: int.tryParse(json['OWNERID'].toString()) ?? -1,
       id: int.tryParse(json['ID'].toString()) ?? -1,
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,

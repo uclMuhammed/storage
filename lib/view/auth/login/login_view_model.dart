@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:widgets/base/base_view_model.dart';
 import 'package:backend/implement/service_auth_client.dart';
 import '../../../features/routes/routes.dart';
+import 'package:backend/errors/error_handler.dart';
 
 class LoginViewModel extends BaseViewModel {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -49,24 +50,29 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<void> login(BuildContext context) async {
-    try {
-      if (formKey.currentState?.validate() == true) {
-        final success = await _authClient.login(
-          int.parse(companyCodeController.text),
-          emailController.text,
-          passwordController.text,
-        );
-
-        if (success == true) {
-          routeController.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-            Routes.home.routeName,
-            (route) => false,
+    await ErrorHandler().handleError(
+      operation: () async {
+        if (formKey.currentState?.validate() == true) {
+          final success = await _authClient.login(
+            int.parse(companyCodeController.text),
+            emailController.text,
+            passwordController.text,
           );
+
+          if (success == true) {
+            routeController.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+              Routes.home.routeName,
+              (route) => false,
+            );
+          }
         }
-      }
-    } catch (e) {
-      _errorMessage = e.toString();
-    }
+      },
+      context: context,
+      customMessage: 'Giriş yapılırken bir hata oluştu',
+      onError: () {
+        clearForm();
+      },
+    );
   }
 
   Future<bool> checkAuthStatus() async {
@@ -94,5 +100,11 @@ class LoginViewModel extends BaseViewModel {
     passwordController.dispose();
     isVisible.dispose();
     super.dispose();
+  }
+
+  void clearForm() {
+    companyCodeController.clear();
+    emailController.clear();
+    passwordController.clear();
   }
 }

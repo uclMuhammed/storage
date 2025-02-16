@@ -12,6 +12,7 @@ class _Drawer extends BaseDrawerView {
   Widget buildDrawerButton(BuildContext context) {
     return context.myShortCutButton(
       name: 'STOKLARIM.com',
+      drawerMode: drawerNotifier.value,
       icon: Icons.menu,
       onTap: () {
         drawerNotifier.change(
@@ -37,6 +38,7 @@ class _Drawer extends BaseDrawerView {
                 (e) => context.myShortCutButton(
                   name: e.title,
                   icon: e.icon,
+                  drawerMode: drawerNotifier.value,
                   onTap: () {
                     viewModel.currentPage.value = e.page!;
                   },
@@ -65,20 +67,10 @@ class _Drawer extends BaseDrawerView {
                   (e) => context.myShortCutButton(
                     name: e.title,
                     icon: e.icon,
+                    drawerMode: drawerNotifier.value,
                     onTap: () {
-                      if (e.title == 'LOGOUT') {
-                        try {
-                          ServiceAuthClient().logout();
-                          routeController.navigatorKey.currentState
-                              ?.pushNamedAndRemoveUntil(
-                            Routes.login.routeName,
-                            (route) => false,
-                          );
-                        } catch (e) {
-                          if (kDebugMode) {
-                            print(e);
-                          }
-                        }
+                      if (e.title == 'LOG OUT') {
+                        _handleLogout(context);
                       } else {
                         viewModel.currentPage.value = e.page!;
                       }
@@ -97,10 +89,39 @@ class _Drawer extends BaseDrawerView {
   @override
   Widget buildDrawerFooter(BuildContext context) {
     return context.myShortCutButton(
+      drawerMode: drawerNotifier.value,
       name: 'Settings',
       icon: Icons.settings,
-      onTap: () {},
+      onTap: () {
+        viewModel.currentPage.value = const SettingsView();
+      },
       tooltipMessage: drawerNotifier.value == DrawerMode.icon ? 'Settings' : '',
     );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    try {
+      // Önce storage'ı temizle
+      await ServiceAuthClient().logout();
+
+      // RouteController üzerinden yönlendirme yap
+      if (context.mounted) {
+        routeController.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          Routes.login.routeName,
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Logout error: $e');
+      }
+      // Hata durumunda da aynı şekilde yönlendir
+      if (context.mounted) {
+        routeController.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          Routes.login.routeName,
+          (route) => false,
+        );
+      }
+    }
   }
 }

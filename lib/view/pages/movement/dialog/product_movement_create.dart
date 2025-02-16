@@ -22,6 +22,7 @@ class ProductMovementCreate {
     int? selectedProjectCodeId;
     int? selectedReferenceCodeId;
     int? selectedTaxRateId;
+    String? selectedWarehouseName;
     ValueNotifier<bool> isReturn = ValueNotifier(false);
     ValueNotifier<bool> isPurchases = ValueNotifier(false);
 
@@ -313,6 +314,7 @@ class ProductMovementCreate {
                   try {
                     viewModel.createProductMovement(
                       selectedWarehouseId!,
+                      selectedWarehouseName!,
                       selectedSupplierId!,
                       selectedProductId!,
                       int.parse(priceController.text.trim()),

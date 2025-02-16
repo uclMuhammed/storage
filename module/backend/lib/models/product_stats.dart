@@ -3,6 +3,7 @@ import '../abstract/models.dart';
 class ProductStats extends IModel<ProductStats> {
   final int productId;
   final int companyId;
+  final int warehouseId;
   final double purchasesQuantity;
   final double salesQuantity;
   final double purchasesTotal;
@@ -13,6 +14,7 @@ class ProductStats extends IModel<ProductStats> {
   ProductStats({
     required this.productId,
     required this.companyId,
+    required this.warehouseId,
     required this.purchasesQuantity,
     required this.salesQuantity,
     required this.purchasesTotal,
@@ -32,6 +34,7 @@ class ProductStats extends IModel<ProductStats> {
 
   factory ProductStats.empty() {
     return ProductStats(
+      warehouseId: 0,
       companyId: 0,
       purchasesQuantity: 0,
       salesQuantity: 0,
@@ -47,6 +50,7 @@ class ProductStats extends IModel<ProductStats> {
   }
   factory ProductStats.insert(int productId) {
     return ProductStats(
+      warehouseId: 0,
       companyId: 0,
       purchasesQuantity: 1,
       salesQuantity: 1,
@@ -69,6 +73,7 @@ class ProductStats extends IModel<ProductStats> {
       double? costPrice,
       double? profitPerSale) {
     return ProductStats(
+      warehouseId: 0,
       companyId: 0,
       purchasesQuantity: purchasesQuantity ?? 1,
       salesQuantity: salesQuantity ?? 1,
@@ -85,6 +90,7 @@ class ProductStats extends IModel<ProductStats> {
   factory ProductStats.fromJson(Map<String, dynamic> json) {
     if (json.isEmpty) return ProductStats.empty();
     return ProductStats(
+      warehouseId: int.tryParse(json['WAREHOUSE_ID'].toString()) ?? 0,
       productId: int.tryParse(json['PRODUCT_ID'].toString()) ?? 0,
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       purchasesQuantity:
@@ -106,6 +112,7 @@ class ProductStats extends IModel<ProductStats> {
 
   @override
   Map<String, dynamic> toJson() => {
+        'WAREHOUSE_ID': warehouseId,
         'PRODUCT_ID': productId,
         'COMPANY_ID': companyId,
         'PURCHASES_QUANTITY': purchasesQuantity,

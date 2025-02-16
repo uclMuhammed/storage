@@ -31,7 +31,7 @@ class Roles extends IModel<Roles> {
   ) {
     return Roles(
       role: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       id: 0,
       isActive: false,
       isDelete: false,
@@ -43,7 +43,7 @@ class Roles extends IModel<Roles> {
   ) {
     return Roles(
       role: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       id: id,
       isActive: false,
       isDelete: false,
@@ -63,7 +63,7 @@ class Roles extends IModel<Roles> {
     //
     return Roles(
       role: json['ROLE'],
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       id: int.tryParse(json['ID'].toString()) ?? -1,
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
       isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
@@ -77,7 +77,7 @@ class Roles extends IModel<Roles> {
   @override
   Map<String, dynamic> toJson() => {
         'ROLE': role,
-        'DESCRIPTION': description,
+        'DESCRIPTION': description.trim().toUpperCase(),
         'ID': id,
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,

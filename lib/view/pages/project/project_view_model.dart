@@ -67,7 +67,6 @@ class ProjectViewModel extends BaseViewModel {
       if (kDebugMode) {
         print('Proje verisi yüklenirken hata: $e');
       }
-      rethrow;
     } finally {
       setLoading(false);
     }

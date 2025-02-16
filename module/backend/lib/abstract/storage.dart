@@ -23,7 +23,7 @@ abstract class IStorage {
     if (error is SecureStorageException) {
       return error;
     }
-    throw SecureStorageException(
+    return SecureStorageException(
       stackTrace: StackTrace.current,
       message: message + error.toString(),
       statusCode: 500,

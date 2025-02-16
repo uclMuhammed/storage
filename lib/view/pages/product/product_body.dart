@@ -1,10 +1,12 @@
 part of 'product_view.dart';
 
 class ProductBody {
-  final ProductViewModel viewModel;
-  ProductBody() : viewModel = ProductViewModel()..init();
+  final viewModel = ProductViewModel();
 
   Widget build(BuildContext context) {
+    viewModel.setContext(context);
+    viewModel.init();
+
     return ValueListenableBuilder<bool>(
       valueListenable: viewModel.loadingNotifier,
       builder: (context, isLoading, _) {
@@ -125,7 +127,8 @@ class ProductBody {
                     ),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubheadingText(text: 'Ürün Detayları'),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubheadingText(text: 'Ürün Detayları'),
                   buildFooter(context),
                 ],
               ),

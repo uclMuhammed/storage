@@ -119,8 +119,9 @@ class ProductMovementBody {
                         text: '#${selectedProductMovement?.id}'),
                   ),
                   SizedBox(width: context.smallPadding),
-                  context.mySubText(
-                      text: selectedProductMovement?.description ?? ''),
+                  if (context.isMediumScreen || context.isLargeScreen)
+                    context.mySubText(
+                        text: selectedProductMovement?.description ?? ''),
                   buildFooter(context),
                 ],
               ),
@@ -129,22 +130,12 @@ class ProductMovementBody {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      ValueListenableBuilder<List<Warehouses>>(
-                        valueListenable: viewModel.warehouses,
-                        builder: (context, value, _) {
-                          final warehouse = value.firstWhere(
-                            (warehouse) =>
-                                warehouse.id ==
-                                selectedProductMovement?.warehouseId,
-                            orElse: () => Warehouses.empty(),
-                          );
-                          return context.bodyDetailRow(
-                            context,
-                            icon: Icons.warehouse,
-                            label: 'Depo',
-                            value: warehouse.description,
-                          );
-                        },
+                      context.bodyDetailRow(
+                        context,
+                        icon: Icons.person,
+                        label: 'Tedarikçi',
+                        value: viewModel
+                            .selectedProductMovement.value!.warehouseName,
                       ),
                       ValueListenableBuilder<List<Suppliers>>(
                         valueListenable: viewModel.suppliers,

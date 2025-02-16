@@ -22,6 +22,9 @@ class ProductMovementUpdate {
             .toString());
     final documentNoController = TextEditingController(
         text: viewModel.selectedProductMovement.value?.documentNo);
+    final selectedWarehouseName = ValueNotifier(
+      viewModel.selectedProductMovement.value?.warehouseName,
+    );
 
     var selectedWarehouseId = ValueNotifier(
       viewModel.selectedProductMovement.value?.warehouseId,
@@ -383,6 +386,7 @@ class ProductMovementUpdate {
                       try {
                         viewModel.updateProductMovement(
                           viewModel.selectedProductMovement.value!.id!,
+                          selectedWarehouseName.value!,
                           selectedWarehouseId.value!,
                           selectedSupplierId.value!,
                           selectedProductId.value!,

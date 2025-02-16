@@ -31,7 +31,6 @@ class ProductMovementViewModel extends BaseViewModel {
   final selectedTax = ValueNotifier<TaxRate?>(null);
 
   final error = ValueNotifier<String?>(null);
-  final refreshTrigger = ValueNotifier<bool>(false);
   final loadingNotifier = ValueNotifier<bool>(false);
 
   @override
@@ -47,9 +46,6 @@ class ProductMovementViewModel extends BaseViewModel {
   @override
   void init() {
     _initServices().then((_) => _loadData());
-    refreshTrigger.addListener(() {
-      _loadData();
-    });
   }
 
   Future<void> _initServices() async {
@@ -240,6 +236,7 @@ class ProductMovementViewModel extends BaseViewModel {
 
   Future<void> createProductMovement(
     int warehouseId,
+    String warehouseName,
     int supplierId,
     int productId,
     int price,
@@ -257,6 +254,7 @@ class ProductMovementViewModel extends BaseViewModel {
       setLoading(true);
       final productMovement = ProductMovement.insert(
         warehouseId,
+        warehouseName,
         supplierId,
         productId,
         price,
@@ -286,6 +284,7 @@ class ProductMovementViewModel extends BaseViewModel {
 
   Future<void> updateProductMovement(
     int id,
+    String warehouseName,
     int warehouseId,
     int supplierId,
     int productId,
@@ -304,6 +303,7 @@ class ProductMovementViewModel extends BaseViewModel {
       setLoading(true);
       final productMovement = ProductMovement.update(
         warehouseId,
+        warehouseName,
         supplierId,
         productId,
         price,
@@ -366,7 +366,6 @@ class ProductMovementViewModel extends BaseViewModel {
     selectedSupplier.dispose();
     selectedTax.dispose();
     error.dispose();
-    refreshTrigger.dispose();
     loadingNotifier.dispose();
     super.dispose();
   }

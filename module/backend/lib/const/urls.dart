@@ -1,6 +1,9 @@
-// ignore_for_file: constant_identifier_names
+// Base URL'i platformlara göre dinamik olarak belirle
+// ignore_for_file: non_constant_identifier_names
 
-const String apiBaseUrl = 'http://server.halilucel.net:14192';
-const String StockTrackerUrl = '$apiBaseUrl/';
-const String StockTrackerApiUrl = '${StockTrackerUrl}api';
-const String StockTrackerAuthUrl = '${StockTrackerUrl}auth';
+String get apiBaseUrl => 'http://server.halilucel.net:14192';
+
+// Diğer URL'leri fonksiyon olarak tanımla
+String get StockTrackerUrl => '$apiBaseUrl/';
+String get StockTrackerApiUrl => '${StockTrackerUrl}api';
+String get StockTrackerAuthUrl => '${StockTrackerUrl}auth';

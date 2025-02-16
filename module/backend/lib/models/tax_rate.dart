@@ -33,7 +33,7 @@ class TaxRate extends IModel<TaxRate> {
   factory TaxRate.insert(double tax, String description) {
     return TaxRate(
       tax: tax,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       companyId: 1,
       id: 0,
       isActive: false,
@@ -43,7 +43,7 @@ class TaxRate extends IModel<TaxRate> {
   factory TaxRate.update(int id, double tax, String description) {
     return TaxRate(
       tax: tax,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       companyId: 1,
       id: id,
       isActive: false,
@@ -64,7 +64,7 @@ class TaxRate extends IModel<TaxRate> {
     if (json.isEmpty) return TaxRate.empty();
     return TaxRate(
       tax: double.tryParse(json['TAX'].toString()) ?? 0,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       id: int.tryParse(json['ID'].toString()) ?? 0,
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? true,
@@ -81,7 +81,7 @@ class TaxRate extends IModel<TaxRate> {
   Map<String, dynamic> toJson() {
     return {
       'TAX': tax,
-      'DESCRIPTION': description,
+      'DESCRIPTION': description.trim().toUpperCase(),
       'COMPANY_ID': companyId,
       'ID': id,
       'ISACTIVE': isActive,

@@ -40,7 +40,7 @@ class Regions extends IModel<Regions> {
     return Regions(
       region: -1,
       companyId: -1,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       id: -1,
       isActive: false,
       isDelete: false,
@@ -56,7 +56,7 @@ class Regions extends IModel<Regions> {
     return Regions(
       region: -1,
       companyId: -1,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       id: id,
       isActive: false,
       isDelete: false,
@@ -89,7 +89,7 @@ class Regions extends IModel<Regions> {
     return Regions(
       region: int.tryParse(json['REGION'].toString()) ?? -1,
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? -1,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       id: int.tryParse(json['ID'].toString()) ?? -1,
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
       isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
@@ -114,7 +114,7 @@ class Regions extends IModel<Regions> {
   @override
   Map<String, dynamic> toJson() => {
         'REGION': region,
-        'DESCRIPTION': description,
+        'DESCRIPTION': description.trim().toUpperCase(),
         'ID': id,
         'ISACTIVE': isActive,
         'ISDELETE': isDelete,

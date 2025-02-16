@@ -81,12 +81,12 @@ class DrawerData extends ChangeNotifier {
     DrawerModel(
       title: 'ADMIN PANEL',
       icon: Icons.admin_panel_settings,
-      page: AdminPanelView(),
+      page: const AdminPanelView(),
     ),
     DrawerModel(
       title: 'DEVELOPER',
       icon: Icons.developer_board,
-      page: DeveloperView(),
+      page: const DeveloperView(),
     ),
     DrawerModel(
       title: 'LOG OUT',

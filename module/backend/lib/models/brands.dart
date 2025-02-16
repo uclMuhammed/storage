@@ -62,7 +62,7 @@ class Brands extends IModel<Brands> {
       id: id ?? this.id,
       brand: brand ?? this.brand,
       companyId: companyId ?? this.companyId,
-      description: description ?? this.description,
+      description: description ?? this.description.trim().toUpperCase(),
       isActive: isActive ?? this.isActive,
       isDelete: isDelete ?? this.isDelete,
       createdAt: createdAt ?? this.createdAt,
@@ -81,7 +81,7 @@ class Brands extends IModel<Brands> {
       id: int.tryParse(json['ID'].toString()) ?? -1,
       brand: int.tryParse(json['BRAND'].toString()) ?? -1,
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? -1,
-      description: json['DESCRIPTION'].toString(),
+      description: json['DESCRIPTION'].toString().trim().toUpperCase(),
       isActive: bool.tryParse(json['ISACTIVE'].toString()) ?? false,
       isDelete: bool.tryParse(json['ISDELETE'].toString()) ?? false,
       // Tarih alanları için null kontrolü ve parse işlemi

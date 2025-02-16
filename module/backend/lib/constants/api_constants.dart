@@ -12,4 +12,5 @@ class ApiEndpoints {
   static const String references = '/referenceCode';
   static const String productMovements = '/productMovement';
   static const String taxRates = '/taxRate';
+  static const String productStats = '/productStats';
 }

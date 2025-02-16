@@ -44,7 +44,7 @@ class ReferenceCode extends IModel<ReferenceCode> {
   ) {
     return ReferenceCode(
       reference: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       companyId: 0,
       startDate: startDate,
       endDate: endDate,
@@ -58,7 +58,7 @@ class ReferenceCode extends IModel<ReferenceCode> {
     final now = DateTime.now();
     return ReferenceCode(
       reference: 0,
-      description: description,
+      description: description.toString().trim().toUpperCase(),
       companyId: 0,
       startDate: now,
       endDate: now.add(const Duration(days: 30)),
@@ -84,7 +84,7 @@ class ReferenceCode extends IModel<ReferenceCode> {
   factory ReferenceCode.fromJson(Map<String, dynamic> json) {
     return ReferenceCode(
       reference: int.tryParse(json['REFERENCE'].toString()) ?? 0,
-      description: json['DESCRIPTION'],
+      description: json['DESCRIPTION']?.toString().trim().toUpperCase() ?? '',
       companyId: int.tryParse(json['COMPANY_ID'].toString()) ?? 0,
       startDate: DateTime.tryParse(json['START_DATE']) ?? DateTime.now(),
       endDate: DateTime.tryParse(json['END_DATE']) ?? DateTime.now(),
@@ -103,7 +103,7 @@ class ReferenceCode extends IModel<ReferenceCode> {
   Map<String, dynamic> toJson() {
     return {
       'REFERENCE': reference,
-      'DESCRIPTION': description,
+      'DESCRIPTION': description.trim().toUpperCase(),
       'COMPANY_ID': companyId,
       'START_DATE': startDate.toIso8601String(),
       'END_DATE': endDate.toIso8601String(),

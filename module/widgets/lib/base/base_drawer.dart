@@ -52,6 +52,10 @@ abstract class BaseDrawerView extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 children: [
+                  const Divider(
+                    color: Colors.transparent,
+                    height: 8,
+                  ),
                   buildDrawerButton(context),
                   const Divider(),
                   Expanded(
@@ -59,9 +63,10 @@ abstract class BaseDrawerView extends StatelessWidget {
                     child: buildDrawerBody(context),
                   ),
                   const Divider(),
-                  Expanded(
-                    flex: 1,
-                    child: buildDrawerFooter(context),
+                  buildDrawerFooter(context),
+                  const Divider(
+                    color: Colors.transparent,
+                    height: 8,
                   ),
                 ],
               ),
